@@ -4,6 +4,8 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { MAKE_DB } from '../subworkflows/local/make_db'
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -31,10 +33,19 @@ workflow ETD {
         ).set { ch_collated_versions }
 
 
-    // My modules will go here
+    // Prepare the (meta, fasta) tuples expected by modules
+    ch_genomes = ch_samplesheet.map { file -> tuple([id: file.basename], file) }
 
-   // emit: results will go here
-    versions       = ch_versions
+    // Run the make_db workflow
+    MAKE_DB(ch_genomes)
+
+
+    emit:
+    mash_sketches	= MAKE_DB.out.mash_sketches
+    amr_reports 	= MAKE_DB.out.amr_reports
+    mob_reports 	= MAKE_DB.out.mob_recon_results
+    integron_results = MAKE_DB.out.integron_summaries
+    versions       	= ch_versions
 
 }
 
