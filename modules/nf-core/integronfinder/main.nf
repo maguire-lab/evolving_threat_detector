@@ -1,5 +1,5 @@
 process INTEGRONFINDER {
-    tag "$meta.id"
+    tag "$genomeID"
     label 'process_low'
 
     containerOptions workflow.containerEngine == 'singularity' ? 
@@ -12,26 +12,28 @@ process INTEGRONFINDER {
         'biocontainers/integron_finder:2.0.5--pyhdfd78af_0' }"
 
     input:
-    tuple val(meta), path(fasta)
+    tuple val(genomeID), path(genome)
 
     output:
-    tuple val(meta), path("*/*.gbk")              , emit: gbk, optional: true
-    tuple val(meta), path("*/*.integrons")        , emit: integrons
-    tuple val(meta), path("*/*.summary")          , emit: summary
-    tuple val(meta), path("*/integron_finder.out"), emit: out
+    tuple val(genomeID), path("*/*.gbk")              , emit: gbk, optional: true
+    tuple val(genomeID), path("*/*.integrons")        , emit: integrons
+    tuple val(genomeID), path("*/*.summary")          , emit: summary
+    tuple val(genomeID), path("*/integron_finder.out"), emit: out
     path "versions.yml"                           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
+    publishDir "${params.outdir}/integron_output", mode: params.publish_dir_mode
+
     script:
     def args                = task.ext.args ?: ''
-    def is_compressed_fasta = fasta.getName().endsWith(".gz") ? true : false
-    def fasta_name          = fasta.getName().replace(".gz", "")
+    def is_compressed_fasta = genome.getName().endsWith(".gz") ? true : false
+    def fasta_name          = genome.getName().replace(".gz", "")
     
     """
     if [ "$is_compressed_fasta" == "true" ]; then
-        gzip -c -d $fasta > $fasta_name
+        gzip -c -d $genome > $fasta_name
     fi
 
     integron_finder \\
@@ -47,7 +49,7 @@ process INTEGRONFINDER {
 
     stub:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${genomeID}"
     def gbk_create = args.contains("--gbk") ? "Results_Integron_Finder_${prefix}/${prefix}.gbk" : ""
 
     """

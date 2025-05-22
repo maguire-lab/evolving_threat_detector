@@ -1,5 +1,5 @@
 process MOBSUITE_RECON {
-    tag "$meta.id"
+    tag "$genomeID"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -8,33 +8,37 @@ process MOBSUITE_RECON {
         'biocontainers/mob_suite:3.1.9--pyhdfd78af_0' }"
 
     input:
-    tuple val(meta), path(fasta)
+    tuple val(genomeID), path(genome)
 
     output:
-    tuple val(meta), path("results/chromosome.fasta")    , emit: chromosome
-    tuple val(meta), path("results/contig_report.txt")   , emit: contig_report
-    tuple val(meta), path("results/plasmid_*.fasta")     , emit: plasmids        , optional: true
-    tuple val(meta), path("results/mobtyper_results.txt"), emit: mobtyper_results, optional: true
+    tuple val(genomeID), path("results/$genomeID/chromosome.fasta")    , emit: chromosome
+    tuple val(genomeID), path("results/$genomeID/contig_report.txt")   , emit: contig_report
+    tuple val(genomeID), path("results/$genomeID/plasmid_*.fasta")     , emit: plasmids        , optional: true
+    tuple val(genomeID), path("results/$genomeID/mobtyper_results.txt"), emit: mobtyper_results, optional: true
     path "versions.yml"                                  , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
+
+    publishDir "${params.outdir}/mob_output", mode: params.publish_dir_mode
+
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def is_compressed = fasta.getName().endsWith(".gz") ? true : false
-    def fasta_name = fasta.getName().replace(".gz", "")
+    def prefix = task.ext.prefix ?: "${genomeID}"
+    def is_compressed = genome.getName().endsWith(".gz") ? true : false
+    def fasta_name = genome.getName().replace(".gz", "")
     """
+    # rerunning mob recon
     if [ "$is_compressed" == "true" ]; then
-        gzip -c -d $fasta > $fasta_name
+        gzip -c -d $genome > $fasta_name
     fi
 
     mob_recon \\
         --infile $fasta_name \\
         $args \\
         --num_threads $task.cpus \\
-        --outdir results \\
+        --outdir "results/$prefix" \\
         --sample_id $prefix
 
     cat <<-END_VERSIONS > versions.yml
@@ -49,6 +53,7 @@ process MOBSUITE_RECON {
 
     touch results/chromosome.fasta
     touch results/contig_report.txt
+    touch results/plasmids
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

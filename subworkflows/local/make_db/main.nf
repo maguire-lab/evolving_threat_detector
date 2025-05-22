@@ -1,27 +1,54 @@
+/*
+ * Import required modules
+ */
+include { AMRFINDERPLUS_UPDATE } from '../../../modules/nf-core/amrfinderplus/update'
+include { AMRFINDERPLUS_RUN    } from '../../../modules/nf-core/amrfinderplus/run'
+include { MASH_SKETCH          } from '../../../modules/nf-core/mash/sketch'
+include { MOBSUITE_RECON       } from '../../../modules/nf-core/mobsuite/recon'
+include { INTEGRONFINDER       } from '../../../modules/nf-core/integronfinder/main'
+include { PROKKA               } from '../../../modules/nf-core/prokka/main'
+include { PHISPY               } from '../../../modules/nf-core/phispy/main'
+include { DB_INIT              } from '../../../modules/local/db_init'
+
 workflow MAKE_DB {
     take:
     ch_genomes
 
     main:
 
+    // Initialize database
+    etd_db = DB_INIT(Channel.value("etd.db"))
+
     // Update AMRFinderPlus database
-    AMRFINDERPLUS_UPDATE()
+    amrfinder_db = AMRFINDERPLUS_UPDATE()
 
     // Run MASH sketching
-    mash = MASH_SKETCH(ch_genomes)
+    MASH_SKETCH(ch_genomes)
 
     // Run AMRFinderPlus with updated DB
-    amr = AMRFINDERPLUS_RUN(ch_genomes, AMRFINDERPLUS_UPDATE.out.db)
+    AMRFINDERPLUS_RUN(ch_genomes, amrfinder_db[0])
 
     // Run MOB-suite
-    mob = MOBSUITE_RECON(ch_genomes)
+    MOBSUITE_RECON(ch_genomes)
 
     // Run IntegronFinder
-    integrons = INTEGRONFINDER(ch_genomes)
+    INTEGRONFINDER(ch_genomes)
+
+    // Generate .gbk file for phispy
+    prokka_out = PROKKA(ch_genomes)
+    
+     //ch_gbk = prokka_out.gbk
+         //.map { genomeID, gbk -> tuple(genomeID, gbk) }
+    
+
+    // Run Phispy
+    //PHISPY(ch_gbk).ext { genomeID, gbk -> [ prefix: "${genomeID}_phispy" ] }
 
     emit:
-    mash_sketches      = mash.out.mash
-    amr_reports        = amr.out.report
-    mobtyper_results   = mob.out.mobtyper_results
-    integron_summaries = integrons.out.summary
+    db_etd               = etd_db.sqlite_db
+    //mash_sketches        = MASH_SKETCH.out.mash
+    //amr_reports        = AMRFINDERPLUS_RUN.out.report
+    //mobtyper_results   = MOBSUITE_RECON.out.contig_report
+    //integron_summaries = INTEGRONFINDER.out.summary
+    //ch_gbk_wprefix       = PROKKA.out.gbk
 }
