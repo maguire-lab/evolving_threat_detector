@@ -1,0 +1,77 @@
+#!/usr/bin/env nextflow
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    nf-core/etd
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Github : https://github.com/nf-core/etd
+    Website: https://nf-co.re/etd
+    Slack  : https://nfcore.slack.com/channels/etd
+----------------------------------------------------------------------------------------
+*/
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+include { MAKE_DB } from './subworkflows/local/make_db'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_etd_pipeline'
+include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_etd_pipeline'
+include { samplesheetToList       } from 'plugin/nf-schema'
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    RUN DEVELOPMENT WORKFLOW
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+workflow {
+
+    main:
+
+    PIPELINE_INITIALISATION (
+        params.version,
+        params.validate_params,
+        params.monochrome_logs,
+        args,
+        params.outdir,
+        null
+    )
+
+    Channel
+        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+        .map {
+            meta, fasta ->
+            // Normalize empty list [] or missing field to null
+            //if (meta.containsKey('organism') && meta.organism instanceof List) {
+             //   meta.organism = meta.organism ? meta.organism[0] : null
+            //} 
+            [meta, fasta]
+        }
+        .set { ch_samplesheet }
+
+     ch_samplesheet.view { "$it" }
+
+	
+
+    // Run the MAKE_DB subworkflow with real data
+    MAKE_DB(ch_samplesheet)
+    
+    // SUBWORKFLOW: Run completion tasks
+   // PIPELINE_COMPLETION (
+   //     params.email,
+   //     params.email_on_fail,
+   //     params.plaintext_email,
+   //     params.outdir,
+   //    params.monochrome_logs,
+   //    params.hook_url,
+   //     Channel.empty()
+    //)
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    THE END
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/

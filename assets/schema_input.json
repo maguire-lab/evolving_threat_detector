@@ -19,6 +19,13 @@
                 "exists": true,
                 "pattern": "^\\S+\\.(fa|fna|fasta)$",
                 "errorMessage": "Fasta file must be provided, cannot contain spaces and must have extension '.fa', '.fna', or '.fasta'"
+            },
+            "organism": {
+                "type": "string",
+                "pattern": "^[A-Za-z]+_[a-z]+$",
+                "description": "AMRFinderPlus organism name (e.g. Staphylococus_aureus)",
+                "errorMessage": "Organism must be and follow the AMRFinderPlus naming format",
+                "meta": ["organism"]
             }
         },
         "required": ["sample", "fasta"]

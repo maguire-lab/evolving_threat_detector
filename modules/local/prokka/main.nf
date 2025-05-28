@@ -1,5 +1,5 @@
 process PROKKA {
-    tag "${meta.id}"
+    tag "${genomeID}"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
@@ -8,23 +8,23 @@ process PROKKA {
         'community.wave.seqera.io/library/prokka_openjdk:10546cadeef11472' }"
 
     input:
-    tuple val(meta), path(fasta)
-    path proteins
-    path prodigal_tf
+    tuple val(genomeID), path(genome)
+    //path proteins
+    //path prodigal_tf
 
     output:
-    tuple val(meta), path("${prefix}/*.gff"), emit: gff
-    tuple val(meta), path("${prefix}/*.gbk"), emit: gbk
-    tuple val(meta), path("${prefix}/*.fna"), emit: fna
-    tuple val(meta), path("${prefix}/*.faa"), emit: faa
-    tuple val(meta), path("${prefix}/*.ffn"), emit: ffn
-    tuple val(meta), path("${prefix}/*.sqn"), emit: sqn
-    tuple val(meta), path("${prefix}/*.fsa"), emit: fsa
-    tuple val(meta), path("${prefix}/*.tbl"), emit: tbl
-    tuple val(meta), path("${prefix}/*.err"), emit: err
-    tuple val(meta), path("${prefix}/*.log"), emit: log
-    tuple val(meta), path("${prefix}/*.txt"), emit: txt
-    tuple val(meta), path("${prefix}/*.tsv"), emit: tsv
+    tuple val(genomeID), path("${prefix}/*.gff"), emit: gff
+    tuple val(genomeID), path("${prefix}/*.gbk"), emit: gbk
+    tuple val(genomeID), path("${prefix}/*.fna"), emit: fna
+    tuple val(genomeID), path("${prefix}/*.faa"), emit: faa
+    tuple val(genomeID), path("${prefix}/*.ffn"), emit: ffn
+    tuple val(genomeID), path("${prefix}/*.sqn"), emit: sqn
+    tuple val(genomeID), path("${prefix}/*.fsa"), emit: fsa
+    tuple val(genomeID), path("${prefix}/*.tbl"), emit: tbl
+    tuple val(genomeID), path("${prefix}/*.err"), emit: err
+    tuple val(genomeID), path("${prefix}/*.log"), emit: log
+    tuple val(genomeID), path("${prefix}/*.txt"), emit: txt
+    tuple val(genomeID), path("${prefix}/*.tsv"), emit: tsv
     path "versions.yml" , emit: versions
 
     when:
@@ -32,12 +32,10 @@ process PROKKA {
 
     script:
     def args             = task.ext.args   ?: ''
-    prefix               = task.ext.prefix ?: "${meta.id}"
-    def input            = fasta.toString() - ~/\.gz$/
-    def decompress       = fasta.getExtension() == "gz" ? "gunzip -c ${fasta} > ${input}" : ""
-    def cleanup          = fasta.getExtension() == "gz" ? "rm ${input}" : ""
-    def proteins_opt     = proteins ? "--proteins ${proteins}" : ""
-    def prodigal_tf_in   = prodigal_tf ? "--prodigaltf ${prodigal_tf}" : ""
+    prefix               = task.ext.prefix ?: "${genomeID}"
+    def input            = genome.toString() - ~/\.gz$/
+    def decompress       = genome.getExtension() == "gz" ? "gunzip -c ${fasta} > ${input}" : ""
+    def cleanup          = genome.getExtension() == "gz" ? "rm ${input}" : ""
     """
     ${decompress}
 
@@ -45,8 +43,6 @@ process PROKKA {
         ${args} \\
         --cpus ${task.cpus} \\
         --prefix ${prefix} \\
-        ${proteins_opt} \\
-        ${prodigal_tf_in} \\
         ${input}
 
     ${cleanup}
@@ -58,7 +54,7 @@ process PROKKA {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${genomeID}"
     """
     mkdir ${prefix}
     touch ${prefix}/${prefix}.gff

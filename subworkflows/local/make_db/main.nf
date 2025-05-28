@@ -4,11 +4,12 @@
 include { AMRFINDERPLUS_UPDATE } from '../../../modules/nf-core/amrfinderplus/update'
 include { AMRFINDERPLUS_RUN    } from '../../../modules/nf-core/amrfinderplus/run'
 include { MASH_SKETCH          } from '../../../modules/nf-core/mash/sketch'
-include { MOBSUITE_RECON       } from '../../../modules/nf-core/mobsuite/recon'
+include { MOBSUITE_RECON       } from '../../../modules/local/mobsuite/recon'
 include { INTEGRONFINDER       } from '../../../modules/nf-core/integronfinder/main'
 include { PROKKA               } from '../../../modules/nf-core/prokka/main'
 include { PHISPY               } from '../../../modules/nf-core/phispy/main'
 include { DB_INIT              } from '../../../modules/local/db_init'
+include { INSERT_GENOMES       } from '../../../modules/local/insert_genomes'
 
 workflow MAKE_DB {
     take:
@@ -17,7 +18,10 @@ workflow MAKE_DB {
     main:
 
     // Initialize database
-    etd_db = DB_INIT(Channel.value("etd.db"))
+    etd_db_init = DB_INIT(Channel.value("etd.db"))
+
+    // Insert genomes + organism into the DB
+    ch_db_insert = INSERT_GENOMES(ch_genomes, etd_db_init)
 
     // Update AMRFinderPlus database
     amrfinder_db = AMRFINDERPLUS_UPDATE()
@@ -35,7 +39,7 @@ workflow MAKE_DB {
     INTEGRONFINDER(ch_genomes)
 
     // Generate .gbk file for phispy
-    prokka_out = PROKKA(ch_genomes)
+    //prokka_out = PROKKA(ch_genomes)
     
      //ch_gbk = prokka_out.gbk
          //.map { genomeID, gbk -> tuple(genomeID, gbk) }
@@ -45,7 +49,8 @@ workflow MAKE_DB {
     //PHISPY(ch_gbk).ext { genomeID, gbk -> [ prefix: "${genomeID}_phispy" ] }
 
     emit:
-    db_etd               = etd_db.sqlite_db
+    db_etd               = etd_db_init.sqlite_db
+    updated_db           = ch_db_insert.sqlite_db
     //mash_sketches        = MASH_SKETCH.out.mash
     //amr_reports        = AMRFINDERPLUS_RUN.out.report
     //mobtyper_results   = MOBSUITE_RECON.out.contig_report
