@@ -26,7 +26,30 @@
                 "description": "AMRFinderPlus organism name (e.g. Staphylococus_aureus)",
                 "errorMessage": "Organism must be and follow the AMRFinderPlus naming format",
                 "meta": ["organism"]
-            }
+            },
+            "gbk": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.gbk$",
+                "errorMessage": "GenBank file must be provided, cannot contain spaces and must end in '.gbk'"
+            },
+            "protein": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.(faa|faa\\.gz)$",
+        "description": "Protein FASTA file. Used in AMRFinderPlus with --protein flag.",
+        "errorMessage": "Protein file cannot contain spaces and must end in .faa (optionally compressed)"
+      },
+            "gff": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.(gff|gff3|gff\\.gz|gff3\\.gz)$",
+                "description": "GFF annotation file (required if protein is provided)",
+                "errorMessage": "GFF file cannot contain spaces and must end in .gff, .gff3 (optionally compressed)"
+      }
         },
         "required": ["sample", "fasta"]
     }

@@ -42,21 +42,23 @@ workflow {
     Channel
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
         .map {
-            meta, fasta ->
-            // Normalize empty list [] or missing field to null
-            //if (meta.containsKey('organism') && meta.organism instanceof List) {
-             //   meta.organism = meta.organism ? meta.organism[0] : null
-            //} 
-            [meta, fasta]
+            meta, fasta, gbk, protein, gff ->
+            [meta, fasta, gbk, protein, gff]
         }
         .set { ch_samplesheet }
 
-     ch_samplesheet.view { "$it" }
+    ch_samplesheet.view { "$it" }
+
+    ch_samplesheet
+        .map { meta, fasta, gbk, protein, gff ->
+        [meta, fasta, protein, gff]
+        }
+        .set { ch_amrfinder_input }
 
 	
 
     // Run the MAKE_DB subworkflow with real data
-    MAKE_DB(ch_samplesheet)
+    MAKE_DB(ch_samplesheet, ch_amrfinder_input)
     
     // SUBWORKFLOW: Run completion tasks
    // PIPELINE_COMPLETION (

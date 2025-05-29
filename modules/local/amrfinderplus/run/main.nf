@@ -1,5 +1,5 @@
 process AMRFINDERPLUS_RUN {
-    tag "$genomeID"
+    tag "$meta.id"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -8,12 +8,12 @@ process AMRFINDERPLUS_RUN {
         'biocontainers/ncbi-amrfinderplus:3.12.8--h283d18e_0' }"
 
     input:
-    tuple val(genomeID), path(genome)
+    tuple val(meta), path(fasta), path(protein), path(gff)
     path db
 
     output:
-    tuple val(genomeID), path("${prefix}.tsv")          , emit: report
-    tuple val(genomeID), path("${prefix}-mutations.tsv"), emit: mutation_report, optional: true
+    tuple val(meta), path("${prefix}.tsv")          , emit: report
+    tuple val(meta), path("${prefix}-mutations.tsv"), emit: mutation_report, optional: true
     path "versions.yml"                             , emit: versions
     env VER                                         , emit: tool_version
     env DBVER                                       , emit: db_version
@@ -21,24 +21,37 @@ process AMRFINDERPLUS_RUN {
     when:
     task.ext.when == null || task.ext.when
 
-    publishDir "${params.outdir}/amrfinderplus", mode: params.publish_dir_mode
-
     script:
     def args = task.ext.args ?: ''
-    def is_compressed_fasta = genome.getName().endsWith(".gz") ? true : false
-    def is_compressed_db = db.getName().endsWith(".gz") ? true : false
-    prefix = task.ext.prefix ?: "${genomeID}"
-    organism_param = params.organism ? "--organism ${params.organism} --mutation_all ${prefix}-mutations.tsv" : ""
-    fasta_name = genome.getName().replace(".gz", "")
-    fasta_param = "-n"
-   // if (meta.containsKey("is_proteins")) {
-       // if (meta.is_proteins) {
-           // fasta_param = "-p"
-       // }
-   // }
+    def is_compressed_fasta   = fasta.getName().endsWith(".gz") ? true : false
+    def is_compressed_protein = protein.getName().endsWith(".gz") ? true : false
+    def is_compressed_gff     = gff.getName().endsWith(".gz") ? true : false  
+    def is_compressed_db      = db.getName().endsWith(".gz") ? true : false
+    prefix = task.ext.prefix ?: "${meta.id}"
+    organism_param = meta.containsKey("organism") ? "--organism ${meta.organism} --mutation_all ${prefix}-mutations.tsv" : ""
+    fasta_name   = fasta.getName().replace(".gz", "")
+    protein_name = protein.getName().replace(".gz", "")
+    gff_name     = gff.getName().replace(".gz", "")
+    annotation_format = gff_name.endsWith(".gff") ? "prokka" : "bakta"
+    
+   // fasta_param = "-n"
+    //if (meta.containsKey("is_proteins")) {
+        //if (meta.is_proteins) {
+            //fasta_param = "-p"
+        //}
+    //}
+
     """
     if [ "$is_compressed_fasta" == "true" ]; then
-        gzip -c -d $genome > $fasta_name
+        gzip -c -d $fasta > $fasta_name
+    fi
+
+    if [ "$is_compressed_protein" == "true" ]; then
+        gzip -c -d $protein > $protein_name
+    fi
+
+    if [ "$is_compressed_gff" == "true" ]; then
+        gzip -c -d $gff > $gff_name
     fi
 
     if [ "$is_compressed_db" == "true" ]; then
@@ -48,8 +61,13 @@ process AMRFINDERPLUS_RUN {
         mv $db amrfinderdb
     fi
 
+    # combined amrfinderplus run
+
     amrfinder \\
-        $fasta_param $fasta_name \\
+        -n $fasta_name \\
+        -p $protein_name \\
+        --gff $gff_name \\
+        --annotation_format $annotation_format \\
         $organism_param \\
         $args \\
         --database amrfinderdb \\
