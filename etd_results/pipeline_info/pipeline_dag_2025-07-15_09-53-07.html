@@ -1,0 +1,109 @@
+<!--
+  ~ Copyright 2013-2024, Seqera Labs
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<html>
+<head>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+</head>
+<body>
+<pre class="mermaid" style="text-align: center;">
+flowchart TB
+    subgraph " "
+    v2["Channel.fromList"]
+    end
+    subgraph " "
+    v5[" "]
+    v8[" "]
+    v11[" "]
+    v14[" "]
+    v16[" "]
+    v18["DBVER"]
+    v19["VER"]
+    v20[" "]
+    v21[" "]
+    v22["amr_reports"]
+    v24[" "]
+    v25[" "]
+    v26[" "]
+    v27["mobtyper_results"]
+    v28[" "]
+    v30[" "]
+    v31[" "]
+    v32[" "]
+    v33[" "]
+    v34[" "]
+    v35[" "]
+    v36[" "]
+    v37[" "]
+    v38[" "]
+    v39[" "]
+    v40[" "]
+    v41[" "]
+    end
+    v6([PARSE_GBK])
+    subgraph MAKE_DB
+    v15([AMRFINDERPLUS_UPDATE])
+    v17([AMRFINDERPLUS_RUN])
+    v23([MOBSUITE_RECON])
+    v29([PHISPY])
+    end
+    v3(( ))
+    v7(( ))
+    v9(( ))
+    v12(( ))
+    v2 --> v3
+    v3 --> v5
+    v3 --> v6
+    v6 --> v7
+    v6 --> v9
+    v6 --> v12
+    v7 --> v8
+    v9 --> v11
+    v12 --> v14
+    v15 --> v17
+    v15 --> v16
+    v9 --> v17
+    v17 --> v22
+    v17 --> v21
+    v17 --> v20
+    v17 --> v19
+    v17 --> v18
+    v12 --> v23
+    v23 --> v28
+    v23 --> v27
+    v23 --> v26
+    v23 --> v25
+    v23 --> v24
+    v3 --> v29
+    v29 --> v41
+    v29 --> v40
+    v29 --> v39
+    v29 --> v38
+    v29 --> v37
+    v29 --> v36
+    v29 --> v35
+    v29 --> v34
+    v29 --> v33
+    v29 --> v32
+    v29 --> v31
+    v29 --> v30
+
+</pre>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true, maxTextSize: Number.MAX_SAFE_INTEGER, maxEdges: Number.MAX_SAFE_INTEGER });
+</script>
+</body>
+</html>

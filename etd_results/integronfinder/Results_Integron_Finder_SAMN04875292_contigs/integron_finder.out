@@ -1,0 +1,644 @@
+
+**************************************************************************
+ ___       _                               _____ _           _
+|_ _|_ __ | |_ ___  __ _ _ __ ___  _ __   |  ___(_)_ __   __| | ___ _ __
+ | || '_ \| __/ _ \/ _` | '__/ _ \| '_ \  | |_  | | '_ \ / _` |/ _ \ '__|
+ | || | | | ||  __/ (_| | | | (_) | | | | |  _| | | | | | (_| |  __/ |
+|___|_| |_|\__\___|\__, |_|  \___/|_| |_| |_|   |_|_| |_|\__,_|\___|_|
+                   |___/
+
+**************************************************************************
+
+integron_finder version 2.0.5 
+Using:
+ - Python 3.12.3 | packaged by conda-forge | (main, Apr 15 2024, 18:38:13) [GCC 12.3.0]
+ - numpy 1.26.4
+ - pandas 2.2.2
+ - matplolib 3.8.4
+ - biopython 1.83
+
+ - Prodigal V2.6.3: February, 2016
+ - INFERNAL 1.1.4 (Dec 2020)
+ - HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+
+Authors:
+ - Jean Cury, Bertrand Neron, Eduardo Rocha,
+
+Citation:
+
+ Néron, B.; Littner, E.; Haudiquet, M.; Perrin, A.; Cury, J.; Rocha, E.P.C. 
+ IntegronFinder 2.0: Identification and Analysis of Integrons across Bacteria, with a Focus on Antibiotic Resistance in Klebsiella. 
+ Microorganisms 2022, 10, 700. https://doi.org/10.3390/microorganisms10040700
+
+ If you use --func-annot in conjunction with file NCBIfam-AMRFinder.hmm please also cite
+
+ Haft, DH et al., Nucleic Acids Res. 2018 Jan 4;46(D1):D851-D860
+ PMID: 29112715
+ 
+
+                     =======================
+
+integron_finder is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+integron_finder is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program (COPYING file).
+If not, see <http://www.gnu.org/licenses/>.
+
+                     =======================
+
+command used: integron_finder --cpu 2 SAMN04875292_contigs.fasta
+
+                     =======================
+
+[0m
+INFO     : ############ Processing replicon AJDFLDLD_1 (1/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_1, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_1
+INFO     : ############ Processing replicon AJDFLDLD_2 (2/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_2, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_2
+INFO     : ############ Processing replicon AJDFLDLD_3 (3/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_3, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_3
+INFO     : ############ Processing replicon AJDFLDLD_4 (4/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_4, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_4
+INFO     : ############ Processing replicon AJDFLDLD_5 (5/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_5, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_5
+INFO     : ############ Processing replicon AJDFLDLD_6 (6/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_6, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_6
+INFO     : ############ Processing replicon AJDFLDLD_7 (7/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_7, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_7
+INFO     : ############ Processing replicon AJDFLDLD_8 (8/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_8, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_8
+INFO     : ############ Processing replicon AJDFLDLD_9 (9/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_9, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_9
+INFO     : ############ Processing replicon AJDFLDLD_10 (10/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_10, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_10
+INFO     : ############ Processing replicon AJDFLDLD_11 (11/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_11, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_11
+INFO     : ############ Processing replicon AJDFLDLD_12 (12/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_12, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_12
+INFO     : ############ Processing replicon AJDFLDLD_13 (13/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_13, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_13
+INFO     : ############ Processing replicon AJDFLDLD_14 (14/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_14, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_14
+INFO     : ############ Processing replicon AJDFLDLD_15 (15/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_15, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_15
+INFO     : ############ Processing replicon AJDFLDLD_16 (16/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_16, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_16
+INFO     : ############ Processing replicon AJDFLDLD_17 (17/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_17, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_17
+INFO     : ############ Processing replicon AJDFLDLD_18 (18/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_18, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_18
+INFO     : ############ Processing replicon AJDFLDLD_19 (19/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_19, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_19
+INFO     : ############ Processing replicon AJDFLDLD_20 (20/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_20, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_20
+INFO     : ############ Processing replicon AJDFLDLD_21 (21/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_21, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_21
+INFO     : ############ Processing replicon AJDFLDLD_22 (22/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_22, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_22
+INFO     : ############ Processing replicon AJDFLDLD_23 (23/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_23, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_23
+INFO     : ############ Processing replicon AJDFLDLD_24 (24/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_24, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_24
+INFO     : ############ Processing replicon AJDFLDLD_25 (25/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_25, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_25
+INFO     : ############ Processing replicon AJDFLDLD_26 (26/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_26, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_26
+INFO     : ############ Processing replicon AJDFLDLD_27 (27/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_27, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_27
+INFO     : ############ Processing replicon AJDFLDLD_28 (28/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_28, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_28
+INFO     : ############ Processing replicon AJDFLDLD_29 (29/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_29, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_29
+INFO     : ############ Processing replicon AJDFLDLD_30 (30/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_30, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_30
+INFO     : ############ Processing replicon AJDFLDLD_31 (31/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_31, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_31
+INFO     : ############ Processing replicon AJDFLDLD_32 (32/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_32, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_32
+INFO     : ############ Processing replicon AJDFLDLD_33 (33/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_33, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_33
+INFO     : ############ Processing replicon AJDFLDLD_34 (34/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_34, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_34
+INFO     : ############ Processing replicon AJDFLDLD_35 (35/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_35, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_35
+INFO     : ############ Processing replicon AJDFLDLD_36 (36/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_36, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_36
+INFO     : ############ Processing replicon AJDFLDLD_37 (37/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_37, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_37
+INFO     : ############ Processing replicon AJDFLDLD_38 (38/69) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/96/3fa1adfdcb5f3472aea21e6097901b/Results_Integron_Finder_SAMN04875292_contigs/tmp_AJDFLDLD_38/AJDFLDLD_38.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon AJDFLDLD_38 ############
+INFO     : ############ Processing replicon AJDFLDLD_39 (39/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_39, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_39
+INFO     : ############ Processing replicon AJDFLDLD_40 (40/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_40, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_40
+INFO     : ############ Processing replicon AJDFLDLD_41 (41/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_41, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_41
+INFO     : ############ Processing replicon AJDFLDLD_42 (42/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_42, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_42
+INFO     : ############ Processing replicon AJDFLDLD_43 (43/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_43, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_43
+INFO     : ############ Processing replicon AJDFLDLD_44 (44/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_44, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_44
+INFO     : ############ Processing replicon AJDFLDLD_45 (45/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_45, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_45
+INFO     : ############ Processing replicon AJDFLDLD_46 (46/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_46, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_46
+INFO     : ############ Processing replicon AJDFLDLD_47 (47/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_47, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_47
+INFO     : ############ Processing replicon AJDFLDLD_48 (48/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_48, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_48
+INFO     : ############ Processing replicon AJDFLDLD_49 (49/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_49, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_49
+INFO     : ############ Processing replicon AJDFLDLD_50 (50/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_50, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_50
+INFO     : ############ Processing replicon AJDFLDLD_51 (51/69) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/96/3fa1adfdcb5f3472aea21e6097901b/Results_Integron_Finder_SAMN04875292_contigs/tmp_AJDFLDLD_51/AJDFLDLD_51.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon AJDFLDLD_51 ############
+INFO     : ############ Processing replicon AJDFLDLD_52 (52/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_52, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_52
+INFO     : ############ Processing replicon AJDFLDLD_53 (53/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_53, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_53
+INFO     : ############ Processing replicon AJDFLDLD_54 (54/69) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/96/3fa1adfdcb5f3472aea21e6097901b/Results_Integron_Finder_SAMN04875292_contigs/tmp_AJDFLDLD_54/AJDFLDLD_54.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon AJDFLDLD_54 ############
+INFO     : ############ Processing replicon AJDFLDLD_55 (55/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_55, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_55
+INFO     : ############ Processing replicon AJDFLDLD_56 (56/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_56, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_56
+INFO     : ############ Processing replicon AJDFLDLD_57 (57/69) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/96/3fa1adfdcb5f3472aea21e6097901b/Results_Integron_Finder_SAMN04875292_contigs/tmp_AJDFLDLD_57/AJDFLDLD_57.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon AJDFLDLD_57 ############
+INFO     : ############ Processing replicon AJDFLDLD_58 (58/69) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/96/3fa1adfdcb5f3472aea21e6097901b/Results_Integron_Finder_SAMN04875292_contigs/tmp_AJDFLDLD_58/AJDFLDLD_58.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon AJDFLDLD_58 ############
+INFO     : ############ Processing replicon AJDFLDLD_59 (59/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_59, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_59
+INFO     : ############ Processing replicon AJDFLDLD_60 (60/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_60, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_60
+INFO     : ############ Processing replicon AJDFLDLD_61 (61/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_61, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_61
+INFO     : ############ Processing replicon AJDFLDLD_62 (62/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_62, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_62
+INFO     : ############ Processing replicon AJDFLDLD_63 (63/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_63, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_63
+INFO     : ############ Processing replicon AJDFLDLD_64 (64/69) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/96/3fa1adfdcb5f3472aea21e6097901b/Results_Integron_Finder_SAMN04875292_contigs/tmp_AJDFLDLD_64/AJDFLDLD_64.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon AJDFLDLD_64 ############
+INFO     : ############ Processing replicon AJDFLDLD_65 (65/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_65, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_65
+INFO     : ############ Processing replicon AJDFLDLD_66 (66/69) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/96/3fa1adfdcb5f3472aea21e6097901b/Results_Integron_Finder_SAMN04875292_contigs/tmp_AJDFLDLD_66/AJDFLDLD_66.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon AJDFLDLD_66 ############
+INFO     : ############ Processing replicon AJDFLDLD_67 (67/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_67, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_67
+INFO     : ############ Processing replicon AJDFLDLD_68 (68/69) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon AJDFLDLD_68, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon AJDFLDLD_68
+INFO     : ############ Processing replicon AJDFLDLD_69 (69/69) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/96/3fa1adfdcb5f3472aea21e6097901b/Results_Integron_Finder_SAMN04875292_contigs/tmp_AJDFLDLD_69/AJDFLDLD_69.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon AJDFLDLD_69 ############
+INFO     : Merging integrons results.
+

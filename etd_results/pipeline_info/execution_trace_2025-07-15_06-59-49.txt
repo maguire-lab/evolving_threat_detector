@@ -1,0 +1,4 @@
+task_id	hash	native_id	name	status	exit	submit	duration	realtime	%cpu	peak_rss	peak_vmem	rchar	wchar
+2	db/46a3cf	162335	MAKE_DB:AMRFINDERPLUS_UPDATE (update)	CACHED	0	2025-07-14 19:21:10.859	24.7s	24s	63.0%	21.6 MB	166 MB	569.8 MB	497.2 MB
+1	a2/7082ae	166916	PARSE_GBK (SAMN04875287)	FAILED	1	2025-07-15 06:59:54.663	153ms	65ms	-	-	-	-	-
+3	87/ae25c7	166909	MAKE_DB:PHISPY (SAMN04875287)	FAILED	1	2025-07-15 06:59:54.647	1.4s	1.4s	-	-	-	-	-

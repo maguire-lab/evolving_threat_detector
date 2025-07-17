@@ -1,0 +1,482 @@
+
+**************************************************************************
+ ___       _                               _____ _           _
+|_ _|_ __ | |_ ___  __ _ _ __ ___  _ __   |  ___(_)_ __   __| | ___ _ __
+ | || '_ \| __/ _ \/ _` | '__/ _ \| '_ \  | |_  | | '_ \ / _` |/ _ \ '__|
+ | || | | | ||  __/ (_| | | | (_) | | | | |  _| | | | | | (_| |  __/ |
+|___|_| |_|\__\___|\__, |_|  \___/|_| |_| |_|   |_|_| |_|\__,_|\___|_|
+                   |___/
+
+**************************************************************************
+
+integron_finder version 2.0.5 
+Using:
+ - Python 3.12.3 | packaged by conda-forge | (main, Apr 15 2024, 18:38:13) [GCC 12.3.0]
+ - numpy 1.26.4
+ - pandas 2.2.2
+ - matplolib 3.8.4
+ - biopython 1.83
+
+ - Prodigal V2.6.3: February, 2016
+ - INFERNAL 1.1.4 (Dec 2020)
+ - HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+
+Authors:
+ - Jean Cury, Bertrand Neron, Eduardo Rocha,
+
+Citation:
+
+ Néron, B.; Littner, E.; Haudiquet, M.; Perrin, A.; Cury, J.; Rocha, E.P.C. 
+ IntegronFinder 2.0: Identification and Analysis of Integrons across Bacteria, with a Focus on Antibiotic Resistance in Klebsiella. 
+ Microorganisms 2022, 10, 700. https://doi.org/10.3390/microorganisms10040700
+
+ If you use --func-annot in conjunction with file NCBIfam-AMRFinder.hmm please also cite
+
+ Haft, DH et al., Nucleic Acids Res. 2018 Jan 4;46(D1):D851-D860
+ PMID: 29112715
+ 
+
+                     =======================
+
+integron_finder is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+integron_finder is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program (COPYING file).
+If not, see <http://www.gnu.org/licenses/>.
+
+                     =======================
+
+command used: integron_finder --cpu 2 SAMN04875284_contigs.fasta
+
+                     =======================
+
+[0m
+INFO     : ############ Processing replicon ECLLOALE_1 (1/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_1, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_1
+INFO     : ############ Processing replicon ECLLOALE_2 (2/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_2, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_2
+INFO     : ############ Processing replicon ECLLOALE_3 (3/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_3, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_3
+INFO     : ############ Processing replicon ECLLOALE_4 (4/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_4, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_4
+INFO     : ############ Processing replicon ECLLOALE_5 (5/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_5, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_5
+INFO     : ############ Processing replicon ECLLOALE_6 (6/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_6, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_6
+INFO     : ############ Processing replicon ECLLOALE_7 (7/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_7, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_7
+INFO     : ############ Processing replicon ECLLOALE_8 (8/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_8, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_8
+INFO     : ############ Processing replicon ECLLOALE_9 (9/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_9, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_9
+INFO     : ############ Processing replicon ECLLOALE_10 (10/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_10, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_10
+INFO     : ############ Processing replicon ECLLOALE_11 (11/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_11, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_11
+INFO     : ############ Processing replicon ECLLOALE_12 (12/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_12, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_12
+INFO     : ############ Processing replicon ECLLOALE_13 (13/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_13, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_13
+INFO     : ############ Processing replicon ECLLOALE_14 (14/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_14, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_14
+INFO     : ############ Processing replicon ECLLOALE_15 (15/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_15, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_15
+INFO     : ############ Processing replicon ECLLOALE_16 (16/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_16, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_16
+INFO     : ############ Processing replicon ECLLOALE_17 (17/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_17, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_17
+INFO     : ############ Processing replicon ECLLOALE_18 (18/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_18, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_18
+INFO     : ############ Processing replicon ECLLOALE_19 (19/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_19, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_19
+INFO     : ############ Processing replicon ECLLOALE_20 (20/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_20, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_20
+INFO     : ############ Processing replicon ECLLOALE_21 (21/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_21, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_21
+INFO     : ############ Processing replicon ECLLOALE_22 (22/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_22, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_22
+INFO     : ############ Processing replicon ECLLOALE_23 (23/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_23, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_23
+INFO     : ############ Processing replicon ECLLOALE_24 (24/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_24, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_24
+INFO     : ############ Processing replicon ECLLOALE_25 (25/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_25, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_25
+INFO     : ############ Processing replicon ECLLOALE_26 (26/51) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/76/0390aab251e4349a8eabecef559faf/Results_Integron_Finder_SAMN04875284_contigs/tmp_ECLLOALE_26/ECLLOALE_26.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ECLLOALE_26 ############
+INFO     : ############ Processing replicon ECLLOALE_27 (27/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_27, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_27
+INFO     : ############ Processing replicon ECLLOALE_28 (28/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_28, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_28
+INFO     : ############ Processing replicon ECLLOALE_29 (29/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_29, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_29
+INFO     : ############ Processing replicon ECLLOALE_30 (30/51) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/76/0390aab251e4349a8eabecef559faf/Results_Integron_Finder_SAMN04875284_contigs/tmp_ECLLOALE_30/ECLLOALE_30.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ECLLOALE_30 ############
+INFO     : ############ Processing replicon ECLLOALE_31 (31/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_31, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_31
+INFO     : ############ Processing replicon ECLLOALE_32 (32/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_32, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_32
+INFO     : ############ Processing replicon ECLLOALE_33 (33/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_33, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_33
+INFO     : ############ Processing replicon ECLLOALE_34 (34/51) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/76/0390aab251e4349a8eabecef559faf/Results_Integron_Finder_SAMN04875284_contigs/tmp_ECLLOALE_34/ECLLOALE_34.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ECLLOALE_34 ############
+INFO     : ############ Processing replicon ECLLOALE_35 (35/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_35, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_35
+INFO     : ############ Processing replicon ECLLOALE_36 (36/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_36, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_36
+INFO     : ############ Processing replicon ECLLOALE_37 (37/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_37, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_37
+INFO     : ############ Processing replicon ECLLOALE_38 (38/51) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/76/0390aab251e4349a8eabecef559faf/Results_Integron_Finder_SAMN04875284_contigs/tmp_ECLLOALE_38/ECLLOALE_38.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ECLLOALE_38 ############
+INFO     : ############ Processing replicon ECLLOALE_39 (39/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_39, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_39
+INFO     : ############ Processing replicon ECLLOALE_40 (40/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_40, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_40
+INFO     : ############ Processing replicon ECLLOALE_41 (41/51) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/76/0390aab251e4349a8eabecef559faf/Results_Integron_Finder_SAMN04875284_contigs/tmp_ECLLOALE_41/ECLLOALE_41.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ECLLOALE_41 ############
+INFO     : ############ Processing replicon ECLLOALE_42 (42/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_42, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_42
+INFO     : ############ Processing replicon ECLLOALE_43 (43/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_43, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_43
+INFO     : ############ Processing replicon ECLLOALE_44 (44/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_44, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_44
+INFO     : ############ Processing replicon ECLLOALE_45 (45/51) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/76/0390aab251e4349a8eabecef559faf/Results_Integron_Finder_SAMN04875284_contigs/tmp_ECLLOALE_45/ECLLOALE_45.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ECLLOALE_45 ############
+INFO     : ############ Processing replicon ECLLOALE_46 (46/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_46, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_46
+INFO     : ############ Processing replicon ECLLOALE_47 (47/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_47, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_47
+INFO     : ############ Processing replicon ECLLOALE_48 (48/51) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/76/0390aab251e4349a8eabecef559faf/Results_Integron_Finder_SAMN04875284_contigs/tmp_ECLLOALE_48/ECLLOALE_48.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ECLLOALE_48 ############
+INFO     : ############ Processing replicon ECLLOALE_49 (49/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_49, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_49
+INFO     : ############ Processing replicon ECLLOALE_50 (50/51) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ECLLOALE_50, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ECLLOALE_50
+INFO     : ############ Processing replicon ECLLOALE_51 (51/51) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/76/0390aab251e4349a8eabecef559faf/Results_Integron_Finder_SAMN04875284_contigs/tmp_ECLLOALE_51/ECLLOALE_51.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ECLLOALE_51 ############
+INFO     : Merging integrons results.
+

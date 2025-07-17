@@ -1,0 +1,9 @@
+name: parsegbk
+description: Parses a GBK file into nucleotide, protein, and GFF files
+keywords:
+  - gbk
+  - fasta
+  - gff
+  - parsing
+tools:
+  - custom

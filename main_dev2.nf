@@ -15,10 +15,11 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { MAKE_DB } from './subworkflows/local/make_db'
+include { MAKE_DB                 } from './subworkflows/local/make_db'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_etd_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_etd_pipeline'
 include { samplesheetToList       } from 'plugin/nf-schema'
+include { PARSE_GBK               } from './modules/local/parsegbk/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -42,23 +43,36 @@ workflow {
     Channel
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
         .map {
-            meta, fasta, gbk, protein, gff ->
-            [meta, fasta, gbk, protein, gff]
+            meta, gbk ->
+            [meta, gbk]
         }
         .set { ch_samplesheet }
 
     ch_samplesheet.view { "$it" }
 
-    ch_samplesheet
-        .map { meta, fasta, gbk, protein, gff ->
-        [meta, fasta, protein, gff]
+    ch_samplesheet | PARSE_GBK
+
+    PARSE_GBK.out
+        .map { 
+            meta, genome, protein, gff ->
+            tuple(meta, genome, protein, gff)
         }
         .set { ch_amrfinder_input }
 
-	
+    ch_amrfinder_input.view { "$it" }
 
-    // Run the MAKE_DB subworkflow with real data
-    MAKE_DB(ch_samplesheet, ch_amrfinder_input)
+    PARSE_GBK.out
+    .map { tuple ->
+        def (meta, genome, protein, gff) = tuple
+        [meta, genome]
+    }
+    .set { ch_genomes }
+
+    ch_genomes.view { "$it" }
+
+
+    // Run the MAKE_DB subworkflow
+    MAKE_DB(ch_samplesheet, ch_amrfinder_input, ch_genomes)
     
     // SUBWORKFLOW: Run completion tasks
    // PIPELINE_COMPLETION (

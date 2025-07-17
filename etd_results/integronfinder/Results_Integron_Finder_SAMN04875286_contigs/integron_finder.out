@@ -1,0 +1,647 @@
+
+**************************************************************************
+ ___       _                               _____ _           _
+|_ _|_ __ | |_ ___  __ _ _ __ ___  _ __   |  ___(_)_ __   __| | ___ _ __
+ | || '_ \| __/ _ \/ _` | '__/ _ \| '_ \  | |_  | | '_ \ / _` |/ _ \ '__|
+ | || | | | ||  __/ (_| | | | (_) | | | | |  _| | | | | | (_| |  __/ |
+|___|_| |_|\__\___|\__, |_|  \___/|_| |_| |_|   |_|_| |_|\__,_|\___|_|
+                   |___/
+
+**************************************************************************
+
+integron_finder version 2.0.5 
+Using:
+ - Python 3.12.3 | packaged by conda-forge | (main, Apr 15 2024, 18:38:13) [GCC 12.3.0]
+ - numpy 1.26.4
+ - pandas 2.2.2
+ - matplolib 3.8.4
+ - biopython 1.83
+
+ - Prodigal V2.6.3: February, 2016
+ - INFERNAL 1.1.4 (Dec 2020)
+ - HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+
+Authors:
+ - Jean Cury, Bertrand Neron, Eduardo Rocha,
+
+Citation:
+
+ Néron, B.; Littner, E.; Haudiquet, M.; Perrin, A.; Cury, J.; Rocha, E.P.C. 
+ IntegronFinder 2.0: Identification and Analysis of Integrons across Bacteria, with a Focus on Antibiotic Resistance in Klebsiella. 
+ Microorganisms 2022, 10, 700. https://doi.org/10.3390/microorganisms10040700
+
+ If you use --func-annot in conjunction with file NCBIfam-AMRFinder.hmm please also cite
+
+ Haft, DH et al., Nucleic Acids Res. 2018 Jan 4;46(D1):D851-D860
+ PMID: 29112715
+ 
+
+                     =======================
+
+integron_finder is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+integron_finder is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program (COPYING file).
+If not, see <http://www.gnu.org/licenses/>.
+
+                     =======================
+
+command used: integron_finder --cpu 2 SAMN04875286_contigs.fasta
+
+                     =======================
+
+[0m
+INFO     : ############ Processing replicon ADCFMMLG_1 (1/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_1, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_1
+INFO     : ############ Processing replicon ADCFMMLG_2 (2/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_2, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_2
+INFO     : ############ Processing replicon ADCFMMLG_3 (3/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_3, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_3
+INFO     : ############ Processing replicon ADCFMMLG_4 (4/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_4, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_4
+INFO     : ############ Processing replicon ADCFMMLG_5 (5/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_5, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_5
+INFO     : ############ Processing replicon ADCFMMLG_6 (6/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_6, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_6
+INFO     : ############ Processing replicon ADCFMMLG_7 (7/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_7, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_7
+INFO     : ############ Processing replicon ADCFMMLG_8 (8/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_8, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_8
+INFO     : ############ Processing replicon ADCFMMLG_9 (9/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_9, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_9
+INFO     : ############ Processing replicon ADCFMMLG_10 (10/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_10, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_10
+INFO     : ############ Processing replicon ADCFMMLG_11 (11/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_11, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_11
+INFO     : ############ Processing replicon ADCFMMLG_12 (12/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_12, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_12
+INFO     : ############ Processing replicon ADCFMMLG_13 (13/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_13, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_13
+INFO     : ############ Processing replicon ADCFMMLG_14 (14/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_14, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_14
+INFO     : ############ Processing replicon ADCFMMLG_15 (15/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_15, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_15
+INFO     : ############ Processing replicon ADCFMMLG_16 (16/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_16, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_16
+INFO     : ############ Processing replicon ADCFMMLG_17 (17/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_17, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_17
+INFO     : ############ Processing replicon ADCFMMLG_18 (18/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_18, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_18
+INFO     : ############ Processing replicon ADCFMMLG_19 (19/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_19, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_19
+INFO     : ############ Processing replicon ADCFMMLG_20 (20/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_20, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_20
+INFO     : ############ Processing replicon ADCFMMLG_21 (21/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_21, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_21
+INFO     : ############ Processing replicon ADCFMMLG_22 (22/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_22, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_22
+INFO     : ############ Processing replicon ADCFMMLG_23 (23/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_23, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_23
+INFO     : ############ Processing replicon ADCFMMLG_24 (24/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_24, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_24
+INFO     : ############ Processing replicon ADCFMMLG_25 (25/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_25, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_25
+INFO     : ############ Processing replicon ADCFMMLG_26 (26/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_26, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_26
+INFO     : ############ Processing replicon ADCFMMLG_27 (27/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_27, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_27
+INFO     : ############ Processing replicon ADCFMMLG_28 (28/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_28, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_28
+INFO     : ############ Processing replicon ADCFMMLG_29 (29/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_29, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_29
+INFO     : ############ Processing replicon ADCFMMLG_30 (30/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_30, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_30
+INFO     : ############ Processing replicon ADCFMMLG_31 (31/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_31, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_31
+INFO     : ############ Processing replicon ADCFMMLG_32 (32/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_32, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_32
+INFO     : ############ Processing replicon ADCFMMLG_33 (33/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_33, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_33
+INFO     : ############ Processing replicon ADCFMMLG_34 (34/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_34, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_34
+INFO     : ############ Processing replicon ADCFMMLG_35 (35/71) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/8c/82a81479ebff081b16dbcb3d35e1ca/Results_Integron_Finder_SAMN04875286_contigs/tmp_ADCFMMLG_35/ADCFMMLG_35.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ADCFMMLG_35 ############
+INFO     : ############ Processing replicon ADCFMMLG_36 (36/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_36, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_36
+INFO     : ############ Processing replicon ADCFMMLG_37 (37/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_37, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_37
+INFO     : ############ Processing replicon ADCFMMLG_38 (38/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_38, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_38
+INFO     : ############ Processing replicon ADCFMMLG_39 (39/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_39, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_39
+INFO     : ############ Processing replicon ADCFMMLG_40 (40/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_40, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_40
+INFO     : ############ Processing replicon ADCFMMLG_41 (41/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_41, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_41
+INFO     : ############ Processing replicon ADCFMMLG_42 (42/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_42, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_42
+INFO     : ############ Processing replicon ADCFMMLG_43 (43/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_43, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_43
+INFO     : ############ Processing replicon ADCFMMLG_44 (44/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_44, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_44
+INFO     : ############ Processing replicon ADCFMMLG_45 (45/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_45, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_45
+INFO     : ############ Processing replicon ADCFMMLG_46 (46/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_46, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_46
+INFO     : ############ Processing replicon ADCFMMLG_47 (47/71) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/8c/82a81479ebff081b16dbcb3d35e1ca/Results_Integron_Finder_SAMN04875286_contigs/tmp_ADCFMMLG_47/ADCFMMLG_47.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ADCFMMLG_47 ############
+INFO     : ############ Processing replicon ADCFMMLG_48 (48/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_48, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_48
+INFO     : ############ Processing replicon ADCFMMLG_49 (49/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_49, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_49
+INFO     : ############ Processing replicon ADCFMMLG_50 (50/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_50, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_50
+INFO     : ############ Processing replicon ADCFMMLG_51 (51/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_51, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_51
+INFO     : ############ Processing replicon ADCFMMLG_52 (52/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_52, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_52
+INFO     : ############ Processing replicon ADCFMMLG_53 (53/71) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/8c/82a81479ebff081b16dbcb3d35e1ca/Results_Integron_Finder_SAMN04875286_contigs/tmp_ADCFMMLG_53/ADCFMMLG_53.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ADCFMMLG_53 ############
+INFO     : ############ Processing replicon ADCFMMLG_54 (54/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_54, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_54
+INFO     : ############ Processing replicon ADCFMMLG_55 (55/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_55, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_55
+INFO     : ############ Processing replicon ADCFMMLG_56 (56/71) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/8c/82a81479ebff081b16dbcb3d35e1ca/Results_Integron_Finder_SAMN04875286_contigs/tmp_ADCFMMLG_56/ADCFMMLG_56.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ADCFMMLG_56 ############
+INFO     : ############ Processing replicon ADCFMMLG_57 (57/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_57, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_57
+INFO     : ############ Processing replicon ADCFMMLG_58 (58/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_58, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_58
+INFO     : ############ Processing replicon ADCFMMLG_59 (59/71) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/8c/82a81479ebff081b16dbcb3d35e1ca/Results_Integron_Finder_SAMN04875286_contigs/tmp_ADCFMMLG_59/ADCFMMLG_59.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ADCFMMLG_59 ############
+INFO     : ############ Processing replicon ADCFMMLG_60 (60/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_60, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_60
+INFO     : ############ Processing replicon ADCFMMLG_61 (61/71) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/8c/82a81479ebff081b16dbcb3d35e1ca/Results_Integron_Finder_SAMN04875286_contigs/tmp_ADCFMMLG_61/ADCFMMLG_61.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ADCFMMLG_61 ############
+INFO     : ############ Processing replicon ADCFMMLG_62 (62/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_62, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_62
+INFO     : ############ Processing replicon ADCFMMLG_63 (63/71) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/8c/82a81479ebff081b16dbcb3d35e1ca/Results_Integron_Finder_SAMN04875286_contigs/tmp_ADCFMMLG_63/ADCFMMLG_63.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ADCFMMLG_63 ############
+INFO     : ############ Processing replicon ADCFMMLG_64 (64/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_64, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_64
+INFO     : ############ Processing replicon ADCFMMLG_65 (65/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_65, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_65
+INFO     : ############ Processing replicon ADCFMMLG_66 (66/71) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/8c/82a81479ebff081b16dbcb3d35e1ca/Results_Integron_Finder_SAMN04875286_contigs/tmp_ADCFMMLG_66/ADCFMMLG_66.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ADCFMMLG_66 ############
+INFO     : ############ Processing replicon ADCFMMLG_67 (67/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_67, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_67
+INFO     : ############ Processing replicon ADCFMMLG_68 (68/71) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon ADCFMMLG_68, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon ADCFMMLG_68
+INFO     : ############ Processing replicon ADCFMMLG_69 (69/71) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/8c/82a81479ebff081b16dbcb3d35e1ca/Results_Integron_Finder_SAMN04875286_contigs/tmp_ADCFMMLG_69/ADCFMMLG_69.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ADCFMMLG_69 ############
+INFO     : ############ Processing replicon ADCFMMLG_70 (70/71) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/8c/82a81479ebff081b16dbcb3d35e1ca/Results_Integron_Finder_SAMN04875286_contigs/tmp_ADCFMMLG_70/ADCFMMLG_70.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ADCFMMLG_70 ############
+INFO     : ############ Processing replicon ADCFMMLG_71 (71/71) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/8c/82a81479ebff081b16dbcb3d35e1ca/Results_Integron_Finder_SAMN04875286_contigs/tmp_ADCFMMLG_71/ADCFMMLG_71.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon ADCFMMLG_71 ############
+INFO     : Merging integrons results.
+

@@ -1,0 +1,500 @@
+
+**************************************************************************
+ ___       _                               _____ _           _
+|_ _|_ __ | |_ ___  __ _ _ __ ___  _ __   |  ___(_)_ __   __| | ___ _ __
+ | || '_ \| __/ _ \/ _` | '__/ _ \| '_ \  | |_  | | '_ \ / _` |/ _ \ '__|
+ | || | | | ||  __/ (_| | | | (_) | | | | |  _| | | | | | (_| |  __/ |
+|___|_| |_|\__\___|\__, |_|  \___/|_| |_| |_|   |_|_| |_|\__,_|\___|_|
+                   |___/
+
+**************************************************************************
+
+integron_finder version 2.0.5 
+Using:
+ - Python 3.12.3 | packaged by conda-forge | (main, Apr 15 2024, 18:38:13) [GCC 12.3.0]
+ - numpy 1.26.4
+ - pandas 2.2.2
+ - matplolib 3.8.4
+ - biopython 1.83
+
+ - Prodigal V2.6.3: February, 2016
+ - INFERNAL 1.1.4 (Dec 2020)
+ - HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+
+Authors:
+ - Jean Cury, Bertrand Neron, Eduardo Rocha,
+
+Citation:
+
+ Néron, B.; Littner, E.; Haudiquet, M.; Perrin, A.; Cury, J.; Rocha, E.P.C. 
+ IntegronFinder 2.0: Identification and Analysis of Integrons across Bacteria, with a Focus on Antibiotic Resistance in Klebsiella. 
+ Microorganisms 2022, 10, 700. https://doi.org/10.3390/microorganisms10040700
+
+ If you use --func-annot in conjunction with file NCBIfam-AMRFinder.hmm please also cite
+
+ Haft, DH et al., Nucleic Acids Res. 2018 Jan 4;46(D1):D851-D860
+ PMID: 29112715
+ 
+
+                     =======================
+
+integron_finder is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+integron_finder is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program (COPYING file).
+If not, see <http://www.gnu.org/licenses/>.
+
+                     =======================
+
+command used: integron_finder --cpu 2 SAMN04875287_contigs.fasta
+
+                     =======================
+
+[0m
+INFO     : ############ Processing replicon IKGCNFLN_1 (1/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_1, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_1
+INFO     : ############ Processing replicon IKGCNFLN_2 (2/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_2, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_2
+INFO     : ############ Processing replicon IKGCNFLN_3 (3/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_3, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_3
+INFO     : ############ Processing replicon IKGCNFLN_4 (4/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_4, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_4
+INFO     : ############ Processing replicon IKGCNFLN_5 (5/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_5, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_5
+INFO     : ############ Processing replicon IKGCNFLN_6 (6/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_6, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_6
+INFO     : ############ Processing replicon IKGCNFLN_7 (7/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_7, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_7
+INFO     : ############ Processing replicon IKGCNFLN_8 (8/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_8, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_8
+INFO     : ############ Processing replicon IKGCNFLN_9 (9/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_9, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_9
+INFO     : ############ Processing replicon IKGCNFLN_10 (10/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_10, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_10
+INFO     : ############ Processing replicon IKGCNFLN_11 (11/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_11, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_11
+INFO     : ############ Processing replicon IKGCNFLN_12 (12/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_12, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_12
+INFO     : ############ Processing replicon IKGCNFLN_13 (13/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_13, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_13
+INFO     : ############ Processing replicon IKGCNFLN_14 (14/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_14, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_14
+INFO     : ############ Processing replicon IKGCNFLN_15 (15/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_15, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_15
+INFO     : ############ Processing replicon IKGCNFLN_16 (16/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_16, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_16
+INFO     : ############ Processing replicon IKGCNFLN_17 (17/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_17, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_17
+INFO     : ############ Processing replicon IKGCNFLN_18 (18/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_18, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_18
+INFO     : ############ Processing replicon IKGCNFLN_19 (19/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_19, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_19
+INFO     : ############ Processing replicon IKGCNFLN_20 (20/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_20, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_20
+INFO     : ############ Processing replicon IKGCNFLN_21 (21/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_21, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_21
+INFO     : ############ Processing replicon IKGCNFLN_22 (22/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_22, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_22
+INFO     : ############ Processing replicon IKGCNFLN_23 (23/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_23, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_23
+INFO     : ############ Processing replicon IKGCNFLN_24 (24/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_24, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_24
+INFO     : ############ Processing replicon IKGCNFLN_25 (25/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_25, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_25
+INFO     : ############ Processing replicon IKGCNFLN_26 (26/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_26, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_26
+INFO     : ############ Processing replicon IKGCNFLN_27 (27/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_27, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_27
+INFO     : ############ Processing replicon IKGCNFLN_28 (28/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_28, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_28
+INFO     : ############ Processing replicon IKGCNFLN_29 (29/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_29, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_29
+INFO     : ############ Processing replicon IKGCNFLN_30 (30/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_30, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_30
+INFO     : ############ Processing replicon IKGCNFLN_31 (31/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_31, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_31
+INFO     : ############ Processing replicon IKGCNFLN_32 (32/53) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/4b/ca3ce1bef0b687103b2db729b1c333/Results_Integron_Finder_SAMN04875287_contigs/tmp_IKGCNFLN_32/IKGCNFLN_32.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon IKGCNFLN_32 ############
+INFO     : ############ Processing replicon IKGCNFLN_33 (33/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_33, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_33
+INFO     : ############ Processing replicon IKGCNFLN_34 (34/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_34, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_34
+INFO     : ############ Processing replicon IKGCNFLN_35 (35/53) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/4b/ca3ce1bef0b687103b2db729b1c333/Results_Integron_Finder_SAMN04875287_contigs/tmp_IKGCNFLN_35/IKGCNFLN_35.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon IKGCNFLN_35 ############
+INFO     : ############ Processing replicon IKGCNFLN_36 (36/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_36, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_36
+INFO     : ############ Processing replicon IKGCNFLN_37 (37/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_37, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_37
+INFO     : ############ Processing replicon IKGCNFLN_38 (38/53) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/4b/ca3ce1bef0b687103b2db729b1c333/Results_Integron_Finder_SAMN04875287_contigs/tmp_IKGCNFLN_38/IKGCNFLN_38.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon IKGCNFLN_38 ############
+INFO     : ############ Processing replicon IKGCNFLN_39 (39/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_39, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_39
+INFO     : ############ Processing replicon IKGCNFLN_40 (40/53) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/4b/ca3ce1bef0b687103b2db729b1c333/Results_Integron_Finder_SAMN04875287_contigs/tmp_IKGCNFLN_40/IKGCNFLN_40.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon IKGCNFLN_40 ############
+INFO     : ############ Processing replicon IKGCNFLN_41 (41/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_41, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_41
+INFO     : ############ Processing replicon IKGCNFLN_42 (42/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_42, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_42
+INFO     : ############ Processing replicon IKGCNFLN_43 (43/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_43, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_43
+INFO     : ############ Processing replicon IKGCNFLN_44 (44/53) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/4b/ca3ce1bef0b687103b2db729b1c333/Results_Integron_Finder_SAMN04875287_contigs/tmp_IKGCNFLN_44/IKGCNFLN_44.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon IKGCNFLN_44 ############
+INFO     : ############ Processing replicon IKGCNFLN_45 (45/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_45, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_45
+INFO     : ############ Processing replicon IKGCNFLN_46 (46/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_46, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_46
+INFO     : ############ Processing replicon IKGCNFLN_47 (47/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_47, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_47
+INFO     : ############ Processing replicon IKGCNFLN_48 (48/53) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/4b/ca3ce1bef0b687103b2db729b1c333/Results_Integron_Finder_SAMN04875287_contigs/tmp_IKGCNFLN_48/IKGCNFLN_48.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon IKGCNFLN_48 ############
+INFO     : ############ Processing replicon IKGCNFLN_49 (49/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_49, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_49
+INFO     : ############ Processing replicon IKGCNFLN_50 (50/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_50, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_50
+INFO     : ############ Processing replicon IKGCNFLN_51 (51/53) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/4b/ca3ce1bef0b687103b2db729b1c333/Results_Integron_Finder_SAMN04875287_contigs/tmp_IKGCNFLN_51/IKGCNFLN_51.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon IKGCNFLN_51 ############
+INFO     : ############ Processing replicon IKGCNFLN_52 (52/53) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon IKGCNFLN_52, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon IKGCNFLN_52
+INFO     : ############ Processing replicon IKGCNFLN_53 (53/53) ############
+
+WARNING  : The protein file: '/home/precious/nf-core-etd/work/4b/ca3ce1bef0b687103b2db729b1c333/Results_Integron_Finder_SAMN04875287_contigs/tmp_IKGCNFLN_53/IKGCNFLN_53.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon IKGCNFLN_53 ############
+INFO     : Merging integrons results.
+
