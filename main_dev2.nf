@@ -70,9 +70,18 @@ workflow {
 
     ch_genomes.view { "$it" }
 
+    PARSE_GBK.out
+    .map { tuple ->
+        def (meta, genome, protein, gff) = tuple
+        [meta, protein]
+    }
+    .set { ch_proteins }
+
+    ch_proteins.view { "$it" }
+
 
     // Run the MAKE_DB subworkflow
-    MAKE_DB(ch_samplesheet, ch_amrfinder_input, ch_genomes)
+    MAKE_DB(ch_samplesheet, ch_amrfinder_input, ch_genomes, ch_proteins)
     
     // SUBWORKFLOW: Run completion tasks
    // PIPELINE_COMPLETION (
