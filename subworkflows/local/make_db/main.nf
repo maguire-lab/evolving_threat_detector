@@ -46,7 +46,7 @@ workflow MAKE_DB {
     //INTEGRONFINDER(ch_genomes)
     
     // Run Phispy
-    PHISPY(ch_samplesheet)
+    //PHISPY(ch_samplesheet)
 
 
     // Run ICEberg annotation

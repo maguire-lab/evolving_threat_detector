@@ -1,0 +1,37 @@
+name: tn3_finder
+description: Predicts Tn3-family transposons associated with type II toxin-antitoxin systems using Tn3+TA_finder
+keywords:
+  - transposons
+  - mobile genetic elements
+  - toxin-antitoxin
+  - Tn3
+tools:
+  - tn3+ta_finder:
+      description: Tn3-family transposon and type II toxin-antitoxin system predictor
+      homepage: https://github.com/danillo-alvarenga/tn3-ta_finder
+      documentation: https://github.com/danillo-alvarenga/tn3-ta_finder
+      licence: AGPL-3.0
+input:
+  - meta:
+      type: map
+      description: Metadata for the input sample
+  - fasta:
+      type: file
+      description: Nucleotide FASTA file of genome
+      pattern: "*.{fasta,fa}"
+output:
+  - report:
+      type: file
+      description: Text report of predicted Tn3 transposons and associated TA systems
+      pattern: "*.txt"
+  - gbk:
+      type: file
+      description: Annotated GenBank file (optional)
+      pattern: "*_*.gbk"
+  - tblastn:
+      type: directory
+      description: tBLASTn intermediate files
+  - info:
+      type: file
+      description: Run metadata
+      pattern: "info.txt"

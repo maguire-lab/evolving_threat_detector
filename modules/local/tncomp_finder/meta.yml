@@ -1,0 +1,36 @@
+name: tncomp_finder
+description: Predicts composite transposons using IS hits from BLAST
+keywords:
+  - transposons
+  - mobile genetic elements
+  - insertion sequences
+tools:
+  - tncomp_finder:
+      description: Composite Transposon Finder
+      homepage: https://github.com/danillo-alvarenga/tncomp_finder
+      documentation: https://github.com/danillo-alvarenga/tncomp_finder
+      licence: AGPL-3.0
+input:
+  - meta:
+      type: map
+      description: Metadata for the input sample
+  - fasta:
+      type: file
+      description: Nucleotide FASTA file of genome
+      pattern: "*.{fasta,fa}"
+output:
+  - report:
+      type: file
+      description: Text report of predicted composite transposons
+      pattern: "*_composite.txt"
+  - gbk:
+      type: file
+      description: Annotated GenBank file (optional)
+      pattern: "*_composite_*.gbk"
+  - blastn:
+      type: directory
+      description: BLASTn intermediate files
+  - info:
+      type: file
+      description: Run metadata
+      pattern: "info.txt"
