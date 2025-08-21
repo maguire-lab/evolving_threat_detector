@@ -1,0 +1,58 @@
+sample_id	molecule_type	primary_cluster_id	secondary_cluster_id	contig_id	size	gc	md5	circularity_status	rep_type(s)	rep_type_accession(s)	relaxase_type(s)	relaxase_type_accession(s)	mpf_type	mpf_type_accession(s)	orit_type(s)	orit_accession(s)	predicted_mobility	mash_nearest_neighbor	mash_neighbor_distance	mash_neighbor_identification	repetitive_dna_id	repetitive_dna_type	filtering_reason
+SAMN04875298	chromosome	-	-	GCILIKDN_1 Staphylococcus aureus strain strain	531855	0.3207171127468953	6b16ed58eabe0662873e6fd473a779e2	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_10 Staphylococcus aureus strain strain	109789	0.3312080445217645	8befb914e38cf363928564a952fe1cc6	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_11 Staphylococcus aureus strain strain	104396	0.3211617303344956	7466386b5bec860e5da0dc8429b0c055	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_12 Staphylococcus aureus strain strain	87867	0.328086767500882	21e4a05e0f301360501d54aa453cc285	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_13 Staphylococcus aureus strain strain	63422	0.34349279429850843	bb940b8fca366f7fbcb8db519743916b	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_14 Staphylococcus aureus strain strain	55242	0.30833423844176533	f6187a95971320eebae406047cee8afc	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_15 Staphylococcus aureus strain strain	53879	0.3359193748955994	6bb13ef38c44563446f989ff7b3a9e82	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_16 Staphylococcus aureus strain strain	45866	0.32243927964069247	a3f5998d3601261f0d3c791be09990de	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_17 Staphylococcus aureus strain strain	37909	0.3346171093935477	1539f5c2b7a3303f7c09384032de52c8	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_18 Staphylococcus aureus strain strain	30065	0.32516214867786464	dc4873060715237e9d53a89dcac6be56	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_19 Staphylococcus aureus strain strain	23436	0.2963816350913125	874f868d6afea5272c99d2871b05c32a	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_2 Staphylococcus aureus strain strain	333130	0.3269774562483115	34baa013043c34391b7c53dab34eabd6	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_20 Staphylococcus aureus strain strain	19828	0.31894290901755096	988bd38d86b3523715c83e659385f6b7	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_21 Staphylococcus aureus strain strain	18600	0.3010215053763441	93f76bd3f1a119f05eb9e0fb71393657	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	plasmid	AA840	AJ227	GCILIKDN_22 Staphylococcus aureus strain strain	18526	0.28673216020727627	34dc271c54615e674767d48a6e2660f8	not tested	rep_cluster_1017,rep_cluster_1733,rep_cluster_2100	000261__GQ900456,CP000737,AP003139	-	-	-	-	MOBQ	AF001314	-	CP030697	0.00181236	Staphylococcus aureus	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_23 Staphylococcus aureus strain strain	17334	0.30800738433137187	56765954becc12f8400cea59ac829a83	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	plasmid	novel_4cfe960d8dc2f5f006a49fc5eeea217c	-	GCILIKDN_24 Staphylococcus aureus strain strain	16042	0.31903752649295597	a27e555b106bc95edd250fbdca8c749e	not tested	-	-	-	-	-	-	-	-	-	KT780704	0.0747985	Staphylococcus aureus subsp. aureus RN4220	KX232516	IS257-3	repetitve element
+SAMN04875298	chromosome	-	-	GCILIKDN_25 Staphylococcus aureus strain strain	12201	0.32005573313662816	2c51a14a98aee5c5c3d7a0b545f9cb13	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_26 Staphylococcus aureus strain strain	5421	0.3403431101272828	192681dd32ff1f7de9aa580ecc3fef34	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	plasmid	AA840	AJ227	GCILIKDN_27 Staphylococcus aureus strain strain	3353	0.3092752758723531	60603efab96e0bc76e482ae2d0995570	not tested	-	-	-	-	-	-	-	-	-	CP030697	0.00181236	Staphylococcus aureus	-	-	-
+SAMN04875298	plasmid	AA840	AJ227	GCILIKDN_28 Staphylococcus aureus strain strain	3221	0.38466314809065505	044db5bcdaa436db9b7cebb6e5251fc0	not tested	-	-	-	-	-	-	-	-	-	CP030697	0.00181236	Staphylococcus aureus	KX077898	ISCco2	repetitve element
+SAMN04875298	plasmid	novel_4cfe960d8dc2f5f006a49fc5eeea217c	-	GCILIKDN_29 Staphylococcus aureus strain strain	2508	0.29784688995215314	12cf1744a72d88a26d6dfac123b8b396	not tested	rep_cluster_1281	000598__NC_005208_00002	-	-	-	-	-	-	-	KT780704	0.0747985	Staphylococcus aureus subsp. aureus RN4220	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_3 Staphylococcus aureus strain strain	283704	0.3358852888926487	ca86f5087080541f157bdd9e66bdfb8d	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	plasmid	AA840	AJ227	GCILIKDN_30 Staphylococcus aureus strain strain	2374	0.2843302443133951	f4642e3f4459b27c797c4be21497310d	not tested	-	-	-	-	-	-	MOB_unknown	NZ_AGFM01000123	-	CP030697	0.00181236	Staphylococcus aureus	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_31 Staphylococcus aureus strain strain	1402	0.31169757489301	1f657427c9117085002cfab739488597	not tested	-	-	-	-	-	-	-	-	-	-	-	-	JX204384	IS1181	repetitve element
+SAMN04875298	chromosome	-	-	GCILIKDN_32 Staphylococcus aureus strain strain	1179	0.3850720949957591	218858d99295e405883f3597f5b12768	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_33 Staphylococcus aureus strain strain	849	0.42402826855123676	b06616e4971c10bde758212a1e5b0b7d	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_34 Staphylococcus aureus strain strain	788	0.29441624365482233	6cf3faa715ee4a2cde33d1cc482690ef	not tested	rep_cluster_1017	000263__NC_013392_00001	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_35 Staphylococcus aureus strain strain	704	0.3409090909090909	f7e4bc4c8e34b190aab2ef5c20c52977	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_36 Staphylococcus aureus strain strain	615	0.3154471544715447	a9b980c270df714e7b54611e9e3480c6	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_37 Staphylococcus aureus strain strain	529	0.4896030245746692	2bc69d8a1d24dbebf4515f5920751492	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_38 Staphylococcus aureus strain strain	442	0.3031674208144796	01ee9a39379851da5d4cc01b660743d7	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_39 Staphylococcus aureus strain strain	390	0.3871794871794872	5e0c696fc1f94e991254923a9dbd2726	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_4 Staphylococcus aureus strain strain	241892	0.3353438724720123	c8438e77dbd01c11e2b552c13d08fe12	not tested	rep_cluster_2250	BX571857	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_40 Staphylococcus aureus strain strain	381	0.4645669291338583	eece62486c27512f239bd7711cdcd09a	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_41 Staphylococcus aureus strain strain	371	0.29380053908355797	4505487eeafb7a4073b3045442c637b3	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_42 Staphylococcus aureus strain strain	351	0.2792022792022792	d3dfd0d08567bae22934a2ba2d764d20	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_43 Staphylococcus aureus strain strain	339	0.5162241887905604	6bd58f922d24a4fcd35ad9e225513ad5	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_44 Staphylococcus aureus strain strain	337	0.3323442136498516	b810f9ba9bc6b3d4a971bf637bd97de1	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_45 Staphylococcus aureus strain strain	308	0.42857142857142855	364821e7bdf3ce38cbb4d395c1793f62	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_46 Staphylococcus aureus strain strain	303	0.29042904290429045	1a0131e789f0afb4ac9b2209b9c7f2c6	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_47 Staphylococcus aureus strain strain	287	0.519163763066202	7a6f87769f2e108741a96cfb64b83d50	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_48 Staphylococcus aureus strain strain	284	0.4225352112676056	5cb398d96959ae182be77ba2c1a315b1	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_49 Staphylococcus aureus strain strain	284	0.35563380281690143	586a38cf70cb7a0bff67c9b90160ad91	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_5 Staphylococcus aureus strain strain	225461	0.3158949884902489	2583a0efe23390491e336cd14ae754ee	not tested	-	-	MOBT	GQ900429_00012	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_50 Staphylococcus aureus strain strain	283	0.3215547703180212	3496d742df74d65aa4ef97a70cccf67e	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_51 Staphylococcus aureus strain strain	275	0.32727272727272727	9a6697e32fc75bf405802926e9adedd2	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_52 Staphylococcus aureus strain strain	251	0.2948207171314741	1f651f9c2b6b396c8660eb374afac77f	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_53 Staphylococcus aureus strain strain	230	0.5260869565217391	89f5d97786afd6fdcf76ffc4d95fbd70	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_54 Staphylococcus aureus strain strain	222	0.536036036036036	b69c374031c65848781001c0d0e7322b	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_55 Staphylococcus aureus strain strain	220	0.40454545454545454	ec8ce74737747a21c5dd5a9802f20a53	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_56 Staphylococcus aureus strain strain	218	0.26146788990825687	eaa5045a41e134f23be2727f316d8ee2	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_57 Staphylococcus aureus strain strain	204	0.3431372549019608	5af6d4b759c254da2e7cfbc6531a4694	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_6 Staphylococcus aureus strain strain	158950	0.3269392890846178	e280536fe9063058632c1c88e34e2056	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_7 Staphylococcus aureus strain strain	145456	0.32612611373886263	780d3da5dbfe9d82cd0d99d0d3752cb6	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_8 Staphylococcus aureus strain strain	137116	0.3306835088538172	554ccc7f3234a01fb3e3a34a45e4e121	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875298	chromosome	-	-	GCILIKDN_9 Staphylococcus aureus strain strain	110940	0.3341265548945376	fb6c7cdd9a64d80972cd135450b2cb6e	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-

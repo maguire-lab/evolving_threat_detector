@@ -1,0 +1,523 @@
+
+**************************************************************************
+ ___       _                               _____ _           _
+|_ _|_ __ | |_ ___  __ _ _ __ ___  _ __   |  ___(_)_ __   __| | ___ _ __
+ | || '_ \| __/ _ \/ _` | '__/ _ \| '_ \  | |_  | | '_ \ / _` |/ _ \ '__|
+ | || | | | ||  __/ (_| | | | (_) | | | | |  _| | | | | | (_| |  __/ |
+|___|_| |_|\__\___|\__, |_|  \___/|_| |_| |_|   |_|_| |_|\__,_|\___|_|
+                   |___/
+
+**************************************************************************
+
+integron_finder version 2.0.5 
+Using:
+ - Python 3.12.3 | packaged by conda-forge | (main, Apr 15 2024, 18:38:13) [GCC 12.3.0]
+ - numpy 1.26.4
+ - pandas 2.2.2
+ - matplolib 3.8.4
+ - biopython 1.83
+
+ - Prodigal V2.6.3: February, 2016
+ - INFERNAL 1.1.4 (Dec 2020)
+ - HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+
+Authors:
+ - Jean Cury, Bertrand Neron, Eduardo Rocha,
+
+Citation:
+
+ Néron, B.; Littner, E.; Haudiquet, M.; Perrin, A.; Cury, J.; Rocha, E.P.C. 
+ IntegronFinder 2.0: Identification and Analysis of Integrons across Bacteria, with a Focus on Antibiotic Resistance in Klebsiella. 
+ Microorganisms 2022, 10, 700. https://doi.org/10.3390/microorganisms10040700
+
+ If you use --func-annot in conjunction with file NCBIfam-AMRFinder.hmm please also cite
+
+ Haft, DH et al., Nucleic Acids Res. 2018 Jan 4;46(D1):D851-D860
+ PMID: 29112715
+ 
+
+                     =======================
+
+integron_finder is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+integron_finder is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program (COPYING file).
+If not, see <http://www.gnu.org/licenses/>.
+
+                     =======================
+
+command used: integron_finder --cpu 2 SAMN04875289_contigs.fasta
+
+                     =======================
+
+[0m
+INFO     : ############ Processing replicon FFLOIGJL_1 (1/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_1, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_1
+INFO     : ############ Processing replicon FFLOIGJL_2 (2/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_2, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_2
+INFO     : ############ Processing replicon FFLOIGJL_3 (3/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_3, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_3
+INFO     : ############ Processing replicon FFLOIGJL_4 (4/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_4, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_4
+INFO     : ############ Processing replicon FFLOIGJL_5 (5/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_5, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_5
+INFO     : ############ Processing replicon FFLOIGJL_6 (6/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_6, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_6
+INFO     : ############ Processing replicon FFLOIGJL_7 (7/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_7, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_7
+INFO     : ############ Processing replicon FFLOIGJL_8 (8/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_8, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_8
+INFO     : ############ Processing replicon FFLOIGJL_9 (9/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_9, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_9
+INFO     : ############ Processing replicon FFLOIGJL_10 (10/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_10, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_10
+INFO     : ############ Processing replicon FFLOIGJL_11 (11/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_11, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_11
+INFO     : ############ Processing replicon FFLOIGJL_12 (12/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_12, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_12
+INFO     : ############ Processing replicon FFLOIGJL_13 (13/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_13, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_13
+INFO     : ############ Processing replicon FFLOIGJL_14 (14/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_14, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_14
+INFO     : ############ Processing replicon FFLOIGJL_15 (15/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_15, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_15
+INFO     : ############ Processing replicon FFLOIGJL_16 (16/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_16, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_16
+INFO     : ############ Processing replicon FFLOIGJL_17 (17/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_17, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_17
+INFO     : ############ Processing replicon FFLOIGJL_18 (18/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_18, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_18
+INFO     : ############ Processing replicon FFLOIGJL_19 (19/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_19, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_19
+INFO     : ############ Processing replicon FFLOIGJL_20 (20/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_20, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_20
+INFO     : ############ Processing replicon FFLOIGJL_21 (21/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_21, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_21
+INFO     : ############ Processing replicon FFLOIGJL_22 (22/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_22, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_22
+INFO     : ############ Processing replicon FFLOIGJL_23 (23/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_23, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_23
+INFO     : ############ Processing replicon FFLOIGJL_24 (24/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_24, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_24
+INFO     : ############ Processing replicon FFLOIGJL_25 (25/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_25, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_25
+INFO     : ############ Processing replicon FFLOIGJL_26 (26/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_26, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_26
+INFO     : ############ Processing replicon FFLOIGJL_27 (27/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_27, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_27
+INFO     : ############ Processing replicon FFLOIGJL_28 (28/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_28, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_28
+INFO     : ############ Processing replicon FFLOIGJL_29 (29/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_29, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_29
+INFO     : ############ Processing replicon FFLOIGJL_30 (30/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_30, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_30
+INFO     : ############ Processing replicon FFLOIGJL_31 (31/55) ############
+
+WARNING  : The protein file: '/home/precious/etd/work/7a/b1736825dff28a78c1c77c52818cc3/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_31/FFLOIGJL_31.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon FFLOIGJL_31 ############
+INFO     : ############ Processing replicon FFLOIGJL_32 (32/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_32, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_32
+INFO     : ############ Processing replicon FFLOIGJL_33 (33/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_33, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_33
+INFO     : ############ Processing replicon FFLOIGJL_34 (34/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_34, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_34
+INFO     : ############ Processing replicon FFLOIGJL_35 (35/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_35, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_35
+INFO     : ############ Processing replicon FFLOIGJL_36 (36/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_36, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_36
+INFO     : ############ Processing replicon FFLOIGJL_37 (37/55) ############
+
+WARNING  : The protein file: '/home/precious/etd/work/7a/b1736825dff28a78c1c77c52818cc3/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_37/FFLOIGJL_37.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon FFLOIGJL_37 ############
+INFO     : ############ Processing replicon FFLOIGJL_38 (38/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_38, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_38
+INFO     : ############ Processing replicon FFLOIGJL_39 (39/55) ############
+
+WARNING  : The protein file: '/home/precious/etd/work/7a/b1736825dff28a78c1c77c52818cc3/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_39/FFLOIGJL_39.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon FFLOIGJL_39 ############
+INFO     : ############ Processing replicon FFLOIGJL_40 (40/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_40, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_40
+INFO     : ############ Processing replicon FFLOIGJL_41 (41/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_41, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_41
+INFO     : ############ Processing replicon FFLOIGJL_42 (42/55) ############
+
+WARNING  : The protein file: '/home/precious/etd/work/7a/b1736825dff28a78c1c77c52818cc3/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_42/FFLOIGJL_42.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon FFLOIGJL_42 ############
+INFO     : ############ Processing replicon FFLOIGJL_43 (43/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_43, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_43
+INFO     : ############ Processing replicon FFLOIGJL_44 (44/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_44, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_44
+INFO     : ############ Processing replicon FFLOIGJL_45 (45/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_45, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_45
+INFO     : ############ Processing replicon FFLOIGJL_46 (46/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_46, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_46
+INFO     : ############ Processing replicon FFLOIGJL_47 (47/55) ############
+
+WARNING  : The protein file: '/home/precious/etd/work/7a/b1736825dff28a78c1c77c52818cc3/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_47/FFLOIGJL_47.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon FFLOIGJL_47 ############
+INFO     : ############ Processing replicon FFLOIGJL_48 (48/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_48, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_48
+INFO     : ############ Processing replicon FFLOIGJL_49 (49/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_49, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_49
+INFO     : ############ Processing replicon FFLOIGJL_50 (50/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_50, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_50
+INFO     : ############ Processing replicon FFLOIGJL_51 (51/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_51, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_51
+INFO     : ############ Processing replicon FFLOIGJL_52 (52/55) ############
+
+WARNING  : The protein file: '/home/precious/etd/work/7a/b1736825dff28a78c1c77c52818cc3/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_52/FFLOIGJL_52.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon FFLOIGJL_52 ############
+INFO     : ############ Processing replicon FFLOIGJL_53 (53/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_53, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_53
+INFO     : ############ Processing replicon FFLOIGJL_54 (54/55) ############
+
+INFO     : Starting Default search ... :
+INFO     : Default search done... : 
+INFO     : In replicon FFLOIGJL_54, there are:
+INFO     : - 0 complete integron(s) found with a total 0 attC site(s)
+INFO     : - 0 CALIN element(s) found with a total of 0 attC site(s)
+INFO     : - 0 In0 element(s) found with a total of 0 attC site
+INFO     : Writing out results for replicon FFLOIGJL_54
+INFO     : ############ Processing replicon FFLOIGJL_55 (55/55) ############
+
+WARNING  : The protein file: '/home/precious/etd/work/7a/b1736825dff28a78c1c77c52818cc3/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_55/FFLOIGJL_55.prt' is empty cannot perform hmmsearch on it.
+WARNING  : ############ Skip replicon FFLOIGJL_55 ############
+INFO     : Merging integrons results.
+

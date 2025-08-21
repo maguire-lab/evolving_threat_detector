@@ -1,0 +1,70 @@
+LOCUS       .                       2997 bp    DNA              BCT 19-AUG-2025
+DEFINITION  EECGICBD_1 Staphylococcus aureus strain strain predicted composite
+            transposon.
+ACCESSION   .
+VERSION     .
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     misc_feature    complement(501..1289)
+                     /note="insertion sequence IS257-2"
+     misc_feature    1708..2497
+                     /note="insertion sequence IS257-2"
+     CDS             complement(1..429)
+     CDS             complement(559..1233)
+     CDS             1764..2429
+     CDS             2588..2872
+ORIGIN
+        1 tataaacagt ttatctgata acttttccaa ttgacttaca agcattgccc ccataccttt
+       61 tttaaatgaa tgtaaggcct caacttctat taatacgcca taatctctga taatgttttc
+      121 taaatactta ttttctgatc gcccaactaa cctaaactga ataaatgctg taatatcagt
+      181 gttgtatacc atataagaag ggctatcatt ctctggaaat tgttgtatat gaatataaaa
+      241 ttcattttta gggaatatgt ttatcatttt attagagaag ttacgactaa acacatctgt
+      301 tttattatta aaagccatac caataaaatg atttctagtc ttgctgtcgc tatgttttat
+      361 aaaatgtttg aaatctttta atggtaatag ttttctgtat ccttcgtgat caaaatctaa
+      421 attccccaaa aaacccctcc tatattattc gtttttgttg ttatctttat caagccaaga
+      481 tgttatttta tcttttattt ggttctgttg caaagtaaaa aatatagcta accactaatt
+      541 tatcatgtca gtgttcgctt aacttgctag catgatgcta atttcgtggc atggcgaaaa
+      601 tccgtagatc tgaagagacc tgcggttctt tttatataga gcgtaaatac attcaatacc
+      661 ttttaaagta ttctttgctg tattgatact ttgatacctt gtctttctta ctttaatatg
+      721 acggtgatct tgctcaatga ggttattcag atatttcgat gtacaatgac agtcaggttt
+      781 aagtttaaaa gctttaatta ctttagccat tgctaccttc gttgaaggtg cctgatctgt
+      841 aattaccttt tgaggtttac caaattgttt aatgagacgt ttgataaacg catatgctga
+      901 atgattatct cgttgcttac gcaaccaaat atctaatgta tgtccatctg catcaatcgc
+      961 gcgatacaga taacaccact gtcctttaat tttgatatat gtctcatcaa cacgccactt
+     1021 ataatacgct tttttatgtt ttttcttcca aatttgatac aaaacgggag catattcttg
+     1081 aacccaacgg tagaccgttg aatgatgaac gtttacacca cgttccctta atatttcaga
+     1141 tatatcacga taactcaatg catatcttag atagtagcca acggctacag tgataacatc
+     1201 cttgttaaat tgtttatatc tgaaatagtt catacagaag actccttttt gttaaaatta
+     1261 tactataaat tcaactttgc aacagaacca gttaaacaat gttatgccaa gttacaatgt
+     1321 ttttatccgt aaagacgagt tagattatag atagaaataa tattcaaaag agaaatgaat
+     1381 gaggactttg catttctcca ctcaccgatg ttataattta gttaacaagg aaactagcat
+     1441 agatgcacca atcccctcac tacggcaata gtgaggggat tttttaggtg tggctatggt
+     1501 cgcctattta ttattgcgat tacgtagcca atgcgtaaat aacgcaataa tacaaccact
+     1561 gatgactgtg gtcgtgatgt gaacaaggat ttctagcata gattagcacc tcctctctgc
+     1621 gtcggaattg acgcctgaga gatagacgac ttgtatatta tatcatctac gaatatacga
+     1681 tgataggtag cttctgataa gtgatctggt tctgttgcaa agttgatttt gtagtataat
+     1741 tttaacaaaa aggagtatgc tatatgaact atttcagata taaacaattt aacaaggacg
+     1801 tcatcactgt agccgttggc tactatctaa gatatgcgct tagttatcgt gatatatctg
+     1861 aaatactaag agaacgtggt gtcaacgttc atcattcaac ggtctaccgt tgggttcaag
+     1921 aatatgctcc cgttttgtat caaatttgga agaaaaaaca taaaaaagcg tattataagt
+     1981 ggcgtgttga tgagacatat atcaaaatta aaggacagtg gtgttatctg tatcgcgcga
+     2041 ttgatgcaga tggacataca ttagatattt ggttacgcaa aaaacgagat catcaatcag
+     2101 catatgcgtt tattaagcgc cttattaaac aattcggtaa acctcaaatg ataattacag
+     2161 atcaagcacc ttcaacgaag gtagccatgg ctaaaataat taaagtgttt aagttgaaac
+     2221 ctaactgtca ttgcacatct aaatatctca ataacttcat tgaacaagat catcgtcaca
+     2281 ttaaggtgag aaagacaaga tatcaaagtg tcaatacggc aaaaaataca ctcaaaggca
+     2341 ttgaatgtat ttacggatta tataaaaaaa ccgtaggtct cttcagatct acggattttc
+     2401 accatgccac gaaattagtt atatgttagc tggttaggcg aagactgaca caataaaatg
+     2461 gtgattagct atatttttct aactttgcaa cagaacccct aaaaaaaatt caaaatcttt
+     2521 cagagaagct gttaaaggaa tttttaagtt cacagatatt aacttagcgc gtgaggctaa
+     2581 aaatcgattg attcatgatt atatcgatca accaaaatat tcaaaagctt gcgcatcatt
+     2641 ggatgatgga ttcgaagacg cctttcaata taccgtacaa ggaaattccc acaatcgact
+     2701 aaagagtacc aatctaattg aacgactgaa tcaagaagta cgcagaagag aaaagattat
+     2761 tcgcatcttc cccaatcaaa catcagccaa tcgcttaatt ggagccgttc ttatggacct
+     2821 acatgatgaa tggatttatt cttcaagaaa atacatcaat tttgataagt agaaatggta
+     2881 aaaacattgt atagcatttt acacaggagt ctggacttga ctcacttcct ttattatttt
+     2941 tcattttttt aaactattta atactaatgt cttttataat agcttttcat atattat
+//

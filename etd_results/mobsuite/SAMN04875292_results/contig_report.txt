@@ -1,0 +1,70 @@
+sample_id	molecule_type	primary_cluster_id	secondary_cluster_id	contig_id	size	gc	md5	circularity_status	rep_type(s)	rep_type_accession(s)	relaxase_type(s)	relaxase_type_accession(s)	mpf_type	mpf_type_accession(s)	orit_type(s)	orit_accession(s)	predicted_mobility	mash_nearest_neighbor	mash_neighbor_distance	mash_neighbor_identification	repetitive_dna_id	repetitive_dna_type	filtering_reason
+SAMN04875292	chromosome	-	-	AJDFLDLD_1 Staphylococcus aureus strain strain	499059	0.320140504429336	d2ea6991d4ac2e172871a4a311bd82d9	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_10 Staphylococcus aureus strain strain	106360	0.32343926288078223	f79069890a7a9007e036514ca126cd34	not tested	rep_cluster_1636	001036__CP012595	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_11 Staphylococcus aureus strain strain	88020	0.328186775732788	e412536178df2f21dad7bb86d20ec00d	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_12 Staphylococcus aureus strain strain	68133	0.31955146551597613	94a0d0355edeef14bacb38e6e94d46d9	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_13 Staphylococcus aureus strain strain	63386	0.3434985643517496	17de8aef106a0f15b76711bb4f3f35fa	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_14 Staphylococcus aureus strain strain	55487	0.3093877845261052	a635a7473b5b6f1f0fa32ee9b06ae430	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_15 Staphylococcus aureus strain strain	53878	0.33594417016221834	eff62656802094ebfe37496e98c6cb54	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_16 Staphylococcus aureus strain strain	38127	0.3355102683137934	d0fb8a35f4bb383ad9398329ec3044cf	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_17 Staphylococcus aureus strain strain	37192	0.3070821682082168	9326744e3a90ea6f2235239f8860881d	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_18 Staphylococcus aureus strain strain	30065	0.3250956261433561	e9462154e02fbdb30c9b334abcb14166	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	plasmid	AB541	AK371	AJDFLDLD_19 Staphylococcus aureus strain strain	26098	0.2832017779140164	c92efcbab8c5a58b69699ad325419059	not tested	rep_cluster_1142	000421__NC_013320_00022	MOBQ	NC_013653_00017	MPF_T,MPF_T	NC_013653_00035,NC_010279_00007	-	-	-	NC_013653	0.0231524	Staphylococcus aureus	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_2 Staphylococcus aureus strain strain	331155	0.32719119445576844	4513b55008659d43f404585888a535e6	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_20 Staphylococcus aureus strain strain	19828	0.31899334274762964	d3075a53de3137f6c1fdfe195cd0ec33	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	plasmid	AB924	-	AJDFLDLD_21 Staphylococcus aureus strain strain	19449	0.30022109105866623	9891db135282cc3168747adbf6942b30	not tested	rep_cluster_1017,rep_cluster_1017,rep_cluster_1215	FR714928,GQ900464,000508__GQ900453_00001	MOBV	NC_022618_00010	-	-	-	-	-	KU882684	0.0342477	Staphylococcus lugdunensis	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_22 Staphylococcus aureus strain strain	17334	0.30812276450905735	909f4e1e6eb956a67d38b7dadd486315	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_23 Staphylococcus aureus strain strain	12202	0.32019341091624326	1f69c7cb0b475e2f1ce1e7925c3b61e6	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_24 Staphylococcus aureus strain strain	11691	0.2729450004276794	35530653a0bb5e418b1a0ca126b08463	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_25 Staphylococcus aureus strain strain	7039	0.3506179855093053	8e8860634439eea8def32aec29ef9495	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_26 Staphylococcus aureus strain strain	5421	0.3399741745065486	41e701ac8aa7206ed3cba43dc1756801	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	plasmid	AD194	-	AJDFLDLD_27 Staphylococcus aureus strain strain	5355	0.30401493930905693	bef4fbe5f4882f8e85fdd49536d4b65f	not tested	-	-	-	-	-	-	-	-	-	CP033813	0.0556462	Staphylococcus haemolyticus	-	-	-
+SAMN04875292	plasmid	AC333	-	AJDFLDLD_28 Staphylococcus aureus strain strain	5263	0.3249097472924188	7c12605985fbe97d491d9bf1d3badab3	not tested	rep_cluster_1118	000379__NC_013452_00003	MOBP	NC_005007_00007	-	-	MOBP	NC_025177	-	NC_001391	0.0300913	Staphylococcus aureus	-	-	-
+SAMN04875292	plasmid	AA069	-	AJDFLDLD_29 Staphylococcus aureus strain strain	3514	0.25839499146272055	c6adf22760dcfc37362827bfc46019a8	not tested	-	-	-	-	-	-	-	-	-	CP024410	0.0287714	Staphylococcus epidermidis	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_3 Staphylococcus aureus strain strain	319601	0.3243951051467298	c24afdf6b58fc75921abbd27be1e47b8	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	plasmid	AC627	AL894	AJDFLDLD_30 Staphylococcus aureus strain strain	2540	0.3090551181102362	f42ec78b2833f269c3a890c7ff3a9c5a	not tested	rep_cluster_1947	NC001390	-	-	-	-	-	-	-	NC_001395	0.000680979	Staphylococcus aureus	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_31 Staphylococcus aureus strain strain	1421	0.32019704433497537	f82626262f4a859e218c29303735d73a	not tested	rep_cluster_1894	001329__NC_013969_00002	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	plasmid	AA069	-	AJDFLDLD_32 Staphylococcus aureus strain strain	1402	0.31169757489301	a594469950f8c856864fbad5d77ab316	not tested	-	-	-	-	-	-	-	-	-	CP024410	0.0287714	Staphylococcus epidermidis	JX204384	IS1181	repetitve element
+SAMN04875292	plasmid	AB924	-	AJDFLDLD_33 Staphylococcus aureus strain strain	1186	0.26981450252951095	b02b716ea581bcca5616167bb9ae2412	not tested	-	-	-	-	-	-	-	-	-	KU882684	0.0342477	Staphylococcus lugdunensis	-	-	-
+SAMN04875292	plasmid	AD194	-	AJDFLDLD_34 Staphylococcus aureus strain strain	1186	0.31703204047217537	f3efaf13219cb96a3b1f4d568e0ef540	not tested	-	-	-	-	-	-	-	-	-	CP033813	0.0556462	Staphylococcus haemolyticus	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_35 Staphylococcus aureus strain strain	1179	0.3850720949957591	218858d99295e405883f3597f5b12768	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_36 Staphylococcus aureus strain strain	812	0.26108374384236455	0251d0bf24158885d173aa931ca84eb6	not tested	rep_cluster_1118	000382__CP017110	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_37 Staphylococcus aureus strain strain	808	0.3180693069306931	5f09895833071ec7cad0d0fa00b99dea	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_38 Staphylococcus aureus strain strain	761	0.42575558475689884	71a41ed81696657185690947e8ced61f	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_39 Staphylococcus aureus strain strain	752	0.32845744680851063	f3c86943cc7b23c998606c960a19fabc	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_4 Staphylococcus aureus strain strain	286360	0.3351620338036039	9fb809343b8dcb4182a0e8b6adb71c95	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_40 Staphylococcus aureus strain strain	615	0.3154471544715447	a9b980c270df714e7b54611e9e3480c6	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_41 Staphylococcus aureus strain strain	525	0.3028571428571429	1b28c7903b13d6fe3566224949c81381	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_42 Staphylococcus aureus strain strain	482	0.3506224066390041	a6b9d216fc5339b529e1fbe53b02a21e	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_43 Staphylococcus aureus strain strain	470	0.30851063829787234	dab6fd19de96f8cb793e1aa62494bff9	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_44 Staphylococcus aureus strain strain	442	0.3031674208144796	8686ba7cf067bc04a8918f627a0248d0	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_45 Staphylococcus aureus strain strain	417	0.2805755395683453	692dcbc62b23346262df6157d7008df7	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_46 Staphylococcus aureus strain strain	390	0.3871794871794872	5e0c696fc1f94e991254923a9dbd2726	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_47 Staphylococcus aureus strain strain	381	0.4645669291338583	eece62486c27512f239bd7711cdcd09a	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_48 Staphylococcus aureus strain strain	371	0.29649595687331537	2f9a0d01cd72d6874f421d4d1a80ac7e	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_49 Staphylococcus aureus strain strain	357	0.34173669467787116	40112cd5a56c664317bdfbc1daff86a8	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_5 Staphylococcus aureus strain strain	226525	0.3366736563293235	64c2fce3ebd534d35c6e67cb2b6ea4c5	not tested	rep_cluster_2250	BX571857	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_50 Staphylococcus aureus strain strain	351	0.2792022792022792	d3dfd0d08567bae22934a2ba2d764d20	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_51 Staphylococcus aureus strain strain	339	0.5162241887905604	6b589eb331fd2ee8fd4eab2d16aaf422	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_52 Staphylococcus aureus strain strain	330	0.3515151515151515	48e4d9cb657dab08b45dce951cbc3d6f	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_53 Staphylococcus aureus strain strain	310	0.3258064516129032	608d176f3c6d3af507879bf0c7cfd7e1	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_54 Staphylococcus aureus strain strain	306	0.24836601307189543	e236988ca1c883e269633d4f2ce08b45	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_55 Staphylococcus aureus strain strain	303	0.29042904290429045	ab4b5d3c51bb102811868a07e36da324	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_56 Staphylococcus aureus strain strain	300	0.33	cea6f619395133c0eed94a4a84d5a361	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_57 Staphylococcus aureus strain strain	284	0.35563380281690143	586a38cf70cb7a0bff67c9b90160ad91	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_58 Staphylococcus aureus strain strain	283	0.3215547703180212	3496d742df74d65aa4ef97a70cccf67e	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_59 Staphylococcus aureus strain strain	277	0.51985559566787	6c9ce937ffdab9d6dfdfde2419dc4809	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_6 Staphylococcus aureus strain strain	159011	0.32697737892347073	7690808d09d8471d66813831693867bf	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_60 Staphylococcus aureus strain strain	276	0.2971014492753623	eeee898e65ee5f98648051dc4a5596e9	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_61 Staphylococcus aureus strain strain	275	0.32727272727272727	31d2217bacf7a0ea5129a66c9bebbc2b	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_62 Staphylococcus aureus strain strain	252	0.5436507936507936	355fddb7fca14cfdab1598617780652d	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_63 Staphylococcus aureus strain strain	251	0.2948207171314741	1f651f9c2b6b396c8660eb374afac77f	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_64 Staphylococcus aureus strain strain	243	0.45267489711934156	01b5d3f756af839bedbdb13b0abc4317	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_65 Staphylococcus aureus strain strain	227	0.33480176211453744	c656803ea0fbde8ccfc777f5ede34143	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_66 Staphylococcus aureus strain strain	225	0.28444444444444444	69dbf9a75c4482cea120d912ca1f9498	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_67 Staphylococcus aureus strain strain	222	0.536036036036036	b69c374031c65848781001c0d0e7322b	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_68 Staphylococcus aureus strain strain	218	0.26146788990825687	eaa5045a41e134f23be2727f316d8ee2	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_69 Staphylococcus aureus strain strain	204	0.3431372549019608	5af6d4b759c254da2e7cfbc6531a4694	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_7 Staphylococcus aureus strain strain	144668	0.3257043713882821	f2667739885ede9962902785d35559d9	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_8 Staphylococcus aureus strain strain	136944	0.330354013319313	07e26014515e1280096699635d3f81b6	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+SAMN04875292	chromosome	-	-	AJDFLDLD_9 Staphylococcus aureus strain strain	110925	0.33400946585530766	41c8fe97f676c48fe8da82c240cee3af	not tested	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-

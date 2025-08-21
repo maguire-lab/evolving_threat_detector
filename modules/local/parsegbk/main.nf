@@ -2,7 +2,6 @@ process PARSE_GBK {
     
     tag "$meta.id"
     label 'process_low'
-    conda = "${projectDir}/modules/local/parsegbk/environment.yml"
     
     input:
     tuple val(meta), path(gbk)

@@ -1,7 +1,7 @@
 process FILTER_DIAMOND_HITS {
 
     input:
-    path blast_results
+    val(meta), path(file)
     val tool_name
     val min_pident
     val min_length
@@ -12,6 +12,6 @@ process FILTER_DIAMOND_HITS {
     script:
     """
     awk -v pid="${min_pident}" -v len="${min_length}" 'BEGIN { OFS="\\t" }
-        \$3 >= pid && \$4 >= len { print }' "${blast_results}" > "${tool_name}_filtered_hits.tsv"
+        \$3 >= pid && \$4 >= len { print }' "${file}" > "${tool_name}_filtered_hits.tsv"
     """
 }

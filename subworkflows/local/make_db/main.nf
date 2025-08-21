@@ -11,9 +11,11 @@ include { PHISPY                    } from '../../../modules/nf-core/phispy/main
 include { DB_INIT                   } from '../../../modules/local/db_init'
 include { INSERT_GENOMES            } from '../../../modules/local/insert_genomes'
 include { GET_ICEBERG               } from '../../../modules/local/iceberg/main'
-include { DIAMOND_MAKEDB            } from '../../../modules/nf-core/diamond/makedb'
-include { DIAMOND_BLASTP            } from '../../../modules/nf-core/diamond/blastp'
+include { DIAMOND_MAKEDB            } from '../../../modules/local/diamond/makedb'
+include { DIAMOND_BLASTP            } from '../../../modules/local/diamond/blastp'
 include { FILTER_DIAMOND_HITS       } from '../../../modules/local/filter_hits'
+include { TNCOMP_FINDER             } from '../../../modules/local/tncomp_finder'
+include { TN3_FINDER                } from '../../../modules/local/tn3finder'
 
 workflow MAKE_DB {
     take:
@@ -31,39 +33,37 @@ workflow MAKE_DB {
     //ch_db_insert = INSERT_GENOMES(ch_genomes, etd_db_init)
 
     // Update AMRFinderPlus database
-    //amrfinder_db = AMRFINDERPLUS_UPDATE()
+    amrfinder_db = AMRFINDERPLUS_UPDATE()
 
     // Run MASH sketching
-    //MASH_SKETCH(ch_genomes)
+    MASH_SKETCH(ch_genomes)
 
     // Run AMRFinderPlus with updated DB
-    //AMRFINDERPLUS_RUN(ch_amrfinder_input, amrfinder_db[0])
+    AMRFINDERPLUS_RUN(ch_amrfinder_input, amrfinder_db[0])
 
     // Run MOB-suite
-    //MOBSUITE_RECON(ch_genomes)
+    MOBSUITE_RECON(ch_genomes)
 
     // Run IntegronFinder
-    //INTEGRONFINDER(ch_genomes)
+    INTEGRONFINDER(ch_genomes)
     
     // Run Phispy
-    //PHISPY(ch_samplesheet)
+    PHISPY(ch_samplesheet)
 
 
     // Run ICEberg annotation
+    
+    // def blast_columns = "qseqid sseqid pident slen qlen length mismatch gapopen qstart qend sstart send evalue bitscore full_qseq"
 
     // Step 1: Get the database
     GET_ICEBERG()
     GET_ICEBERG.out.iceberg
-        .map { file -> tuple([id: "iceberg"], file) }
         .set { ch_iceberg_db }
 
     // Step 2: Create DIAMOND database from ICEberg
-    DIAMOND_MAKEDB(
-        ch_iceberg_db,
-        Channel.empty(),
-        Channel.empty(),
-        Channel.empty()
-    )
+    DIAMOND_MAKEDB(ch_iceberg_db)
+
+    DIAMOND_MAKEDB.out.db.view { "DB: $it" }
 
     // Step 3: Run DIAMOND blastp with protein sequences from PARSE_GBK
 
@@ -71,8 +71,9 @@ workflow MAKE_DB {
         ch_proteins,
         DIAMOND_MAKEDB.out.db,
         "txt",
-        "qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore"
+        "qseqid sseqid pident slen qlen length mismatch gapopen qstart qend sstart send evalue bitscore"
     )
+    DIAMOND_BLASTP.out.txt.view { "BlastP output channel: $it" }
 
     // Step 4: Filter the DIAMOND results
     ch_blast_results = DIAMOND_BLASTP.out.txt.map { meta, file -> tuple(meta, file) }
@@ -84,12 +85,18 @@ workflow MAKE_DB {
         params.min_alignment_length
     )
 
+   // Run Tncompfinder
+    TNCOMP_FINDER(ch_genomes)
+
+   // Rub Tn3finder
+    TN3_FINDER(ch_genomes)
+
     emit:
     //db_etd               = etd_db_init.sqlite_db
     //updated_db           = ch_db_insert.sqlite_db
-   // mash_sketches        = MASH_SKETCH.out.mash
-    //amr_reports        = AMRFINDERPLUS_RUN.out.report
-    //mobtyper_results   = MOBSUITE_RECON.out.contig_report
-    //integron_summaries = INTEGRONFINDER.out.summary
-    iceberg_hits = FILTER_DIAMOND_HITS.out
+      mash_sketches        = MASH_SKETCH.out.mash
+      amr_reports          = AMRFINDERPLUS_RUN.out.report
+      mobtyper_results     = MOBSUITE_RECON.out.contig_report
+      integron_summaries   = INTEGRONFINDER.out.summary
+      iceberg_hits         = FILTER_DIAMOND_HITS.out
 }

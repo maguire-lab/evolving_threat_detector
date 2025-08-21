@@ -48,7 +48,7 @@ workflow {
         }
         .set { ch_samplesheet }
 
-    ch_samplesheet.view { "$it" }
+    //ch_samplesheet.view { "$it" }
 
     ch_samplesheet | PARSE_GBK
 
@@ -59,7 +59,7 @@ workflow {
         }
         .set { ch_amrfinder_input }
 
-    ch_amrfinder_input.view { "$it" }
+    //ch_amrfinder_input.view { "$it" }
 
     PARSE_GBK.out
     .map { tuple ->
@@ -68,7 +68,7 @@ workflow {
     }
     .set { ch_genomes }
 
-    ch_genomes.view { "$it" }
+    //ch_genomes.view { "$it" }
 
     PARSE_GBK.out
     .map { tuple ->

@@ -1,5 +1,5 @@
 ##gff-version 3
-##date 2025-08-18
+##date 2025-08-19
 ##source-version GenBank
 ##sequence-region PFFFBGGF_1 1 563980
 PFFFBGGF_1	GenBank	gene	298	1209	.	+	.	ID=PFFFBGGF_00001
