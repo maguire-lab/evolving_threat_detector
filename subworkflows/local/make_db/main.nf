@@ -4,6 +4,7 @@
 include { AMRFINDERPLUS_UPDATE      } from '../../../modules/nf-core/amrfinderplus/update'
 include { AMRFINDERPLUS_RUN         } from '../../../modules/local/amrfinderplus/run'
 include { MASH_SKETCH               } from '../../../modules/nf-core/mash/sketch'
+include { MASH_PASTE                } from '../../../modules/local/mash_paste'
 include { MOBSUITE_RECON            } from '../../../modules/local/mobsuite/recon'
 include { INTEGRONFINDER            } from '../../../modules/nf-core/integronfinder/main'
 include { PARSE_GBK                 } from '../../../modules/local/parsegbk/main'
@@ -37,6 +38,10 @@ workflow MAKE_DB {
 
     // Run MASH sketching
     MASH_SKETCH(ch_genomes)
+
+    // Run MASH paste
+    all_msh_list = MASH_SKETCH.out.mash.map { meta, msh -> msh }.collect()
+    pasted = MASH_PASTE(all_msh_list)
 
     // Run AMRFinderPlus with updated DB
     AMRFINDERPLUS_RUN(ch_amrfinder_input, amrfinder_db[0])
@@ -76,14 +81,14 @@ workflow MAKE_DB {
     DIAMOND_BLASTP.out.txt.view { "BlastP output channel: $it" }
 
     // Step 4: Filter the DIAMOND results
-    ch_blast_results = DIAMOND_BLASTP.out.txt.map { meta, file -> tuple(meta, file) }
+    //ch_blast_results = DIAMOND_BLASTP.out.txt.map { meta, file -> tuple(meta, file) }
 
-    FILTER_DIAMOND_HITS(
-        ch_blast_results,
-        "ICEBERG",
-        params.min_pident,
-        params.min_alignment_length
-    )
+    //FILTER_DIAMOND_HITS(
+       // ch_blast_results,
+        //"ICEBERG",
+        //params.min_pident,
+        //params.min_alignment_length
+    //)
 
    // Run Tncompfinder
     TNCOMP_FINDER(ch_genomes)
@@ -98,5 +103,5 @@ workflow MAKE_DB {
       amr_reports          = AMRFINDERPLUS_RUN.out.report
       mobtyper_results     = MOBSUITE_RECON.out.contig_report
       integron_summaries   = INTEGRONFINDER.out.summary
-      iceberg_hits         = FILTER_DIAMOND_HITS.out
+      //iceberg_hits       = FILTER_DIAMOND_HITS.out
 }
