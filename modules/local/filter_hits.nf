@@ -1,7 +1,7 @@
 process FILTER_DIAMOND_HITS {
 
     input:
-    val(meta), path(file)
+    tuple val(meta), path(file)
     val tool_name
     val min_pident
     val min_length

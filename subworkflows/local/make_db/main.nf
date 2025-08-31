@@ -81,14 +81,14 @@ workflow MAKE_DB {
     DIAMOND_BLASTP.out.txt.view { "BlastP output channel: $it" }
 
     // Step 4: Filter the DIAMOND results
-    //ch_blast_results = DIAMOND_BLASTP.out.txt.map { meta, file -> tuple(meta, file) }
+    ch_blast_results = DIAMOND_BLASTP.out.txt
 
-    //FILTER_DIAMOND_HITS(
-       // ch_blast_results,
-        //"ICEBERG",
-        //params.min_pident,
-        //params.min_alignment_length
-    //)
+    FILTER_DIAMOND_HITS(
+        ch_blast_results,
+        "ICEBERG",
+        params.min_pident,
+        params.min_alignment_length
+    )
 
    // Run Tncompfinder
     TNCOMP_FINDER(ch_genomes)
