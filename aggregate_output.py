@@ -1,7 +1,8 @@
-# etd/db/db_setup.py
+#!/usr/bin/env python3
 
 import sqlite3
 from pathlib import Path
+import argparse
 from Bio import SeqIO
 
 DATABASE_PATH = 'etd.db'
@@ -50,10 +51,12 @@ def init_db(db_path=DATABASE_PATH):
                           integron_output_path TEXT,
                           prophage_annotation TEXT,
                           prophage_output_path TEXT,
-                          Transposon_annotation TEXT,
-                          Transposon_annotation_path TEXT,
-                          ICE_annotation TEXT,
-                          ICE_annotation_path TEXT)''')
+                          composite_transposon_annotation TEXT,
+                          composite_transposon_output_path TEXT,
+                          tn3_transposon_annotation TEXT,
+                          tn3_transposon_output_path TEXT,
+                          ice_annotation TEXT,
+                          ice_output_path TEXT)''')
 
         # Index to speed up UPDATE/SELECT by (genome_id, gene_name)
         cursor.execute("""
@@ -69,7 +72,7 @@ def init_db(db_path=DATABASE_PATH):
 
 def create_genome_entry(cursor, fasta_name, organism):
     """
-    Create and store a Genome entry in the database, including the organism name.
+    Create and store a Genome entry in the database if it does not exist, including the organism name.
 
     Parameters:
     cursor (sqlite3.Cursor): Database cursor object.
@@ -80,7 +83,17 @@ def create_genome_entry(cursor, fasta_name, organism):
     int: The ID of the created genome entry.
     """
     try:
-        cursor.execute("INSERT INTO genomes (genome_name, organism) VALUES (?, ?)", (fasta_name, organism))
+        # Try to find an existing row by (genome_name, organism)
+        cursor.execute(
+            "SELECT id FROM genomes WHERE genome_name = ? AND IFNULL(organism,'') = IFNULL(?, '')",
+            (fasta_name, organism)
+        )
+        row = cursor.fetchone()
+        if row:
+            return int(row[0])
+        # Else insert
+        cursor.execute(
+                "INSERT INTO genomes (genome_name, organism) VALUES (?, ?)", (fasta_name, organism))
         genome_id = cursor.lastrowid
         if genome_id is None:
             raise sqlite3.IntegrityError(f"Failed to insert genome '{fasta_name}'.")
@@ -310,7 +323,7 @@ def merge_amr_ice_annotation(amr_annotations, ice_annotations):
         list of dicts: {
             "genome_id": ...,
             "amr_gene": ...,
-            "plasmid_annotation": ...,
+            "ice_annotation": ...,
         }
     """
     amr_ice_annotations = []
@@ -371,7 +384,7 @@ def parse_phage_annotation(phage_report_path):
             #next(f, None)
             for line in f:
                 parts = line.strip().split("\t")
-                if len(parts) < 5:
+                if len(parts) < 11:
                     continue
 
                 contig_id = parts[1]
@@ -395,13 +408,13 @@ def parse_phage_annotation(phage_report_path):
 
 def merge_amr_phage_annotation(amr_annotations, phage_annotations):
     """
-    Join AMR rows with ice annotations by contig_id.
+    Join AMR rows with prophage annotations by contig_id.
 
     Returns:
         list of dicts: {
             "genome_id": ...,
             "amr_gene": ...,
-            "plasmid_annotation": ...,
+            "prophage_annotation": ...,
         }
     """
     amr_phage_annotations = []
@@ -411,7 +424,7 @@ def merge_amr_phage_annotation(amr_annotations, phage_annotations):
             amr_ice_annotations.append({
                 "genome_id": annotation["genome_id"],
                 "amr_gene": annotation["amr_gene"],
-                "phage_annotation": info["prophage"],
+                "prophage_annotation": info["prophage"],
                 "phage_id": info["contig_id"]
                 })
 
@@ -419,10 +432,10 @@ def merge_amr_phage_annotation(amr_annotations, phage_annotations):
 
 def store_amr_phage_annotations(amr_phage_annotations, cursor, output_path):
     """
-    Update existing AMR rows with ice info.
-
-    amr_ice_annotations: list of dicts like:
-      {"genome_id": int, "contig_id": str, "amr_gene": str, "ice_annotation": str}
+    Update existing AMR rows with prophage info.
+g
+    amr_phage_annotations: list of dicts like:
+      {"genome_id": int, "contig_id": str, "amr_gene": str, "prophage_annotation": str}
 
     Returns:
       int: number of table rows updated.
@@ -431,22 +444,22 @@ def store_amr_phage_annotations(amr_phage_annotations, cursor, output_path):
     for row in amr_ice_annotations:
         genome_id = row.get("genome_id")
         gene      = row.get("amr_gene")
-        phage   = row.get("phage_annotation")
+        prophage   = row.get("phage_annotation")
 
         cursor.execute(
             """
             UPDATE annotations
-                SET phage_annotation = ?,
-                phage_output_path = ?
-            WHERE genome_id = ?
+                SET prophage_annotation  = ?,
+                    prophage_output_path = ?
+            WHERE genome_id   = ?
                 AND gene_name = ?
             """,
-                (phage, str(output_path), genome_id, gene)
+                (prophage, str(output_path), genome_id, gene)
             )
         total_updated += cursor.rowcount
     return total_update
 
-def parse_transposon_annotation(gbk_file_path):
+def parse_composite_transposon_annotation(comp_gbk_file_path):
     """
     Parse GenBank file to extract only the IS element name and contig ID (from definition).
 
@@ -454,8 +467,8 @@ def parse_transposon_annotation(gbk_file_path):
     dict with 'contig_id' and 'is_element_id'
     """
     try:
-        transposon_annotations = {}
-        record = SeqIO.read(gbk_path, "genbank")
+        composite_transposon_annotations = {}
+        record = SeqIO.read(comp_gbk_file_path, "genbank")
 
         # Extract contig ID from the DEFINITION field
         definition = record.description  # e.g. "EECGICBD_1 Staphylococcus aureus strain ..."
@@ -470,14 +483,117 @@ def parse_transposon_annotation(gbk_file_path):
                     is_element_id = note.replace("insertion sequence ", "")
                     break  # only need the first one
 
-        transposon_annotations[contig_id] = {
+        composite_transposon_annotations[contig_id] = {
             "contig_id": contig_id,
-            "transposon_annotation": is_element_id
+            "composite_transposon_annotation": is_element_id
         }
 
-        if not transposon_annotations:
+        if not composite_transposon_annotations:
             print(f"Warning: No transposon annotation found in {gbk_file_path}")
 
     except Exception as e:
         print(f"Error parsing {gbk_path}: {e}")
-        return transposon_annotations
+        return composite_transposon_annotations
+
+def merge_amr_comp_transposon(amr_annotations, comp_ann):
+    out = []
+    for a in amr_annotations:
+        info = comp_ann.get(a["contig_id"])
+        if info:
+            out.append({
+                "genome_id": a["genome_id"],
+                "contig_id": a["contig_id"],
+                "amr_gene":  a["amr_gene"],
+                "composite_transposon_annotation": info.get("composite_transposon_annotation")
+            })
+    return out
+
+def store_amr_comp_transposon(amr_comp, cursor, output_path):
+    total_updated = 0
+    for row in amr_comp:
+        genome_id = row.get("genome_id")
+        gene      = row.get("amr_gene")
+        ann       = row.get("composite_transposon_annotation")
+        cursor.execute(
+            """
+            UPDATE annotations
+               SET composite_transposon_annotation      = ?,
+                   composite_transposon_output_path = ?
+             WHERE genome_id = ?
+               AND gene_name = ?
+            """,
+            (ann, str(output_path), genome_id, gene)
+        )
+        total_updated += cursor.rowcount
+    return total_updated
+
+def main():
+    parser = argparse.ArgumentParser(description='Store sketches and annotations into the ETD DB.')
+    parser.add_argument('--db_path', type=Path, default=PATH(DATABASE_PATH), help='Path to the SQLite database.')
+    parser.add_argument('--fasta_name', type=str, required=True, help='Genome fasta id')
+    parser.add_argument('--organism', type=str, default=None, help='Organism name')
+    parser.add_argument('--sketch_path', type=Path, help='Path to the all genomes sketch file')
+    parser.add_argument('--amrfinder_output', type=Path, help='Path to amrfinderplus TSV file')
+    parser.add_argument('--contigs_report_path', type=Path, help='Path to mobsuite contigs_report.txt')
+    parser.add_argument('--filtered_hits_report_path', type=Path, default=None, help='Path to to ICE filtered_hits TSV')
+    parser.add_argument('--phage_report_path', type=Path, default=None, help='Path to the prophage report TSV')
+    parser.add_argument('--comp_gbk_file_path', type=Path, default=None, help='Path to composite transposon gbk')
+    
+    args = parser.parse_ags()
+
+    db_path = Path(args.db_path)
+    init_db(db_path)
+    conn = connect(db_path)
+    cursor = conn.cursor()
+
+    # Create genome entry
+    genome_id = create_genome_entry(cursor, args.fasta_name, args.organism)
+
+
+    # store sketch file
+    if args.sketch_path and Path(args.sketch_path).exists():
+        store_sketch(args.sketch_path, cursor)
+
+    # parse and store amr_annotations
+    amr_annotations = []
+    if args.amrfinder_output and Path(args.amrfinder_output).exists():
+        amr_annotations = parse_amr_annotation(args.amrfinder_output, genome_id)
+        if amr_annotations:
+            store_amr_annotation(amr_annotations, cursor, args.amrfinder_output)
+    else:
+        print("Note: No AMR file provided or not found; skipping AMR insert.")
+
+    # parse and store plasmid annotations
+    if amr_annotations and args.contigs_report_path and Path(args.contigs_report_path).exists():
+        plasmid_annotations = parse_plasmid_annotation(args.contigs_report_path)
+        plasmid_amr_annotation = merge_amr_plasmid_annotation(amr_annotations, plasmid_annotations)
+        if plasmid_amr_annotation:
+            store_amr_plasmid_annotations(plasmid_amr_annotation, cursor, Path(args.contigs_report).parent)
+
+    # parse and store ICE annotations
+    if amr_annotations and args.filtered_hits_report_path and Path(args.filtered_hits_report_path).exists():
+        ice_annotations = parse_ice_annotation(args.filtered_hits_report_path)
+        ice_amr_annotations = merge_amr_ice_annotation(amr_annotations, ice_annotations)
+        if ice_amr_annotations:
+            store_amr_ice_annotations(ice_amr_annotation, cursor, args.filtered_hits_report_path)
+
+    # parse and store prophage annotations
+    if amr_annotations and args.phage_report_path and Path(args.phage_report_path).exists():
+        phage_annotations = parse_phage_annotation(args.phage_report_path)
+        phage_amr_annotation = merge_amr_phage_annotation(amr_annotations, phage_annotations)
+        if phage_amr_annotation:
+            store_amr_phage_annotations(phage_amr_annotation, cursor, args.phage_report_path)
+
+    # parse and store composite transposon annotations
+    if amr_annotations and args.comp_gbk_file_path and Path(args.comp_gbk_file_path).exists():
+        comp_transposon_annotations = parse_composite_transposon_annotation(args.comp_gbk_file_path)
+        comp_transposon_amr_annotation = merge_amr_comp_transposon(amr_annotations, comp_transposon_annotations)
+        if comp_transposon_amr_annotation:
+            store_amr_comp_transposon(comp_transposon_amr_annotation, cursor, args.comp_gbk_file_path)
+
+    conn.commit()
+    con.close()
+
+
+if __name__ = "__main__":
+    main()
