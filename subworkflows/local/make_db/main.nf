@@ -17,6 +17,7 @@ include { DIAMOND_BLASTP            } from '../../../modules/local/diamond/blast
 include { FILTER_DIAMOND_HITS       } from '../../../modules/local/filter_hits'
 include { TNCOMP_FINDER             } from '../../../modules/local/tncomp_finder'
 include { TN3_FINDER                } from '../../../modules/local/tn3finder'
+include { INSERT_DB                 } from '../../../modules/local/insert_db'
 
 workflow MAKE_DB {
     take:
@@ -57,8 +58,6 @@ workflow MAKE_DB {
 
 
     // Run ICEberg annotation
-    
-    // def blast_columns = "qseqid sseqid pident slen qlen length mismatch gapopen qstart qend sstart send evalue bitscore full_qseq"
 
     // Step 1: Get the database
     GET_ICEBERG()
@@ -93,15 +92,73 @@ workflow MAKE_DB {
    // Run Tncompfinder
     TNCOMP_FINDER(ch_genomes)
 
-   // Rub Tn3finder
+   // Run Tn3finder
     TN3_FINDER(ch_genomes)
+
+    // Insert genomes into db
+    // Step 1: Define short aliases for module outputs
+    amr_ch    = AMRFINDERPLUS_RUN.out.report            
+    mob_ch    = MOBSUITE_RECON.out.contig_report
+        
+    phage_ch  = PHISPY.out.coordinates  
+    phage_ch.view { "phage_ch: $it" }
+                
+    ice_ch    = FILTER_DIAMOND_HITS.out.filtered_iceberg_hits
+    ice_ch.view { "ice_ch: $it" }
+  
+    tncomp_all = TNCOMP_FINDER.out.gbk.groupTuple()
+    tncomp_all.view { "After groupTuple: $it" }
+
+    sketch_ref = MASH_PASTE.out.reference
+    sketch_ref.view { "sketch_ref: $it" }
+
+    db_initial = Channel.of(file(params.db_path ?: "etd.db")) 
+    db_initial.view { "db_initial: $it" }  
+ 
+    // Step 2: Join per genome by meta.id
+    paired = amr_ch.combine(mob_ch, by: 0)              // [meta, amr_tsv, contigs_report]
+    paired.view { "paired: $it" }
+
+    paired2 = paired
+       .combine(ice_ch, by: 0)                    // [meta, amr_tsv, contigs_report, ice_file_or_null]
+    paired2.view { "paired2: $it" }
+    paired3 = paired2
+       .combine(phage_ch, by: 0)
+    paired3.view { "paired3: $it" }
+
+    paired4 = paired3                    // [meta, amr_tsv, contigs_report, ice_file_or_null, phage_file_or_null]
+       .combine(tncomp_all, by: 0)                    // [meta, amr_tsv, contigs_report, ice_file_or_null, phage_file_or_null, gbk_files_list_or_null]
+
+    paired4.view { "paired4: $it" }
+
+    // Step 3: Shape the final per-genome bundle
+    to_insert = paired4.map { meta, amr_tsv, contigs_report, ice_file, phage_file, gbk_files ->
+    // Convert nulls to empty lists for optional inputs
+          tuple(meta, amr_tsv, contigs_report,
+           ice_file   ?: [], 
+           phage_file ?: [], 
+           gbk_files  ?: [])
+}
+
+    // Call INSERT_DB
+    
+     INSERT_DB(
+        to_insert,
+        sketch_ref,
+        db_initial
+    )
 
     emit:
     //db_etd               = etd_db_init.sqlite_db
     //updated_db           = ch_db_insert.sqlite_db
       mash_sketches        = MASH_SKETCH.out.mash
+      sketch_reference     = MASH_PASTE.out.reference
       amr_reports          = AMRFINDERPLUS_RUN.out.report
       mobtyper_results     = MOBSUITE_RECON.out.contig_report
       integron_summaries   = INTEGRONFINDER.out.summary
-      //iceberg_hits       = FILTER_DIAMOND_HITS.out
+      iceberg_hits         = FILTER_DIAMOND_HITS.out.filtered_iceberg_hits
+      phispy_prophage_tsv  = PHISPY.out.prophage_tsv
+      phispy_coordinates   = PHISPY.out.coordinates
+      tncomp_gbk           = TNCOMP_FINDER.out.gbk
+      updated_db           = INSERT_DB.out.db 
 }

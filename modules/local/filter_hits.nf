@@ -7,7 +7,7 @@ process FILTER_DIAMOND_HITS {
     val min_length
 
     output:
-    path "${tool_name}_filtered_hits.tsv", emit: filtered_iceberg_hits
+    tuple val(meta), path ("${tool_name}_filtered_hits.tsv"), emit: filtered_iceberg_hits
 
     script:
     """

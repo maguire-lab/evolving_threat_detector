@@ -459,58 +459,67 @@ g
         total_updated += cursor.rowcount
     return total_update
 
-def parse_composite_transposon_annotation(comp_gbk_file_path):
+def parse_composite_transposon_annotation(comp_gbk_files):
     """
-    Parse GenBank file to extract only the IS element name and contig ID (from definition).
-
+    Parse multiple GBK files, but flatten to contig_id level.
+    
     Returns:
     dict with 'contig_id' and 'is_element_id'
     """
-    try:
-        composite_transposon_annotations = {}
-        record = SeqIO.read(comp_gbk_file_path, "genbank")
+    composite_transposon_annotations = {}
+    
+    for gbk_file in comp_gbk_files:
+        try:
+            record = SeqIO.read(gbk_file, "genbank")
+            contig_id = record.description.split()[0]
+            
+            # Collect all IS elements from this candidate
+            is_elements = []
+            for feature in record.features:
+                if feature.type == "misc_feature" and "note" in feature.qualifiers:
+                    note = feature.qualifiers["note"][0]
+                    if note.startswith("insertion sequence"):
+                        is_element = note.replace("insertion sequence ", "")
+                        is_elements.append(is_element)
+            
+            # Accumulate IS elements for this contig_id (from all candidates)
+            if contig_id not in composite_transposon_annotations:
+                composite_transposon_annotations[contig_id] = {
+                    "contig_id": contig_id,
+                    "composite_transposon_annotation": []
+                }
+            
+            # Add all IS elements found in this candidate
+            composite_transposon_annotations[contig_id]["composite_transposon_annotation"].extend(is_elements)
+            
+        except Exception as e:
+            print(f"Error parsing {gbk_file}: {e}")
+    
+    # Convert lists to comma-separated strings for compatibility
+    for contig_id in composite_transposon_annotations:
+        elements = composite_transposon_annotations[contig_id]["composite_transposon_annotation"]
+        # Remove duplicates and join
+        unique_elements = list(set(elements))
+        composite_transposon_annotations[contig_id]["composite_transposon_annotation"] = ", ".join(unique_elements)
+    
+    return composite_transposon_annotations
 
-        # Extract contig ID from the DEFINITION field
-        definition = record.description  # e.g. "EECGICBD_1 Staphylococcus aureus strain ..."
-        contig_id = definition.split()[0]
-
-        # Extract IS element name from misc_feature note
-        is_element_id = None
-        for feature in record.features:
-            if feature.type == "misc_feature" and "note" in feature.qualifiers:
-                note = feature.qualifiers["note"][0]
-                if note.startswith("insertion sequence"):
-                    is_element_id = note.replace("insertion sequence ", "")
-                    break  # only need the first one
-
-        composite_transposon_annotations[contig_id] = {
-            "contig_id": contig_id,
-            "composite_transposon_annotation": is_element_id
-        }
-
-        if not composite_transposon_annotations:
-            print(f"Warning: No transposon annotation found in {gbk_file_path}")
-
-    except Exception as e:
-        print(f"Error parsing {gbk_path}: {e}")
-        return composite_transposon_annotations
-
-def merge_amr_comp_transposon(amr_annotations, comp_ann):
-    out = []
-    for a in amr_annotations:
-        info = comp_ann.get(a["contig_id"])
+def merge_amr_comp_transposon(amr_annotations, composite_transposon_annotation):
+    amr_comp_transposon_annotations = []
+    for annotation in amr_annotations:
+        info = composite_transposon_annotation.get(annotation["contig_id"])
         if info:
             out.append({
-                "genome_id": a["genome_id"],
-                "contig_id": a["contig_id"],
-                "amr_gene":  a["amr_gene"],
+                "genome_id": annotation["genome_id"],
+                "contig_id": annotation["contig_id"],
+                "amr_gene":  annotation["amr_gene"],
                 "composite_transposon_annotation": info.get("composite_transposon_annotation")
             })
-    return out
+    return amr_comp_transposon_annotations
 
-def store_amr_comp_transposon(amr_comp, cursor, output_path):
+def store_amr_comp_transposon(amr_comp_transposon_annotations, cursor, output_path):
     total_updated = 0
-    for row in amr_comp:
+    for row in amr_comp_transposon_annotations:
         genome_id = row.get("genome_id")
         gene      = row.get("amr_gene")
         ann       = row.get("composite_transposon_annotation")
@@ -537,7 +546,7 @@ def main():
     parser.add_argument('--contigs_report_path', type=Path, help='Path to mobsuite contigs_report.txt')
     parser.add_argument('--filtered_hits_report_path', type=Path, default=None, help='Path to to ICE filtered_hits TSV')
     parser.add_argument('--phage_report_path', type=Path, default=None, help='Path to the prophage report TSV')
-    parser.add_argument('--comp_gbk_file_path', type=Path, default=None, help='Path to composite transposon gbk')
+    parser.add_argument('--comp_gbk_files', type=Path, nargs='*', default=None, help='Paths to composite transposon GBK files (one per candidate)')
     
     args = parser.parse_ags()
 

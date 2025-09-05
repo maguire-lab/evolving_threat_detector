@@ -1,0 +1,7 @@
+name: insert_db_env
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11
+  - biopython=1.84
