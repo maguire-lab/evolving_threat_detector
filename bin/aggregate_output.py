@@ -173,11 +173,12 @@ def store_amr_annotation(amr_annotations, cursor, output_path):
     cursor (sqlite3.Cursor): Database cursor object..
     """
     
+    out_str = str(Path(output_path))
     try:
         for annotation in amr_annotations:
             cursor.execute(
                 "INSERT INTO annotations (genome_id, gene_name, amr_annotation, amr_output_path) VALUES (?, ?, ?, ?)",
-                (annotation['genome_id'], annotation['amr_gene'], annotation['annotation'], output_path))
+                (annotation['genome_id'], annotation['amr_gene'], annotation['annotation'], out_str))
     except sqlite3.Error as e:
         print(f"Error storing AMR annotations: {e}")
         raise
@@ -421,7 +422,7 @@ def merge_amr_phage_annotation(amr_annotations, phage_annotations):
     for annotation in amr_annotations:
         info = phage_annotations.get(annotation["contig_id"])
         if info:
-            amr_ice_annotations.append({
+            amr_phage_annotations.append({
                 "genome_id": annotation["genome_id"],
                 "amr_gene": annotation["amr_gene"],
                 "prophage_annotation": info["prophage"],
@@ -441,7 +442,7 @@ g
       int: number of table rows updated.
     """
     total_updated = 0
-    for row in amr_ice_annotations:
+    for row in amr_phage_annotations:
         genome_id = row.get("genome_id")
         gene      = row.get("amr_gene")
         prophage   = row.get("phage_annotation")
@@ -457,7 +458,7 @@ g
                 (prophage, str(output_path), genome_id, gene)
             )
         total_updated += cursor.rowcount
-    return total_update
+    return total_updated
 
 def parse_composite_transposon_annotation(comp_gbk_files):
     """
@@ -509,7 +510,7 @@ def merge_amr_comp_transposon(amr_annotations, composite_transposon_annotation):
     for annotation in amr_annotations:
         info = composite_transposon_annotation.get(annotation["contig_id"])
         if info:
-            out.append({
+            amr_comp_transposon_annotations.append({
                 "genome_id": annotation["genome_id"],
                 "contig_id": annotation["contig_id"],
                 "amr_gene":  annotation["amr_gene"],
@@ -538,7 +539,7 @@ def store_amr_comp_transposon(amr_comp_transposon_annotations, cursor, output_pa
 
 def main():
     parser = argparse.ArgumentParser(description='Store sketches and annotations into the ETD DB.')
-    parser.add_argument('--db_path', type=Path, default=PATH(DATABASE_PATH), help='Path to the SQLite database.')
+    parser.add_argument('--db_path', type=Path, default=Path(DATABASE_PATH), help='Path to the SQLite database.')
     parser.add_argument('--fasta_name', type=str, required=True, help='Genome fasta id')
     parser.add_argument('--organism', type=str, default=None, help='Organism name')
     parser.add_argument('--sketch_path', type=Path, help='Path to the all genomes sketch file')
@@ -548,7 +549,16 @@ def main():
     parser.add_argument('--phage_report_path', type=Path, default=None, help='Path to the prophage report TSV')
     parser.add_argument('--comp_gbk_files', type=Path, nargs='*', default=None, help='Paths to composite transposon GBK files (one per candidate)')
     
-    args = parser.parse_ags()
+    args = parser.parse_args()
+
+    # Normalize comp_gbk_files to a list of strings (existing only)
+    gbk_list = []
+    if args.comp_gbk_files:
+        for p in args.comp_gbk_files:
+            p = Path(p)
+            if p.exists():
+                gbk_list.append(str(p))
+
 
     db_path = Path(args.db_path)
     init_db(db_path)
@@ -577,7 +587,7 @@ def main():
         plasmid_annotations = parse_plasmid_annotation(args.contigs_report_path)
         plasmid_amr_annotation = merge_amr_plasmid_annotation(amr_annotations, plasmid_annotations)
         if plasmid_amr_annotation:
-            store_amr_plasmid_annotations(plasmid_amr_annotation, cursor, Path(args.contigs_report).parent)
+            store_amr_plasmid_annotations(plasmid_amr_annotation, cursor, Path(args.contigs_report_path).parent)
 
     # parse and store ICE annotations
     if amr_annotations and args.filtered_hits_report_path and Path(args.filtered_hits_report_path).exists():
@@ -594,15 +604,16 @@ def main():
             store_amr_phage_annotations(phage_amr_annotation, cursor, args.phage_report_path)
 
     # parse and store composite transposon annotations
-    if amr_annotations and args.comp_gbk_file_path and Path(args.comp_gbk_file_path).exists():
-        comp_transposon_annotations = parse_composite_transposon_annotation(args.comp_gbk_file_path)
+    if amr_annotations and gbk_list:
+        comp_transposon_annotations = parse_composite_transposon_annotation(gbk_list)
         comp_transposon_amr_annotation = merge_amr_comp_transposon(amr_annotations, comp_transposon_annotations)
         if comp_transposon_amr_annotation:
-            store_amr_comp_transposon(comp_transposon_amr_annotation, cursor, args.comp_gbk_file_path)
+            comp_transposon_result_path = str(Path(gbk_list[0]).parent)
+            store_amr_comp_transposon(comp_transposon_amr_annotation, cursor, comp_transposon_result_path)
 
     conn.commit()
-    con.close()
+    conn.close()
 
 
-if __name__ = "__main__":
+if __name__ == "__main__":
     main()

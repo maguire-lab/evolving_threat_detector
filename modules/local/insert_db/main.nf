@@ -5,9 +5,9 @@ process INSERT_DB {
   input:
   // per-genome bundle prepared by joins/mapping
   tuple val(meta), path(amr_tsv), path(contigs_report),
-        path(ice_hits)      optional: true,
-        path(phage_coords)  optional: true,
-        path(gbk_files)     optional: true, collect: true
+        path(ice_hits),
+        path(phage_coords),
+        path(gbk_files)
   
   // global (single) files:
   path sketch_msh
@@ -20,27 +20,20 @@ process INSERT_DB {
   script:
   // build an optional GBK argument only if we actually have files
   def gbkArg = (gbk_files && gbk_files.size() > 0) ? 
-    "--comp-gbk-files ${gbk_files.collect{ it.toString() }.join(' ')}" : ""
+    "--comp_gbk_files ${gbk_files.collect{ it.toString() }.join(' ')}" : ""
   """
   set -euo pipefail
 
-  # Seed or create DB
-  if [ -s "${db_in}" ]; then cp "${db_in}" etd.db; else : > etd.db; fi
-
-  # Collect GBK files if they exist
-  # gbk_files=\$(ls *.gbk 2>/dev/null | tr '\\n' ' ' || echo "")
-
-
-  bin/aggregate_output.py \\
-    --db-path etd.db \\
-    --fasta-name ${meta.id} \\
+  python3 ${projectDir}/bin/aggregate_output.py \\
+    --db_path etd.db \\
+    --fasta_name ${meta.id} \\
     --organism "${meta.organism}" \\
-    --sketch-path "${sketch_msh}" \\
-    --amrfinder-output "${amr_tsv}" \\
-    --contigs-report-path "${contigs_report}" \\
-    ${ ice_hits     ? "--filtered-hits-report-path ${ice_hits}" : ""} \\
-    ${ phage_coords ? "--phage-report-path ${phage_coords}"     : ""} \\
-    ${ (gbkArg } \\
+    --sketch_path "${sketch_msh}" \\
+    --amrfinder_output "${amr_tsv}" \\
+    --contigs_report_path "${contigs_report}" \\
+    ${ice_hits && ice_hits.size() > 0 ? "--filtered_hits_report_path ${ice_hits}" : ""} \\
+    ${phage_coords && phage_coords.size() > 0 ? "--phage_report_path ${phage_coords}" : ""} \\
+    ${gbkArg} \\
     2>&1 | tee register.log
   """
 }
