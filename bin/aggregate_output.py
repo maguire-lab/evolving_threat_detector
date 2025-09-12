@@ -4,6 +4,8 @@ import sqlite3
 from pathlib import Path
 import argparse
 from Bio import SeqIO
+import sys
+import json
 
 DATABASE_PATH = 'etd.db'
 
@@ -30,7 +32,7 @@ def init_db(db_path=DATABASE_PATH):
         # Create Genomes table
         cursor.execute('''CREATE TABLE IF NOT EXISTS genomes (
                           id INTEGER PRIMARY KEY,
-                          genome_name TEXT NOT NULL,
+                          genome_name TEXT NOT NULL UNIQUE,
                           organism TEXT)''')
 
         # Create Sketch table for storing the single sketch file
@@ -56,7 +58,8 @@ def init_db(db_path=DATABASE_PATH):
                           tn3_transposon_annotation TEXT,
                           tn3_transposon_output_path TEXT,
                           ice_annotation TEXT,
-                          ice_output_path TEXT)''')
+                          ice_output_path TEXT,
+                          UNIQUE(genome_id, gene_name))''')
 
         # Index to speed up UPDATE/SELECT by (genome_id, gene_name)
         cursor.execute("""
@@ -149,11 +152,13 @@ def parse_amr_annotation(amrfinder_output, genome_id):
                     # skip malformed/short lines
                     continue
                 contig_id = parts[1].split()[0]
+                protein_id = parts[0]
                 gene_name = parts[5]
                 annotation = parts[6]
                 amr_annotations.append({
                     "genome_id": genome_id,
                     "contig_id": contig_id,
+                    "protein_id": protein_id,
                     "amr_gene": gene_name,
                     "annotation": annotation
                 })
@@ -173,11 +178,11 @@ def store_amr_annotation(amr_annotations, cursor, output_path):
     cursor (sqlite3.Cursor): Database cursor object..
     """
     
-    out_str = str(Path(output_path))
+    out_str = str(Path(output_path).resolve())
     try:
         for annotation in amr_annotations:
             cursor.execute(
-                "INSERT INTO annotations (genome_id, gene_name, amr_annotation, amr_output_path) VALUES (?, ?, ?, ?)",
+                "INSERT OR REPLACE INTO annotations (genome_id, gene_name, amr_annotation, amr_output_path) VALUES (?, ?, ?, ?)",
                 (annotation['genome_id'], annotation['amr_gene'], annotation['annotation'], out_str))
     except sqlite3.Error as e:
         print(f"Error storing AMR annotations: {e}")
@@ -203,9 +208,12 @@ def parse_plasmid_annotation(contigs_report_path):
                     continue
 
                 molecule_type_full = parts[1].strip()
-                first_token = molecule_type_full.split(None, 1)[0].lower() if molecule_type_full else ""
-                if first_token != "plasmid":
+                if not molecule_type_full.lower().startswith("plasmid"):
+                # first_token = molecule_type_full.split(None, 1)[0].lower() if molecule_type_full else ""
+                # if first_token != "plasmid":
                     continue
+
+                plasmid = parts[2].strip()
 
                 contig_id_norm = parts[4].split()[0]
                 if not contig_id_norm:
@@ -213,7 +221,7 @@ def parse_plasmid_annotation(contigs_report_path):
 
                 plasmid_annotations[contig_id_norm] = {
                     "contig_id": contig_id_norm,
-                    "plasmid": molecule_type_full
+                    "plasmid": plasmid
                 }
 
         if not plasmid_annotations:
@@ -259,6 +267,8 @@ def store_amr_plasmid_annotations(amr_plasmid_annotations, cursor, output_path):
     Returns:
       int: number of table rows updated.
     """
+    out_str = str(Path(output_path).resolve())
+
     total_updated = 0
     for row in amr_plasmid_annotations:
         genome_id = row.get("genome_id")
@@ -273,7 +283,7 @@ def store_amr_plasmid_annotations(amr_plasmid_annotations, cursor, output_path):
             WHERE genome_id = ?
                 AND gene_name = ?
             """,
-                (plasmid, str(output_path), genome_id, gene)
+                (plasmid, out_str, genome_id, gene)
             )
         total_updated += cursor.rowcount
     return total_updated
@@ -297,13 +307,13 @@ def parse_ice_annotation(filtered_hits_report_path):
                 if len(parts) < 5:
                     continue
 
-                contig_id = parts[0]
-                if not contig_id:
+                protein_id = parts[0].strip()
+                if not protein_id:
                     continue
-                annotation = parts[1]
+                annotation = parts[1].strip()
 
-                ice_annotations[contig_id] = {
-                    "contig_id": contig_id,
+                ice_annotations[protein_id] = {
+                    "protein_id": protein_id,
                     "ice": annotation
                 }
 
@@ -327,16 +337,45 @@ def merge_amr_ice_annotation(amr_annotations, ice_annotations):
             "ice_annotation": ...,
         }
     """
+    # Debug: print sample contig IDs from both sources
+    amr_contigs = set(a["contig_id"] for a in amr_annotations)
+    ice_contigs = set(ice_annotations.keys())
+
+    print(f"AMR contig IDs (first 5): {list(amr_contigs)[:5]}")
+    print(f"ICE contig IDs (first 5): {list(ice_contigs)[:5]}")
+
+    # Find matches
+    matches = amr_contigs.intersection(ice_contigs)
+    print(f"Matching contigs: {len(matches)} out of {len(amr_contigs)} AMR and {len(ice_contigs)} ICE")
+
+    # Write debug info to file
+    debug_file = Path("ice_merge_debug.txt")
+    with open(debug_file, 'w') as debug:
+        amr_contigs = set(a["protein_id"] for a in amr_annotations)
+        ice_contigs = set(ice_annotations.keys())
+        
+        debug.write(f"AMR contigs (all): {list(amr_contigs)[:]}\n")
+        debug.write(f"ICE contigs (all): {list(ice_contigs)[:]}\n")
+        
+        # Try to find pattern matches
+        for amr_contig in list(amr_contigs):
+            debug.write(f"\nChecking AMR contig: {amr_contig}\n")
+            for ice_contig in list(ice_contigs):
+                if amr_contig in ice_contig or ice_contig in amr_contig:
+                    debug.write(f"  Potential match: {ice_contig}\n")
+
     amr_ice_annotations = []
     for annotation in amr_annotations:
-        info = ice_annotations.get(annotation["contig_id"])
+        info = ice_annotations.get(annotation["protein_id"])
         if info:
             amr_ice_annotations.append({
                 "genome_id": annotation["genome_id"],
                 "amr_gene": annotation["amr_gene"],
                 "ice_annotation": info["ice"],
-                "ice_id": info["contig_id"]
+                "ice_id": info["protein_id"]
                 })
+
+    print(f"Created {len(amr_ice_annotations)} AMR-ICE annotations")
 
     return amr_ice_annotations
 
@@ -350,6 +389,7 @@ def store_amr_ice_annotations(amr_ice_annotations, cursor, output_path):
     Returns:
       int: number of table rows updated.
     """
+    out_str = str(Path(output_path).resolve())
     total_updated = 0
     for row in amr_ice_annotations:
         genome_id = row.get("genome_id")
@@ -364,10 +404,10 @@ def store_amr_ice_annotations(amr_ice_annotations, cursor, output_path):
             WHERE genome_id = ?
                 AND gene_name = ?
             """,
-                (ice, str(output_path), genome_id, gene)
+                (ice, str(out_str), genome_id, gene)
             )
         total_updated += cursor.rowcount
-    return total_update
+    return total_updated
 
 def parse_phage_annotation(phage_report_path):
     """
@@ -441,11 +481,12 @@ g
     Returns:
       int: number of table rows updated.
     """
+    out_str = str(Path(output_path).resolve())
     total_updated = 0
     for row in amr_phage_annotations:
         genome_id = row.get("genome_id")
         gene      = row.get("amr_gene")
-        prophage   = row.get("phage_annotation")
+        prophage   = row.get("prophage_annotation")
 
         cursor.execute(
             """
@@ -455,7 +496,7 @@ g
             WHERE genome_id   = ?
                 AND gene_name = ?
             """,
-                (prophage, str(output_path), genome_id, gene)
+                (prophage, str(out_str), genome_id, gene)
             )
         total_updated += cursor.rowcount
     return total_updated
@@ -518,7 +559,10 @@ def merge_amr_comp_transposon(amr_annotations, composite_transposon_annotation):
             })
     return amr_comp_transposon_annotations
 
-def store_amr_comp_transposon(amr_comp_transposon_annotations, cursor, output_path):
+def store_amr_comp_transposon(amr_comp_transposon_annotations, cursor, gbk_files):
+
+    output_paths = [str(Path(f).resolve()) for f in gbk_files]
+    output_path_str = ";".join(output_paths) if gbk_files else ""
     total_updated = 0
     for row in amr_comp_transposon_annotations:
         genome_id = row.get("genome_id")
@@ -532,7 +576,7 @@ def store_amr_comp_transposon(amr_comp_transposon_annotations, cursor, output_pa
              WHERE genome_id = ?
                AND gene_name = ?
             """,
-            (ann, str(output_path), genome_id, gene)
+            (ann, str(output_path_str), genome_id, gene)
         )
         total_updated += cursor.rowcount
     return total_updated
@@ -587,14 +631,14 @@ def main():
         plasmid_annotations = parse_plasmid_annotation(args.contigs_report_path)
         plasmid_amr_annotation = merge_amr_plasmid_annotation(amr_annotations, plasmid_annotations)
         if plasmid_amr_annotation:
-            store_amr_plasmid_annotations(plasmid_amr_annotation, cursor, Path(args.contigs_report_path).parent)
+            store_amr_plasmid_annotations(plasmid_amr_annotation, cursor, args.contigs_report_path)
 
     # parse and store ICE annotations
     if amr_annotations and args.filtered_hits_report_path and Path(args.filtered_hits_report_path).exists():
         ice_annotations = parse_ice_annotation(args.filtered_hits_report_path)
         ice_amr_annotations = merge_amr_ice_annotation(amr_annotations, ice_annotations)
         if ice_amr_annotations:
-            store_amr_ice_annotations(ice_amr_annotation, cursor, args.filtered_hits_report_path)
+            store_amr_ice_annotations(ice_amr_annotations, cursor, args.filtered_hits_report_path)
 
     # parse and store prophage annotations
     if amr_annotations and args.phage_report_path and Path(args.phage_report_path).exists():
@@ -608,8 +652,8 @@ def main():
         comp_transposon_annotations = parse_composite_transposon_annotation(gbk_list)
         comp_transposon_amr_annotation = merge_amr_comp_transposon(amr_annotations, comp_transposon_annotations)
         if comp_transposon_amr_annotation:
-            comp_transposon_result_path = str(Path(gbk_list[0]).parent)
-            store_amr_comp_transposon(comp_transposon_amr_annotation, cursor, comp_transposon_result_path)
+            #comp_transposon_result_path = str(Path(gbk_list[0]).parent)
+            store_amr_comp_transposon(comp_transposon_amr_annotation,cursor, gbk_list)
 
     conn.commit()
     conn.close()

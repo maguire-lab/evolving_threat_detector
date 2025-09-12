@@ -1,5 +1,5 @@
 ##gff-version 3
-##date 2025-08-19
+##date 2025-09-11
 ##source-version GenBank
 ##sequence-region ADCFMMLG_1 1 466074
 ADCFMMLG_1	GenBank	gene	2063	2419	.	-	.	ID=ADCFMMLG_00001;Name=sarT

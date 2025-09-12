@@ -1,0 +1,4 @@
+AMR contig IDs (first 5): ['GCILIKDN_4', 'GCILIKDN_16', 'GCILIKDN_22', 'GCILIKDN_29', 'GCILIKDN_6']
+ICE contig IDs (first 5): ['GCILIKDN_01341', 'GCILIKDN_01348', 'GCILIKDN_01349', 'GCILIKDN_02664', 'GCILIKDN_01339']
+Matching contigs: 0 out of 9 AMR and 29 ICE
+Created 5 AMR-ICE annotations

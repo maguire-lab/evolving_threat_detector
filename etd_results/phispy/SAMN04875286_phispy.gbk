@@ -20503,10 +20503,6 @@ FEATURES             Location/Qualifiers
                      /translation="MAKINFDAATKGNPGISTCAIVIKEDEQHYTYTHELGEMDNHTAE
                      WAACIYALEHARELNVQNALLYTDSKLIADSIEAGYVKNANFKPYFDQIEIFEKDFDLL
                      FVKWIPREQNKEANQHAQQALYKLIKKNK"
-     misc_feature    187837..238499
-                     /note="prophage region pp1 identified with PhiSpy v4.2.21"
-     repeat_region   join(190198..190210,237252..237264)
-                     /note="prophage region pp1 potential attachment sites"
 ORIGIN
         1 tttctatcaa ataattaata gaaatcagct tttttacatt gcctaagaac ttaatgtccc
        61 aagccctaaa acttgttgtt atttatttga tttagcagcg atacgtttat atcttaagta
@@ -48992,9 +48988,9 @@ FEATURES             Location/Qualifiers
                      /translation="MSNIYKSYLVAVLCFTVLAIVLMPLLYFTTAWSIAGFASIATFIF
                      YKEYFYGE"
      misc_feature    3023..14941
-                     /note="prophage region pp2 identified with PhiSpy v4.2.21"
+                     /note="prophage region pp1 identified with PhiSpy v4.2.21"
      repeat_region   join(2041..2053,16771..16783)
-                     /note="prophage region pp2 potential attachment sites"
+                     /note="prophage region pp1 potential attachment sites"
 ORIGIN
         1 catgcataag aaatactaat ttctaaagaa aaagtatttc tttatgttgg ggccccgcca
        61 acttgcacat tattgtaagc tgacttacca tcagcttctg tgttggggcc ccgctataat

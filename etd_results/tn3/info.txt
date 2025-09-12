@@ -1,3 +1,3 @@
-time:	Tue Aug 19 15:24:00 2025
-working directory:	/home/precious/etd/work/88/113416e6f3ab174707971d1f4799ac
-command line:	/home/precious/etd/bin/tn3/Tn3+TA_finder.py -f SAMN04875288_contigs.fasta -g -t 1
+time:	Thu Sep 11 13:35:55 2025
+working directory:	/home/precious/etd/work/09/ee0fddf73e4f8c05220cf96285b353
+command line:	/home/precious/etd/bin/tn3/Tn3+TA_finder.py -f SAMN04875289_contigs.fasta -g -t 1

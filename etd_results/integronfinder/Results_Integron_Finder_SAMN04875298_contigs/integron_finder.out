@@ -349,7 +349,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon GCILIKDN_32
 INFO     : ############ Processing replicon GCILIKDN_33 (33/57) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/41/95952b88c1fee128ff70ae2ba210b5/Results_Integron_Finder_SAMN04875298_contigs/tmp_GCILIKDN_33/GCILIKDN_33.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/46/beda488ec90739d587cba002dd68d5/Results_Integron_Finder_SAMN04875298_contigs/tmp_GCILIKDN_33/GCILIKDN_33.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon GCILIKDN_33 ############
 INFO     : ############ Processing replicon GCILIKDN_34 (34/57) ############
 
@@ -434,7 +434,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon GCILIKDN_42
 INFO     : ############ Processing replicon GCILIKDN_43 (43/57) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/41/95952b88c1fee128ff70ae2ba210b5/Results_Integron_Finder_SAMN04875298_contigs/tmp_GCILIKDN_43/GCILIKDN_43.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/46/beda488ec90739d587cba002dd68d5/Results_Integron_Finder_SAMN04875298_contigs/tmp_GCILIKDN_43/GCILIKDN_43.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon GCILIKDN_43 ############
 INFO     : ############ Processing replicon GCILIKDN_44 (44/57) ############
 
@@ -483,11 +483,11 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon GCILIKDN_48
 INFO     : ############ Processing replicon GCILIKDN_49 (49/57) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/41/95952b88c1fee128ff70ae2ba210b5/Results_Integron_Finder_SAMN04875298_contigs/tmp_GCILIKDN_49/GCILIKDN_49.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/46/beda488ec90739d587cba002dd68d5/Results_Integron_Finder_SAMN04875298_contigs/tmp_GCILIKDN_49/GCILIKDN_49.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon GCILIKDN_49 ############
 INFO     : ############ Processing replicon GCILIKDN_50 (50/57) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/41/95952b88c1fee128ff70ae2ba210b5/Results_Integron_Finder_SAMN04875298_contigs/tmp_GCILIKDN_50/GCILIKDN_50.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/46/beda488ec90739d587cba002dd68d5/Results_Integron_Finder_SAMN04875298_contigs/tmp_GCILIKDN_50/GCILIKDN_50.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon GCILIKDN_50 ############
 INFO     : ############ Processing replicon GCILIKDN_51 (51/57) ############
 
@@ -545,7 +545,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon GCILIKDN_56
 INFO     : ############ Processing replicon GCILIKDN_57 (57/57) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/41/95952b88c1fee128ff70ae2ba210b5/Results_Integron_Finder_SAMN04875298_contigs/tmp_GCILIKDN_57/GCILIKDN_57.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/46/beda488ec90739d587cba002dd68d5/Results_Integron_Finder_SAMN04875298_contigs/tmp_GCILIKDN_57/GCILIKDN_57.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon GCILIKDN_57 ############
 INFO     : Merging integrons results.
 

@@ -403,7 +403,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon EECGICBD_38
 INFO     : ############ Processing replicon EECGICBD_39 (39/71) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/cb/91a93ce126e3a93a7cfa562bfe9f71/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_39/EECGICBD_39.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/2d/b834e51de7070b95b44b7f60e96589/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_39/EECGICBD_39.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon EECGICBD_39 ############
 INFO     : ############ Processing replicon EECGICBD_40 (40/71) ############
 
@@ -425,7 +425,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon EECGICBD_41
 INFO     : ############ Processing replicon EECGICBD_42 (42/71) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/cb/91a93ce126e3a93a7cfa562bfe9f71/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_42/EECGICBD_42.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/2d/b834e51de7070b95b44b7f60e96589/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_42/EECGICBD_42.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon EECGICBD_42 ############
 INFO     : ############ Processing replicon EECGICBD_43 (43/71) ############
 
@@ -564,7 +564,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon EECGICBD_57
 INFO     : ############ Processing replicon EECGICBD_58 (58/71) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/cb/91a93ce126e3a93a7cfa562bfe9f71/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_58/EECGICBD_58.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/2d/b834e51de7070b95b44b7f60e96589/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_58/EECGICBD_58.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon EECGICBD_58 ############
 INFO     : ############ Processing replicon EECGICBD_59 (59/71) ############
 
@@ -577,7 +577,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon EECGICBD_59
 INFO     : ############ Processing replicon EECGICBD_60 (60/71) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/cb/91a93ce126e3a93a7cfa562bfe9f71/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_60/EECGICBD_60.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/2d/b834e51de7070b95b44b7f60e96589/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_60/EECGICBD_60.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon EECGICBD_60 ############
 INFO     : ############ Processing replicon EECGICBD_61 (61/71) ############
 
@@ -608,7 +608,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon EECGICBD_63
 INFO     : ############ Processing replicon EECGICBD_64 (64/71) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/cb/91a93ce126e3a93a7cfa562bfe9f71/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_64/EECGICBD_64.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/2d/b834e51de7070b95b44b7f60e96589/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_64/EECGICBD_64.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon EECGICBD_64 ############
 INFO     : ############ Processing replicon EECGICBD_65 (65/71) ############
 
@@ -630,7 +630,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon EECGICBD_66
 INFO     : ############ Processing replicon EECGICBD_67 (67/71) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/cb/91a93ce126e3a93a7cfa562bfe9f71/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_67/EECGICBD_67.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/2d/b834e51de7070b95b44b7f60e96589/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_67/EECGICBD_67.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon EECGICBD_67 ############
 INFO     : ############ Processing replicon EECGICBD_68 (68/71) ############
 
@@ -661,7 +661,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon EECGICBD_70
 INFO     : ############ Processing replicon EECGICBD_71 (71/71) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/cb/91a93ce126e3a93a7cfa562bfe9f71/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_71/EECGICBD_71.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/2d/b834e51de7070b95b44b7f60e96589/Results_Integron_Finder_SAMN04875290_contigs/tmp_EECGICBD_71/EECGICBD_71.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon EECGICBD_71 ############
 INFO     : Merging integrons results.
 

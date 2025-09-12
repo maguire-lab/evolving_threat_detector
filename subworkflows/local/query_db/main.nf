@@ -3,7 +3,7 @@
  */
 include { AMRFINDERPLUS_UPDATE      } from '../../../modules/nf-core/amrfinderplus/update'
 include { AMRFINDERPLUS_RUN         } from '../../../modules/local/amrfinderplus/run'
-include { MASH_SKETCH               } from '../../../modules/nf-core/mash/sketch'
+include { MASH_DIST                 } from '../../../modules/nf-core/mash/dist'
 include { MASH_PASTE                } from '../../../modules/local/mash_paste'
 include { MOBSUITE_RECON            } from '../../../modules/local/mobsuite/recon'
 include { INTEGRONFINDER            } from '../../../modules/nf-core/integronfinder/main'
@@ -19,12 +19,16 @@ include { TNCOMP_FINDER             } from '../../../modules/local/tncomp_finder
 include { TN3_FINDER                } from '../../../modules/local/tn3finder'
 include { INSERT_DB                 } from '../../../modules/local/insert_db'
 
-workflow MAKE_DB {
+workflow QUERY_DB {
+
     take:
     ch_samplesheet
     ch_amrfinder_input
     ch_genomes
     ch_proteins
+    reference
+    diamond_db
+    etd_db_last
 
     main:
 
@@ -37,12 +41,12 @@ workflow MAKE_DB {
     // Update AMRFinderPlus database
     amrfinder_db = AMRFINDERPLUS_UPDATE()
 
-    // Run MASH sketching
-    MASH_SKETCH(ch_genomes)
+    // Run MASH distance estimation
+    MASH_DIST(ch_genomes, reference)
 
     // Run MASH paste
-    all_msh_list = MASH_SKETCH.out.mash.map { meta, msh -> msh }.collect()
-    pasted = MASH_PASTE(all_msh_list)
+    //all_msh_list = MASH_SKETCH.out.mash.map { meta, msh -> msh }.collect()
+    //pasted = MASH_PASTE(all_msh_list)
 
     // Run AMRFinderPlus with updated DB
     AMRFINDERPLUS_RUN(ch_amrfinder_input, amrfinder_db[0])
@@ -54,25 +58,25 @@ workflow MAKE_DB {
     INTEGRONFINDER(ch_genomes)
 
     // Run Phispy
-    PHISPY(ch_samplesheet
+    PHISPY(ch_samplesheet)
 
    // Run ICEberg annotation
 
     // Step 1: Get the database
-    GET_ICEBERG()
-    GET_ICEBERG.out.iceberg
-        .set { ch_iceberg_db }
+    //GET_ICEBERG()
+    //GET_ICEBERG.out.iceberg
+       // .set { ch_iceberg_db }
 
     // Step 2: Create DIAMOND database from ICEberg
-    DIAMOND_MAKEDB(ch_iceberg_db)
+    //DIAMOND_MAKEDB(ch_iceberg_db)
 
-    DIAMOND_MAKEDB.out.db.view { "DB: $it" }
+    //DIAMOND_MAKEDB.out.db.view { "DB: $it" }
 
     // Step 3: Run DIAMOND blastp with protein sequences from PARSE_GBK
 
     DIAMOND_BLASTP(
         ch_proteins,
-        DIAMOND_MAKEDB.out.db,
+        diamond_db,
         "txt",
         "qseqid sseqid pident slen qlen length mismatch gapopen qstart qend sstart send evalue bitscore"
     )
@@ -98,12 +102,13 @@ workflow MAKE_DB {
  emit:
     //db_etd               = etd_db_init.sqlite_db
     //updated_db           = ch_db_insert.sqlite_db
-      mash_sketches        = MASH_SKETCH.out.mash
-      sketch_reference     = MASH_PASTE.out.reference
+    //mash_sketches        = MASH_SKETCH.out.mash
+    //sketch_reference     = MASH_PASTE.out.reference
       amr_reports          = AMRFINDERPLUS_RUN.out.report
       mobtyper_results     = MOBSUITE_RECON.out.contig_report
       integron_summaries   = INTEGRONFINDER.out.summary
       iceberg_hits         = FILTER_DIAMOND_HITS.out.filtered_iceberg_hits
       phispy_prophage_tsv  = PHISPY.out.prophage_tsv
       phispy_coordinates   = PHISPY.out.coordinates
-      tncomp_gbk           = TNCOMP_FINDER.out.gbk)
+      tncomp_gbk           = TNCOMP_FINDER.out.gbk
+}

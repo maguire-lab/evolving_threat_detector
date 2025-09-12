@@ -9608,7 +9608,7 @@ FEATURES             Location/Qualifiers
      rRNA            complement(570408..573326)
                      /locus_tag="HDIEIFCH_00562"
                      /product="23S ribosomal RNA"
-     misc_feature    234657..251648
+     misc_feature    234844..251648
                      /note="prophage region pp1 identified with PhiSpy v4.2.21"
      repeat_region   join(234038..234053,248769..248784)
                      /note="prophage region pp1 potential attachment sites"

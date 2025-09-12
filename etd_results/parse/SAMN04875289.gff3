@@ -1,5 +1,5 @@
 ##gff-version 3
-##date 2025-08-19
+##date 2025-09-11
 ##source-version GenBank
 ##sequence-region FFLOIGJL_1 1 518247
 FFLOIGJL_1	GenBank	gene	355	2001	.	-	.	ID=FFLOIGJL_00001;Name=opuD_1

@@ -1,27 +1,27 @@
-2025-08-19 14:24:38 INFO     Welcome to PhiSpy.py version 4.2.21
-2025-08-19 14:24:38 INFO     Starting PhiSpy.py with the following arguments
+2025-09-11 16:35:53 INFO     Welcome to PhiSpy.py version 4.2.21
+2025-09-11 16:35:53 INFO     Starting PhiSpy.py with the following arguments
 Namespace(infile='SAMN04875289.gbk', output_dir='.', make_training_data=None, training_set='data/trainSet_genericAll.txt', list=False, file_prefix='SAMN04875289_phispy_', evaluate=False, number=5, min_contig_size=5000, window_size=30, nonprophage_genegaps=10, phage_genes=1, metrics=['orf_length_med', 'shannon_slope', 'at_skew', 'gc_skew', 'max_direction'], randomforest_trees=500, expand_slope=False, kmers_type='all', phmms=None, include_annotations=True, ignore_annotations=False, color=False, threads=2, output_choice=3, include_all_repeats=False, keep_dropped_predictions=False, extra_dna=2000, min_repeat_len=10, log='./SAMN04875289_phispy_phispy.log', quiet=False, keep=False, logger=<Logger PhiSpy (Level 5)>)
-2025-08-19 14:24:39 INFO     Processing 26 contigs
-2025-08-19 14:24:39 INFO     Making Testing Set...
-2025-08-19 14:24:43 INFO     Start Classification Algorithm...
-2025-08-19 14:24:43 INFO     Using training set in data/trainSet_genericAll.txt
-2025-08-19 14:24:44 INFO     Using the following metric(s): {'gc_skew', 'shannon_slope', 'at_skew', 'max_direction', 'orf_length_med'}.
-2025-08-19 14:24:44 INFO     Running the random forest classifier with 500 trees and 2 threads
-2025-08-19 14:27:20 INFO     Rank threshold calculated as 0.37785876865454815
-2025-08-19 14:27:20 INFO     As the training flag is zero, down-weighting unknown functions
-2025-08-19 14:27:20 INFO     Evaluating...
-2025-08-19 14:27:20 INFO     Checking prophages we might have found
-2025-08-19 14:27:20 INFO     Potential prophages (sorted highest to lowest)
-2025-08-19 14:27:20 INFO     Contig	Start	Stop	Number of potential genes	Status
-2025-08-19 14:27:20 INFO     FFLOIGJL_5	202495	220946	32	Dropped. No genes were identified as phage genes
-2025-08-19 14:27:20 INFO     FFLOIGJL_11	55461	65968	21	Dropped. No genes were identified as phage genes
-2025-08-19 14:27:20 INFO     FFLOIGJL_6	51569	52646	2	Dropped. Region too small (Not enough genes)
-2025-08-19 14:27:20 INFO     FFLOIGJL_5	187843	198434	2	Dropped. Region too small (Not enough genes)
-2025-08-19 14:27:20 INFO     FFLOIGJL_7	35272	35562	1	Dropped. Region too small (Not enough genes)
-2025-08-19 14:27:20 INFO     FFLOIGJL_3	152130	152690	1	Dropped. Region too small (Not enough genes)
-2025-08-19 14:27:20 INFO     FFLOIGJL_11	48224	49261	1	Dropped. Region too small (Not enough genes)
-2025-08-19 14:27:20 INFO     FFLOIGJL_1	108928	109824	1	Dropped. Region too small (Not enough genes)
-2025-08-19 14:27:20 INFO     Creating output files
-2025-08-19 14:27:20 INFO     Writing GenBank output file
-2025-08-19 14:27:21 INFO     Writing prophage_coordinates output file
-2025-08-19 14:27:21 INFO     Done!!! Output is in . and the log is in ./SAMN04875289_phispy_phispy.log
+2025-09-11 16:35:54 INFO     Processing 26 contigs
+2025-09-11 16:35:54 INFO     Making Testing Set...
+2025-09-11 16:35:58 INFO     Start Classification Algorithm...
+2025-09-11 16:35:58 INFO     Using training set in data/trainSet_genericAll.txt
+2025-09-11 16:36:00 INFO     Using the following metric(s): {'shannon_slope', 'at_skew', 'gc_skew', 'orf_length_med', 'max_direction'}.
+2025-09-11 16:36:00 INFO     Running the random forest classifier with 500 trees and 2 threads
+2025-09-11 16:37:42 INFO     Rank threshold calculated as 0.3838517450875415
+2025-09-11 16:37:42 INFO     As the training flag is zero, down-weighting unknown functions
+2025-09-11 16:37:42 INFO     Evaluating...
+2025-09-11 16:37:42 INFO     Checking prophages we might have found
+2025-09-11 16:37:42 INFO     Potential prophages (sorted highest to lowest)
+2025-09-11 16:37:42 INFO     Contig	Start	Stop	Number of potential genes	Status
+2025-09-11 16:37:42 INFO     FFLOIGJL_5	202495	220946	32	Dropped. No genes were identified as phage genes
+2025-09-11 16:37:42 INFO     FFLOIGJL_11	55461	65968	21	Dropped. No genes were identified as phage genes
+2025-09-11 16:37:42 INFO     FFLOIGJL_6	51569	52646	2	Dropped. Region too small (Not enough genes)
+2025-09-11 16:37:42 INFO     FFLOIGJL_5	187843	198434	2	Dropped. Region too small (Not enough genes)
+2025-09-11 16:37:42 INFO     FFLOIGJL_7	35272	35562	1	Dropped. Region too small (Not enough genes)
+2025-09-11 16:37:42 INFO     FFLOIGJL_3	152130	152690	1	Dropped. Region too small (Not enough genes)
+2025-09-11 16:37:42 INFO     FFLOIGJL_11	48224	49261	1	Dropped. Region too small (Not enough genes)
+2025-09-11 16:37:42 INFO     FFLOIGJL_1	108928	109824	1	Dropped. Region too small (Not enough genes)
+2025-09-11 16:37:42 INFO     Creating output files
+2025-09-11 16:37:42 INFO     Writing GenBank output file
+2025-09-11 16:37:42 INFO     Writing prophage_coordinates output file
+2025-09-11 16:37:42 INFO     Done!!! Output is in . and the log is in ./SAMN04875289_phispy_phispy.log
