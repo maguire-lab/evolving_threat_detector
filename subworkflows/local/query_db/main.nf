@@ -17,7 +17,7 @@ include { DIAMOND_BLASTP            } from '../../../modules/local/diamond/blast
 include { FILTER_DIAMOND_HITS       } from '../../../modules/local/filter_hits'
 include { TNCOMP_FINDER             } from '../../../modules/local/tncomp_finder'
 include { TN3_FINDER                } from '../../../modules/local/tn3finder'
-include { INSERT_DB                 } from '../../../modules/local/insert_db'
+include { QUERY_RESISTOME           } from '../../../modules/local/query_resistome'
 
 workflow QUERY_DB {
 
@@ -98,12 +98,92 @@ workflow QUERY_DB {
    // Run Tn3finder
     TN3_FINDER(ch_genomes)
 
+   // Query genomes in db
+    // Step 1: Define short aliases for module outputs
+    amr_ch    = AMRFINDERPLUS_RUN.out.report
+    mob_ch    = MOBSUITE_RECON.out.contig_report
+
+    phage_ch  = PHISPY.out.coordinates
+    phage_ch.view { "phage_ch: $it" }
+
+    ice_ch    = FILTER_DIAMOND_HITS.out.filtered_iceberg_hits
+    ice_ch.view { "ice_ch: $it" }
+
+    tncomp_all = TNCOMP_FINDER.out.gbk.groupTuple()
+    tncomp_all.view { "After groupTuple: $it" }
+
+    mash_dist = MASH_DIST.out.dist
+    mash_dist.view { "mash_dist: $it" }
+
+    // DEBUG: Count items in each channel
+    amr_ch.count().view { "AMR reports count: $it" }
+    mob_ch.count().view { "MOB reports count: $it" }
+    phage_ch.count().view { "Phage coords count: $it" }
+    ice_ch.count().view { "ICE hits count: $it" }
+    tncomp_all.count().view { "TnComp grouped count: $it" }
+
+    // DEBUG: View the meta IDs in each channel
+    amr_ch.map { meta, files -> meta.id }.collect().view { "AMR IDs: $it" }
+    mob_ch.map { meta, files -> meta.id }.collect().view { "MOB IDs: $it" }
+    phage_ch.map { meta, files -> meta.id }.collect().view { "Phage IDs: $it" }
+    ice_ch.map { meta, files -> meta.id }.collect().view { "ICE IDs: $it" }
+    tncomp_all.map { meta, files -> meta.id }.collect().view { "TnComp IDs: $it" }
+
+
+    etd_db_last =  Channel.fromPath("${params.outdir}/insert/etd.db")
+    etd_db_last.view { "db_last: $it" }
+
+    // Step 2: Join per genome by meta.id
+    paired = amr_ch.join(mob_ch, by: 0, remainder: true)              // [meta, amr_tsv, contigs_report]
+    paired.count().view { "After first join: $it genomes" }
+    paired.view { "paired: $it" }
+
+    paired2 = paired
+       .join(ice_ch, by: 0, remainder: true)                    // [meta, amr_tsv, contigs_report, ice_file_or_null]
+    paired2.count().view { "After second join: $it genomes" }
+    paired2.view { "paired2: $it" }
+
+    paired3 = paired2
+       .join(phage_ch, by: 0, remainder: true)
+    paired3.count().view { "After third join: $it genomes" }
+    paired3.view { "paired3: $it" }
+
+    paired4 = paired3                    // [meta, amr_tsv, contigs_report, ice_file_or_null, phage_file_or_null]
+       .join(tncomp_all, by: 0, remainder: true)                    // [meta, amr_tsv, contigs_report, ice_file_or_null, phage_file_or_null, gbk_files_list_or_null]
+    paired4.count().view { "After fourth join: $it genomes" }
+
+    // Step 3: Shape the final per-genome bundle
+    query_input = paired4
+        .join(mash_dist, by: 0)
+        .map { items ->
+            def meta = items[0]
+            def amr_tsv = items[1] ?: []
+            def contigs_report = items[2] ?: []
+            def ice_file = items[3] ?: []
+            def phage_file = items[4] ?: []
+            def gbk_files = items[5] ?: []
+            def dist_file = items[6]
+    
+        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, gbk_files, dist_file)
+}
+
+    query_input.count().view { "Final query_input count: $it genomes" }
+    query_input.view { "Query input structure: $it" }
+
+     // Call QUERY_DB
+
+     QUERY_RESISTOME(
+        query_input,
+        etd_db_last
+    )
+
 
  emit:
     //db_etd               = etd_db_init.sqlite_db
     //updated_db           = ch_db_insert.sqlite_db
     //mash_sketches        = MASH_SKETCH.out.mash
     //sketch_reference     = MASH_PASTE.out.reference
+      mash_distance        = MASH_DIST.out.dist
       amr_reports          = AMRFINDERPLUS_RUN.out.report
       mobtyper_results     = MOBSUITE_RECON.out.contig_report
       integron_summaries   = INTEGRONFINDER.out.summary
