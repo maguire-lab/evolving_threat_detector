@@ -149,9 +149,20 @@ workflow QUERY_DB {
     ch_proteins.view { "$it" }
 
     // Load from published/cached results
+    //diamond_db = Channel.fromPath("${params.outdir}/diamond/*.dmnd").first()
     diamond_db = Channel.fromPath("${params.outdir}/diamond/*.dmnd")
-    reference = Channel.fromPath("${params.outdir}/mash/all_genomes.msh")
-    etd_db_last =  Channel.fromPath("${params.outdir}/insert/etd.db")
+      .collect()
+      .map { files -> 
+          if (files.size() == 0) {
+              error "No .dmnd files found in ${params.outdir}/diamond/"
+          }
+          return files[0]
+    }
+    //diamond_db = Channel.value("${params.outdir}/diamond/*.dmnd")
+    //reference = Channel.fromPath("${params.outdir}/mash/all_genomes.msh")
+    reference = Channel.value(file("${params.outdir}/mash/all_genomes.msh"))
+    //etd_db_last =  Channel.fromPath("${params.outdir}/insert/etd.db")
+    etd_db_last =  Channel.value(file("${params.outdir}/insert/etd.db"))
 
     // Run the QUERY_DB subworkflow
     QUERY_DB_V1(ch_samplesheet, ch_amrfinder_input, ch_genomes, ch_proteins, reference, diamond_db, etd_db_last)

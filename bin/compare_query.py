@@ -9,19 +9,20 @@ from Bio import SeqIO
 import sys
 from aggregate_output import parse_plasmid_annotation, parse_ice_annotation, parse_phage_annotation, parse_composite_transposon_annotation
 
-def retrieve_closest_relatives(query_fasta, mash_dist_output, number=5):
+def retrieve_closest_relatives(mash_dist_output, number=5):
     try:
         closest_relatives = []
         with open(mash_dist_output) as f:
             for line in f:
                 fields = line.strip().split('\t')
-                genome_name = Path(fields[0]).name
+                #genome_name = Path(fields[0]).name
+                genome_name = fields[0].split('_')[0]
                 p_value = float(fields[2])
                 numerator, denominator = map(int, fields[4].split('/'))
-                dist = numerator / denominator
+                dist = 1 - (numerator / denominator)
                 closest_relatives.append((genome_name, p_value, dist))
 
-        closest_relatives.sort(key=lambda x: x[2], reverse=True)
+        closest_relatives.sort(key=lambda x: x[2])
         closest_relatives = closest_relatives[:number]
     except Exception as e:
         print(f"Error reading Mash file: {e}")
@@ -311,7 +312,7 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
 
       return pl.DataFrame(differences)
 
-def prepare_output(differences, output_format='json'):
+def prepare_output(differences, fasta_name, output_format='json'):
     """
     Function to report resistome differences between a query genome and its closest reference sequences.
 
@@ -323,13 +324,13 @@ def prepare_output(differences, output_format='json'):
     str or pl.DataFrame: A JSON string or a Polars DataFrame containing the resistome differences.
     """
     if output_format.lower() == 'json':
-        filename = 'resistome_differences.json'
+        filename = f"{fasta_name}_resistome_differences.json"
         differences_dict = differences.to_dicts()
         with open(filename, 'w') as f:
             json.dump(differences_dict, f, indent=2)
         return filename
     elif output_format.lower() == 'dataframe':
-        filename = 'resistome_differences.csv'
+        filename = f"{fasta_name}_resistome_differences.csv"
         differences.write_csv(filename)
         return filename
     else:
@@ -372,7 +373,7 @@ def main():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    closest_relatives =  retrieve_closest_relatives(args.fasta_name, args.mash_dist_output, args.number)
+    closest_relatives =  retrieve_closest_relatives(args.mash_dist_output, args.number)
 
      # parse and store amr_annotations
     query_amr_annotations = []
@@ -405,7 +406,7 @@ def main():
 
     differences = compare_amr_annotations(cursor, merged_df, closest_relatives)
 
-    prepare_output(differences, args.output_format)
+    prepare_output(differences, args.fasta_name, args.output_format)
 
     conn.close()
 

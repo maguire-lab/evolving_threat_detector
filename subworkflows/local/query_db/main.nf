@@ -130,7 +130,7 @@ workflow QUERY_DB {
     tncomp_all.map { meta, files -> meta.id }.collect().view { "TnComp IDs: $it" }
 
 
-    etd_db_last =  Channel.fromPath("${params.outdir}/insert/etd.db")
+    //etd_db_last =  Channel.value(file("${params.outdir}/insert/etd.db"))
     etd_db_last.view { "db_last: $it" }
 
     // Step 2: Join per genome by meta.id
@@ -154,7 +154,7 @@ workflow QUERY_DB {
 
     // Step 3: Shape the final per-genome bundle
     query_input = paired4
-        .join(mash_dist, by: 0)
+        .join(mash_dist, by: 0, remainder: true)
         .map { items ->
             def meta = items[0]
             def amr_tsv = items[1] ?: []

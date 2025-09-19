@@ -7,3 +7,6 @@ testing/
 testing*
 *.pyc
 null/
+work_new/
+1_etd_results/
+2_etd_results/

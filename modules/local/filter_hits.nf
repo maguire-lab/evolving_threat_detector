@@ -7,11 +7,11 @@ process FILTER_DIAMOND_HITS {
     val min_length
 
     output:
-    tuple val(meta), path ("${tool_name}_filtered_hits.tsv"), emit: filtered_iceberg_hits
+    tuple val(meta), path ("${meta.id}_${tool_name}_filtered_hits.tsv"), emit: filtered_iceberg_hits
 
     script:
     """
     awk -v pid="${min_pident}" -v len="${min_length}" 'BEGIN { OFS="\\t" }
-        \$3 >= pid && \$6 >= len { print }' "${file}" > "${tool_name}_filtered_hits.tsv"
+        \$3 >= pid && \$6 >= len { print }' "${file}" > "${meta.id}_${tool_name}_filtered_hits.tsv"
     """
 }

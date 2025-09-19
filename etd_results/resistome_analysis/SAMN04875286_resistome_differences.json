@@ -1,0 +1,40 @@
+[
+  {
+    "relative_genome": "SAMN04875299",
+    "gene_name": "parE_D432H",
+    "p_value": 0.000830728,
+    "distance": 0.03400000000000003,
+    "query_amr_annotation": "Gene not present",
+    "query_plasmid_annotation": "Gene not present",
+    "query_prophage_annotation": "Gene not present",
+    "query_ice_annotation": "Gene not present",
+    "query_composite_transposon_annotation": "Gene not present",
+    "relative_amr_annotation": "Staphylococcus aureus quinolone resistant ParE",
+    "relative_plasmid_annotation": "None",
+    "relative_integron_annotation": "None",
+    "relative_prophage_annotation": "None",
+    "relative_composite_transposon_annotation": "None",
+    "relative_tn3_transposon_annotation": "None",
+    "relative_ice_annotation": "None",
+    "difference_type": "lost_gene"
+  },
+  {
+    "relative_genome": "SAMN04875296",
+    "gene_name": "parC_E84K",
+    "p_value": 0.00115999,
+    "distance": 0.04700000000000004,
+    "query_amr_annotation": "Gene not present",
+    "query_plasmid_annotation": "Gene not present",
+    "query_prophage_annotation": "Gene not present",
+    "query_ice_annotation": "Gene not present",
+    "query_composite_transposon_annotation": "Gene not present",
+    "relative_amr_annotation": "Staphylococcus aureus quinolone resistant ParC",
+    "relative_plasmid_annotation": "None",
+    "relative_integron_annotation": "None",
+    "relative_prophage_annotation": "None",
+    "relative_composite_transposon_annotation": "None",
+    "relative_tn3_transposon_annotation": "None",
+    "relative_ice_annotation": "None",
+    "difference_type": "lost_gene"
+  }
+]

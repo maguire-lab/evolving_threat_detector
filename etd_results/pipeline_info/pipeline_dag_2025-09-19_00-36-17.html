@@ -1,0 +1,272 @@
+<!--
+  ~ Copyright 2013-2024, Seqera Labs
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<html>
+<head>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+</head>
+<body>
+<pre class="mermaid" style="text-align: center;">
+%%{
+  init: {
+    'theme': 'base',
+    'themeVariables': {
+      'primaryColor': '#B6ECE2',
+      'primaryTextColor': '#160F26',
+      'primaryBorderColor': '#065647',
+      'lineColor': '#545555',
+      'clusterBkg': '#BABCBD22',
+      'clusterBorder': '#DDDEDE',
+      'fontFamily': 'arial'
+    }
+  }
+}%%
+flowchart TB
+    subgraph " "
+    v2["Channel.fromList"]
+    v10["Channel.fromPath"]
+    v15["reference"]
+    v46["out_ext"]
+    v47["blast_columns"]
+    v58["tool_name"]
+    v59["min_pident"]
+    v60["min_length"]
+    v115["Channel.fromPath"]
+    end
+    subgraph "QUERY_DB [QUERY_DB]"
+    v4(["PARSE_GBK"])
+    subgraph "QUERY_DB:QUERY_DB_V1 [QUERY_DB_V1]"
+    v13(["AMRFINDERPLUS_UPDATE"])
+    v16(["MASH_DIST"])
+    v18(["AMRFINDERPLUS_RUN"])
+    v23(["MOBSUITE_RECON"])
+    v28(["INTEGRONFINDER"])
+    v34(["PHISPY"])
+    v48(["DIAMOND_BLASTP"])
+    v61(["FILTER_DIAMOND_HITS"])
+    v62(["TNCOMP_FINDER"])
+    v66(["TN3_FINDER"])
+    v147(["QUERY_RESISTOME"])
+    v56(( ))
+    v71(( ))
+    v73(( ))
+    v75(( ))
+    v78(( ))
+    v80(( ))
+    v83(( ))
+    v86(( ))
+    v89(( ))
+    v95(( ))
+    v99(( ))
+    v103(( ))
+    v107(( ))
+    v116(( ))
+    end
+    v3(( ))
+    v5(( ))
+    v6(( ))
+    v7(( ))
+    v11(( ))
+    end
+    subgraph " "
+    v9[" "]
+    v14[" "]
+    v17[" "]
+    v19["DBVER"]
+    v20["VER"]
+    v21[" "]
+    v22[" "]
+    v24[" "]
+    v25[" "]
+    v26[" "]
+    v27[" "]
+    v29[" "]
+    v30[" "]
+    v31["integron_summaries"]
+    v32[" "]
+    v33[" "]
+    v35[" "]
+    v36["phispy_prophage_tsv"]
+    v37[" "]
+    v38[" "]
+    v39[" "]
+    v40[" "]
+    v41[" "]
+    v42[" "]
+    v43[" "]
+    v44[" "]
+    v45[" "]
+    v49[" "]
+    v50[" "]
+    v51[" "]
+    v52[" "]
+    v53[" "]
+    v54[" "]
+    v55[" "]
+    v57[" "]
+    v63[" "]
+    v64[" "]
+    v65[" "]
+    v67[" "]
+    v68[" "]
+    v69[" "]
+    v70[" "]
+    v72[" "]
+    v74[" "]
+    v77[" "]
+    v79[" "]
+    v82[" "]
+    v85[" "]
+    v88[" "]
+    v91[" "]
+    v94[" "]
+    v98[" "]
+    v102[" "]
+    v106[" "]
+    v110[" "]
+    v114[" "]
+    v117[" "]
+    v121[" "]
+    v123[" "]
+    v127[" "]
+    v129[" "]
+    v133[" "]
+    v135[" "]
+    v139[" "]
+    v144[" "]
+    v146[" "]
+    v148[" "]
+    v149[" "]
+    end
+    v2 --> v3
+    v3 --> v4
+    v4 --> v5
+    v4 --> v6
+    v4 --> v7
+    v7 --> v9
+    v10 --> v11
+    v13 --> v18
+    v13 --> v14
+    v15 --> v16
+    v6 --> v16
+    v16 --> v17
+    v16 --> v75
+    v16 --> v78
+    v5 --> v18
+    v18 --> v22
+    v18 --> v21
+    v18 --> v20
+    v18 --> v19
+    v18 --> v75
+    v18 --> v80
+    v18 --> v95
+    v6 --> v23
+    v23 --> v27
+    v23 --> v26
+    v23 --> v25
+    v23 --> v24
+    v23 --> v75
+    v23 --> v83
+    v23 --> v99
+    v6 --> v28
+    v28 --> v33
+    v28 --> v32
+    v28 --> v31
+    v28 --> v30
+    v28 --> v29
+    v3 --> v34
+    v34 --> v45
+    v34 --> v44
+    v34 --> v43
+    v34 --> v42
+    v34 --> v41
+    v34 --> v40
+    v34 --> v39
+    v34 --> v38
+    v34 --> v37
+    v34 --> v36
+    v34 --> v35
+    v34 --> v71
+    v34 --> v75
+    v34 --> v86
+    v34 --> v103
+    v46 --> v48
+    v47 --> v48
+    v7 --> v48
+    v11 --> v48
+    v48 --> v55
+    v48 --> v54
+    v48 --> v53
+    v48 --> v52
+    v48 --> v51
+    v48 --> v50
+    v48 --> v49
+    v48 --> v61
+    v48 --> v56
+    v56 --> v57
+    v58 --> v61
+    v59 --> v61
+    v60 --> v61
+    v61 --> v73
+    v61 --> v75
+    v61 --> v89
+    v61 --> v107
+    v6 --> v62
+    v62 --> v65
+    v62 --> v64
+    v62 --> v63
+    v62 --> v75
+    v6 --> v66
+    v66 --> v70
+    v66 --> v69
+    v66 --> v68
+    v66 --> v67
+    v71 --> v72
+    v73 --> v74
+    v75 --> v77
+    v78 --> v79
+    v80 --> v82
+    v83 --> v85
+    v86 --> v88
+    v89 --> v91
+    v75 --> v94
+    v95 --> v98
+    v99 --> v102
+    v103 --> v106
+    v107 --> v110
+    v75 --> v114
+    v115 --> v147
+    v115 --> v116
+    v116 --> v117
+    v75 --> v121
+    v75 --> v123
+    v75 --> v127
+    v75 --> v129
+    v75 --> v133
+    v75 --> v135
+    v75 --> v139
+    v75 --> v144
+    v75 --> v146
+    v75 --> v147
+    v147 --> v149
+    v147 --> v148
+
+</pre>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true, maxTextSize: Number.MAX_SAFE_INTEGER, maxEdges: Number.MAX_SAFE_INTEGER });
+</script>
+</body>
+</html>

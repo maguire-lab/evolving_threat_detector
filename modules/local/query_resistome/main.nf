@@ -16,7 +16,7 @@ process QUERY_RESISTOME {
   path db_in
 
   output:
-  path "resistome_differences.*"       , emit: differences
+  path "${meta.id}_resistome_differences.*"       , emit: differences
   path "*.log"                , emit: logs, optional: true
   
   when:
