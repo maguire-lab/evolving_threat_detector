@@ -313,11 +313,11 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon JOGNMEOM_28
 INFO     : ############ Processing replicon JOGNMEOM_29 (29/52) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/70/aa6c4a53c9c790c324e51a46ea80bb/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_29/JOGNMEOM_29.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/60/002f0316b7ccefff57146311005bc5/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_29/JOGNMEOM_29.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon JOGNMEOM_29 ############
 INFO     : ############ Processing replicon JOGNMEOM_30 (30/52) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/70/aa6c4a53c9c790c324e51a46ea80bb/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_30/JOGNMEOM_30.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/60/002f0316b7ccefff57146311005bc5/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_30/JOGNMEOM_30.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon JOGNMEOM_30 ############
 INFO     : ############ Processing replicon JOGNMEOM_31 (31/52) ############
 
@@ -366,7 +366,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon JOGNMEOM_35
 INFO     : ############ Processing replicon JOGNMEOM_36 (36/52) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/70/aa6c4a53c9c790c324e51a46ea80bb/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_36/JOGNMEOM_36.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/60/002f0316b7ccefff57146311005bc5/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_36/JOGNMEOM_36.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon JOGNMEOM_36 ############
 INFO     : ############ Processing replicon JOGNMEOM_37 (37/52) ############
 
@@ -424,7 +424,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon JOGNMEOM_42
 INFO     : ############ Processing replicon JOGNMEOM_43 (43/52) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/70/aa6c4a53c9c790c324e51a46ea80bb/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_43/JOGNMEOM_43.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/60/002f0316b7ccefff57146311005bc5/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_43/JOGNMEOM_43.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon JOGNMEOM_43 ############
 INFO     : ############ Processing replicon JOGNMEOM_44 (44/52) ############
 
@@ -464,7 +464,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon JOGNMEOM_47
 INFO     : ############ Processing replicon JOGNMEOM_48 (48/52) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/70/aa6c4a53c9c790c324e51a46ea80bb/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_48/JOGNMEOM_48.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/60/002f0316b7ccefff57146311005bc5/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_48/JOGNMEOM_48.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon JOGNMEOM_48 ############
 INFO     : ############ Processing replicon JOGNMEOM_49 (49/52) ############
 
@@ -486,11 +486,11 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon JOGNMEOM_50
 INFO     : ############ Processing replicon JOGNMEOM_51 (51/52) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/70/aa6c4a53c9c790c324e51a46ea80bb/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_51/JOGNMEOM_51.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/60/002f0316b7ccefff57146311005bc5/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_51/JOGNMEOM_51.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon JOGNMEOM_51 ############
 INFO     : ############ Processing replicon JOGNMEOM_52 (52/52) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/70/aa6c4a53c9c790c324e51a46ea80bb/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_52/JOGNMEOM_52.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/60/002f0316b7ccefff57146311005bc5/Results_Integron_Finder_SAMN04875294_contigs/tmp_JOGNMEOM_52/JOGNMEOM_52.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon JOGNMEOM_52 ############
 INFO     : Merging integrons results.
 

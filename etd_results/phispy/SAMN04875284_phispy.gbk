@@ -66027,7 +66027,7 @@ FEATURES             Location/Qualifiers
                      KQAIVAEPAGALSVSALENYKDHIKGKTVVCVISGGNNDINRMKEIEERSLLYEEMKHY
                      FILNFPQRPGALREFVNDVLGPQDDITKFEYLKKSSQNTGTVIIGIQLKDHDDLIQLKQ
                      RVNHFDPSNIYINENKMLYSLLI"
-     misc_feature    35116..56994
+     misc_feature    36319..56994
                      /note="prophage region pp1 identified with PhiSpy v4.2.21"
      repeat_region   join(35343..35358,54717..54732)
                      /note="prophage region pp1 potential attachment sites"

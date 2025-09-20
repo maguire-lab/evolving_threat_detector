@@ -313,7 +313,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon PFFFBGGF_28
 INFO     : ############ Processing replicon PFFFBGGF_29 (29/54) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/71/e0b6db71da51ddae7ad7e6324e8600/Results_Integron_Finder_SAMN04875295_contigs/tmp_PFFFBGGF_29/PFFFBGGF_29.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/f4/35673b2263871f4b23859533fe21ec/Results_Integron_Finder_SAMN04875295_contigs/tmp_PFFFBGGF_29/PFFFBGGF_29.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon PFFFBGGF_29 ############
 INFO     : ############ Processing replicon PFFFBGGF_30 (30/54) ############
 
@@ -416,7 +416,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon PFFFBGGF_40
 INFO     : ############ Processing replicon PFFFBGGF_41 (41/54) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/71/e0b6db71da51ddae7ad7e6324e8600/Results_Integron_Finder_SAMN04875295_contigs/tmp_PFFFBGGF_41/PFFFBGGF_41.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/f4/35673b2263871f4b23859533fe21ec/Results_Integron_Finder_SAMN04875295_contigs/tmp_PFFFBGGF_41/PFFFBGGF_41.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon PFFFBGGF_41 ############
 INFO     : ############ Processing replicon PFFFBGGF_42 (42/54) ############
 
@@ -474,7 +474,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon PFFFBGGF_47
 INFO     : ############ Processing replicon PFFFBGGF_48 (48/54) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/71/e0b6db71da51ddae7ad7e6324e8600/Results_Integron_Finder_SAMN04875295_contigs/tmp_PFFFBGGF_48/PFFFBGGF_48.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/f4/35673b2263871f4b23859533fe21ec/Results_Integron_Finder_SAMN04875295_contigs/tmp_PFFFBGGF_48/PFFFBGGF_48.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon PFFFBGGF_48 ############
 INFO     : ############ Processing replicon PFFFBGGF_49 (49/54) ############
 
@@ -496,7 +496,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon PFFFBGGF_50
 INFO     : ############ Processing replicon PFFFBGGF_51 (51/54) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/71/e0b6db71da51ddae7ad7e6324e8600/Results_Integron_Finder_SAMN04875295_contigs/tmp_PFFFBGGF_51/PFFFBGGF_51.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/f4/35673b2263871f4b23859533fe21ec/Results_Integron_Finder_SAMN04875295_contigs/tmp_PFFFBGGF_51/PFFFBGGF_51.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon PFFFBGGF_51 ############
 INFO     : ############ Processing replicon PFFFBGGF_52 (52/54) ############
 
@@ -518,7 +518,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon PFFFBGGF_53
 INFO     : ############ Processing replicon PFFFBGGF_54 (54/54) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/71/e0b6db71da51ddae7ad7e6324e8600/Results_Integron_Finder_SAMN04875295_contigs/tmp_PFFFBGGF_54/PFFFBGGF_54.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/f4/35673b2263871f4b23859533fe21ec/Results_Integron_Finder_SAMN04875295_contigs/tmp_PFFFBGGF_54/PFFFBGGF_54.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon PFFFBGGF_54 ############
 INFO     : Merging integrons results.
 

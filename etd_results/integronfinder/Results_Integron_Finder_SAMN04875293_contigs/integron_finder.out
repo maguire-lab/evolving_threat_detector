@@ -322,7 +322,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon KCCBKPIN_29
 INFO     : ############ Processing replicon KCCBKPIN_30 (30/54) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/d2/8e3491cbb6c9053b772860d9cf6e04/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_30/KCCBKPIN_30.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/48/3f91adc21e8878218c8843fcf2ef5c/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_30/KCCBKPIN_30.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon KCCBKPIN_30 ############
 INFO     : ############ Processing replicon KCCBKPIN_31 (31/54) ############
 
@@ -344,7 +344,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon KCCBKPIN_32
 INFO     : ############ Processing replicon KCCBKPIN_33 (33/54) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/d2/8e3491cbb6c9053b772860d9cf6e04/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_33/KCCBKPIN_33.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/48/3f91adc21e8878218c8843fcf2ef5c/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_33/KCCBKPIN_33.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon KCCBKPIN_33 ############
 INFO     : ############ Processing replicon KCCBKPIN_34 (34/54) ############
 
@@ -393,7 +393,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon KCCBKPIN_38
 INFO     : ############ Processing replicon KCCBKPIN_39 (39/54) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/d2/8e3491cbb6c9053b772860d9cf6e04/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_39/KCCBKPIN_39.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/48/3f91adc21e8878218c8843fcf2ef5c/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_39/KCCBKPIN_39.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon KCCBKPIN_39 ############
 INFO     : ############ Processing replicon KCCBKPIN_40 (40/54) ############
 
@@ -442,11 +442,11 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon KCCBKPIN_44
 INFO     : ############ Processing replicon KCCBKPIN_45 (45/54) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/d2/8e3491cbb6c9053b772860d9cf6e04/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_45/KCCBKPIN_45.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/48/3f91adc21e8878218c8843fcf2ef5c/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_45/KCCBKPIN_45.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon KCCBKPIN_45 ############
 INFO     : ############ Processing replicon KCCBKPIN_46 (46/54) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/d2/8e3491cbb6c9053b772860d9cf6e04/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_46/KCCBKPIN_46.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/48/3f91adc21e8878218c8843fcf2ef5c/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_46/KCCBKPIN_46.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon KCCBKPIN_46 ############
 INFO     : ############ Processing replicon KCCBKPIN_47 (47/54) ############
 
@@ -486,7 +486,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon KCCBKPIN_50
 INFO     : ############ Processing replicon KCCBKPIN_51 (51/54) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/d2/8e3491cbb6c9053b772860d9cf6e04/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_51/KCCBKPIN_51.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/48/3f91adc21e8878218c8843fcf2ef5c/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_51/KCCBKPIN_51.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon KCCBKPIN_51 ############
 INFO     : ############ Processing replicon KCCBKPIN_52 (52/54) ############
 
@@ -508,7 +508,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon KCCBKPIN_53
 INFO     : ############ Processing replicon KCCBKPIN_54 (54/54) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/d2/8e3491cbb6c9053b772860d9cf6e04/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_54/KCCBKPIN_54.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/48/3f91adc21e8878218c8843fcf2ef5c/Results_Integron_Finder_SAMN04875293_contigs/tmp_KCCBKPIN_54/KCCBKPIN_54.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon KCCBKPIN_54 ############
 INFO     : Merging integrons results.
 
