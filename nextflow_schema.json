@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": ["outdir"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -20,10 +20,39 @@
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/ethreatdetector/usage#samplesheet-input).",
+                    "help_text": "You will need to create an input file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. Use this when running single workflow modes or when input_make/input_query are not specified. It has to be a comma-separated file with 3 columns, and a header row.",
                     "fa_icon": "fas fa-file-csv"
                 },
-                "outdir": {
+		"input_make": {
+                    "type": "string",
+                    "format": "file-path",
+		    "exists": true,
+                    "schema": "assets/schema_input.json",
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "Path to comma-separated file containing information about the samples for building the database.",
+                    "help_text": "Required when mode is 'make_db' or 'all'",
+                    "fa_icon": "fas fa-file-csv"
+                },
+		"input_query": {
+                    "type": "string",
+                    "format": "file-path",
+		    "exists": true,
+                    "schema": "assets/schema_input.json",
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "Path to comma-separated file containing information about the samples for querying database (QUERY_DB workflow)",
+                    "help_text": "Required when mode is 'query_db' or 'all'",
+                    "fa_icon": "fas fa-file-csv"
+                },
+		"mode": {
+                    "type": "string",
+                    "description": "Pipeline execution mode",
+                    "help_text": "Specify which workflow(s) to run",
+                    "fa_icon": "fas fa-cogs",
+                    "enum": ["make_db", "query_db", "all"]
+                },
+		"outdir": {
                     "type": "string",
                     "format": "directory-path",
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",

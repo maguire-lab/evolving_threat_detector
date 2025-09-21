@@ -340,7 +340,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon MMHCIOPA_31
 INFO     : ############ Processing replicon MMHCIOPA_32 (32/58) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/e7/246749b132eee1cb89663931ca695d/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_32/MMHCIOPA_32.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/4c/2fa992b83d7fb52f09da1ed6802200/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_32/MMHCIOPA_32.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon MMHCIOPA_32 ############
 INFO     : ############ Processing replicon MMHCIOPA_33 (33/58) ############
 
@@ -353,7 +353,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon MMHCIOPA_33
 INFO     : ############ Processing replicon MMHCIOPA_34 (34/58) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/e7/246749b132eee1cb89663931ca695d/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_34/MMHCIOPA_34.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/4c/2fa992b83d7fb52f09da1ed6802200/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_34/MMHCIOPA_34.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon MMHCIOPA_34 ############
 INFO     : ############ Processing replicon MMHCIOPA_35 (35/58) ############
 
@@ -456,7 +456,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon MMHCIOPA_45
 INFO     : ############ Processing replicon MMHCIOPA_46 (46/58) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/e7/246749b132eee1cb89663931ca695d/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_46/MMHCIOPA_46.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/4c/2fa992b83d7fb52f09da1ed6802200/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_46/MMHCIOPA_46.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon MMHCIOPA_46 ############
 INFO     : ############ Processing replicon MMHCIOPA_47 (47/58) ############
 
@@ -469,7 +469,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon MMHCIOPA_47
 INFO     : ############ Processing replicon MMHCIOPA_48 (48/58) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/e7/246749b132eee1cb89663931ca695d/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_48/MMHCIOPA_48.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/4c/2fa992b83d7fb52f09da1ed6802200/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_48/MMHCIOPA_48.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon MMHCIOPA_48 ############
 INFO     : ############ Processing replicon MMHCIOPA_49 (49/58) ############
 
@@ -491,7 +491,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon MMHCIOPA_50
 INFO     : ############ Processing replicon MMHCIOPA_51 (51/58) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/e7/246749b132eee1cb89663931ca695d/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_51/MMHCIOPA_51.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/4c/2fa992b83d7fb52f09da1ed6802200/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_51/MMHCIOPA_51.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon MMHCIOPA_51 ############
 INFO     : ############ Processing replicon MMHCIOPA_52 (52/58) ############
 
@@ -504,7 +504,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon MMHCIOPA_52
 INFO     : ############ Processing replicon MMHCIOPA_53 (53/58) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/e7/246749b132eee1cb89663931ca695d/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_53/MMHCIOPA_53.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/4c/2fa992b83d7fb52f09da1ed6802200/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_53/MMHCIOPA_53.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon MMHCIOPA_53 ############
 INFO     : ############ Processing replicon MMHCIOPA_54 (54/58) ############
 
@@ -526,7 +526,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon MMHCIOPA_55
 INFO     : ############ Processing replicon MMHCIOPA_56 (56/58) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/e7/246749b132eee1cb89663931ca695d/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_56/MMHCIOPA_56.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/4c/2fa992b83d7fb52f09da1ed6802200/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_56/MMHCIOPA_56.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon MMHCIOPA_56 ############
 INFO     : ############ Processing replicon MMHCIOPA_57 (57/58) ############
 
@@ -539,7 +539,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon MMHCIOPA_57
 INFO     : ############ Processing replicon MMHCIOPA_58 (58/58) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/e7/246749b132eee1cb89663931ca695d/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_58/MMHCIOPA_58.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/4c/2fa992b83d7fb52f09da1ed6802200/Results_Integron_Finder_SAMN04875285_contigs/tmp_MMHCIOPA_58/MMHCIOPA_58.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon MMHCIOPA_58 ############
 INFO     : Merging integrons results.
 

@@ -331,7 +331,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon FFLOIGJL_30
 INFO     : ############ Processing replicon FFLOIGJL_31 (31/55) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/55/ac86236fa36b800e22aa88eb5a9d70/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_31/FFLOIGJL_31.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/25/a7fa7380565f5d1df395b14295f813/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_31/FFLOIGJL_31.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon FFLOIGJL_31 ############
 INFO     : ############ Processing replicon FFLOIGJL_32 (32/55) ############
 
@@ -380,7 +380,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon FFLOIGJL_36
 INFO     : ############ Processing replicon FFLOIGJL_37 (37/55) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/55/ac86236fa36b800e22aa88eb5a9d70/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_37/FFLOIGJL_37.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/25/a7fa7380565f5d1df395b14295f813/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_37/FFLOIGJL_37.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon FFLOIGJL_37 ############
 INFO     : ############ Processing replicon FFLOIGJL_38 (38/55) ############
 
@@ -393,7 +393,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon FFLOIGJL_38
 INFO     : ############ Processing replicon FFLOIGJL_39 (39/55) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/55/ac86236fa36b800e22aa88eb5a9d70/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_39/FFLOIGJL_39.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/25/a7fa7380565f5d1df395b14295f813/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_39/FFLOIGJL_39.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon FFLOIGJL_39 ############
 INFO     : ############ Processing replicon FFLOIGJL_40 (40/55) ############
 
@@ -415,7 +415,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon FFLOIGJL_41
 INFO     : ############ Processing replicon FFLOIGJL_42 (42/55) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/55/ac86236fa36b800e22aa88eb5a9d70/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_42/FFLOIGJL_42.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/25/a7fa7380565f5d1df395b14295f813/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_42/FFLOIGJL_42.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon FFLOIGJL_42 ############
 INFO     : ############ Processing replicon FFLOIGJL_43 (43/55) ############
 
@@ -455,7 +455,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon FFLOIGJL_46
 INFO     : ############ Processing replicon FFLOIGJL_47 (47/55) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/55/ac86236fa36b800e22aa88eb5a9d70/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_47/FFLOIGJL_47.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/25/a7fa7380565f5d1df395b14295f813/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_47/FFLOIGJL_47.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon FFLOIGJL_47 ############
 INFO     : ############ Processing replicon FFLOIGJL_48 (48/55) ############
 
@@ -495,7 +495,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon FFLOIGJL_51
 INFO     : ############ Processing replicon FFLOIGJL_52 (52/55) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/55/ac86236fa36b800e22aa88eb5a9d70/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_52/FFLOIGJL_52.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/25/a7fa7380565f5d1df395b14295f813/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_52/FFLOIGJL_52.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon FFLOIGJL_52 ############
 INFO     : ############ Processing replicon FFLOIGJL_53 (53/55) ############
 
@@ -517,7 +517,7 @@ INFO     : - 0 In0 element(s) found with a total of 0 attC site
 INFO     : Writing out results for replicon FFLOIGJL_54
 INFO     : ############ Processing replicon FFLOIGJL_55 (55/55) ############
 
-WARNING  : The protein file: '/home/precious/etd/work/55/ac86236fa36b800e22aa88eb5a9d70/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_55/FFLOIGJL_55.prt' is empty cannot perform hmmsearch on it.
+WARNING  : The protein file: '/home/precious/etd/work/25/a7fa7380565f5d1df395b14295f813/Results_Integron_Finder_SAMN04875289_contigs/tmp_FFLOIGJL_55/FFLOIGJL_55.prt' is empty cannot perform hmmsearch on it.
 WARNING  : ############ Skip replicon FFLOIGJL_55 ############
 INFO     : Merging integrons results.
 
