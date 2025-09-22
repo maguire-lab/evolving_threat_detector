@@ -124,7 +124,7 @@ Optional parameters:
  - `--min_pident` : minimum percentage identity for diamond homology search (default: 60)
  - `--min_alignment_length` : minimum alignment length for diamond homology search (default: 60)
 
-> [!WARNING]
+> [!NOTE]
 > To override defaults for optional parameters, please provide pipeline parameters via the CLI
 
 ## Testing
@@ -151,10 +151,10 @@ A successful run creates the parent outpyt directory `etd_results` in which othe
 - `tncomp/` : per sample gbk and .txt reports of annotated composite transposons
 - `tn3/` : per sample gnk and .txt reports of annotated tn3 transposons
 - `get/` : ICEberg database proteins
-- 'diamomd/` : reformatted iceberg database proteins, and per sample blastp .txt reports.
+- `diamond/` : reformatted iceberg database proteins, and per sample blastp .txt reports.
 - `filter/`: report of predicted ICEs following homology search and threshold filtering.
 - `insert/`: houses the created etd reference db and any log files.
-- `resistome_analysis` : per sample report of resistome differences between query and closest relatives.
+- `resistome_analysis/` : per sample report of resistome differences between query and closest relatives.
 
 ## Credits
 
