@@ -50,10 +50,18 @@ The etd pipeline consists of two main sub-workflows:
 2. Install [`Docker`](https://www.docker.com/)
 3. Install [`Conda`](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html)
 4. Clone the repository
-   `git clone  `
-   `cd etd`
-5. Test with a stub-run. The stub-run will ensure that the pipeline is able to download and use containers as well as execute in the proper logic. 
-   `nextflow run main.nf -profile test_stub,docker_conda -stub`
+
+   ```bash
+   git clone
+
+   cd etd
+   ```
+
+5. Test with a stub-run. The stub-run will ensure that the pipeline is able to download and use containers as well as execute in the proper logic.
+ 
+   ``` bash
+   nextflow run main.nf -profile test_stub,docker_conda -stub
+   ```
 
 ## Usage
 
@@ -71,7 +79,7 @@ SAMPLE_1,/path/to/gbk/file,Staphylococcus_aureus
 
 Samplesheet.csv must be formatted as above, with the first column corresponding to sample names, the second column corresponding to the locations of the sample gbk file and the third column corresponding to an optional organism / species name if known. In the event that the organism name is unknown, your samplesheet would only have two - sample,gbk - columns.
 
->[!NOTE]
+> [!NOTE]
 
 Orgamism name when specified should correspond to the format for organism name specification indicated by AMRFinderPlus. (See [`Organism option`](https://github.com/ncbi/amr/wiki/Running-AMRFinderPlus#--organism-option)
 
@@ -105,16 +113,16 @@ nextflow run main.nf \
 ```
 
 Parameters used:
- `--mode` : **(Required)** specifies which subworkflow/workflow to run. 
- `--input_make` : Path to the reference genomes input samplesheet.csv file. **Required** for the `make_db` and `all` modes.
- `--input_query` : Path to the query genome(s) input samplesheet.csv file. **Required** for the `query_db` and `all` modes.
+-  `--mode` : **(Required)** specifies which subworkflow/workflow to run. 
+-  `--input_make` : Path to the reference genomes input samplesheet.csv file. **Required** for the `make_db` and `all` modes.
+-  `--input_query` : Path to the query genome(s) input samplesheet.csv file. **Required** for the `query_db` and `all` modes.
 
 Optional parameters:
 
- `--number` : Number of closest genomes to consider (default: 5)
- `--output_forrmat` {json, dataframe} : Output format (default:  json)
- `--min_pident` : minimum percentage identity for diamond homology search (default: 60)
- `--min_alignment_length` : minimum alignment length for diamond homology search (default: 60)
+ - `--number` : Number of closest genomes to consider (default: 5)
+ - `--output_forrmat` {json, dataframe} : Output format (default:  json)
+ - `--min_pident` : minimum percentage identity for diamond homology search (default: 60)
+ - `--min_alignment_length` : minimum alignment length for diamond homology search (default: 60)
 
 > [!WARNING]
 > To override defaults for optional parameters, please provide pipeline parameters via the CLI
@@ -125,14 +133,16 @@ Testing is a crutial part of the development process, ensuring that our tool beh
 
 To test the worklow on a minimal dataset you can use the test configuration (with -profile docker_conda) by executing the following command:
 
- `nextflow run main.nf -profile test,docker_conda`
+ ```bash
+nextflow run main.nf -profile test,docker_conda
+```
 
 
 ## Pipeline output
 
 A successful run creates the parent outpyt directory `etd_results` in which other sub annotation and analysis directories are stored. These other directories include:
 
-- `parse/' : fasta, protein and .gff3 files derived from supplied input gbk files.
+- `parse/` : fasta, protein and .gff3 files derived from supplied input gbk files.
 - `amrfinderplus/` ; houses the updated amrfinderplus database and individual sample amr genes and mutations reports.
 - `mash/` : combined sketch file for all reference database genomes, individual sample sketch files andmash distance report for query sample(s).
 - `phispy/` : per sample .gbk and tsv report files of annotated prohpages, if present.
