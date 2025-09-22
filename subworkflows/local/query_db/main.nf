@@ -161,9 +161,11 @@ workflow QUERY_DB {
             def contigs_report = items[2] ?: []
             def ice_file = items[3] ?: []
             def phage_file = items[4] ?: []
-            def gbk_files = items[5] ?: []
+            def gbk_files_nested = items[5] ?: []
             def dist_file = items[6]
-    
+      
+     def gbk_files = gbk_files_nested ? [gbk_files_nested].flatten() : []
+
         tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, gbk_files, dist_file)
 }
 

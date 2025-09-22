@@ -40,7 +40,6 @@ process INSERT_DB {
       def published_gbks = gbk_files.collect { "${params.outdir}/tncomp/${meta.id}_${it.name}" }
       gbk_published = "--comp_gbk_files_published ${published_gbks.join(' ')}"
     }
-    
 
   """
   set -euo pipefail
@@ -66,5 +65,12 @@ process INSERT_DB {
 
   # Capture any debug files created
   ls *_debug.txt 2>/dev/null || true
+  """
+
+  stub:
+  """
+  touch etd.db
+  touch register.log
+  touch ${meta.id}_debug.txt
   """
 }

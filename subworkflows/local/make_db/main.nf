@@ -157,13 +157,18 @@ workflow MAKE_DB {
         def contigs_report = items[2] ?: []
         def ice_file = items[3] ?: []
         def phage_file = items[4] ?: []
-        def gbk_files = items[5] ?: []
+        def gbk_files_nested = items[5] ?: []
+
+     // Flatten the double-nested gbk files
+     def gbk_files = gbk_files_nested ? [gbk_files_nested].flatten() : []
+
+
        
         tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, gbk_files)
 }
 
     to_insert.count().view { "Final to_insert count: $it genomes" }
-
+    to_insert.view {"Final to insert: $it" }
 
     // Initialize empty database if it doesn't exist
     db_initial = file(params.db_path ?: "etd.db")

@@ -18,4 +18,13 @@ process TNCOMP_FINDER {
         -p ${task.cpus} \\
         -g -e 500 -k
     """
+
+   stub:
+   """
+   touch ${fasta.baseName}_composite.txt
+   touch ${fasta.baseName}_composite_candidate1.gbk
+   touch ${fasta.baseName}_composite_candidate2.gbk
+   touch blastn
+   touch info.txt
+   """
 }

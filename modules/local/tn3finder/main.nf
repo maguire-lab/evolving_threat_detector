@@ -18,4 +18,13 @@ process TN3_FINDER {
         -g \\
         -t ${task.cpus}
     """
+
+    stub:
+    """
+    touch ${fasta.baseName}.txt
+    touch ${fasta.baseName}_candidate1.gbk
+    touch ${fasta.baseName}_candidate2.gbk
+    touch tblastn
+    touch info.txt
+    """
 }

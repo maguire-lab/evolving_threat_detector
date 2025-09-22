@@ -14,4 +14,9 @@ process FILTER_DIAMOND_HITS {
     awk -v pid="${min_pident}" -v len="${min_length}" 'BEGIN { OFS="\\t" }
         \$3 >= pid && \$6 >= len { print }' "${file}" > "${meta.id}_${tool_name}_filtered_hits.tsv"
     """
+
+   stub:
+   """
+   touch ${meta.id}_${tool_name}_filtered_hits.tsv
+   """
 }

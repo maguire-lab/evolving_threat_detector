@@ -52,7 +52,7 @@ process QUERY_RESISTOME {
     """
     stub:
     """
-    touch resistome_differences.json
+    touch ${meta.id}_resistome_differences.json
     touch analysis.log
     """
   }

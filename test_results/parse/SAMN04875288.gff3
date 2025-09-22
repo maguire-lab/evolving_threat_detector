@@ -1,5 +1,5 @@
 ##gff-version 3
-##date 2025-09-21
+##date 2025-09-22
 ##source-version GenBank
 ##sequence-region CDLCMCKM_1 1 256740
 CDLCMCKM_1	GenBank	gene	84	1172	.	-	.	ID=CDLCMCKM_00001
