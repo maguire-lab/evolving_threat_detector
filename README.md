@@ -12,20 +12,32 @@
 
 ## Introduction
 
-The **nf-core/etd** (Evolving Threat Detector) is a bioinformatics pipeline that analyzes antimicrobial resistome variation of bacterial genomes in comparison to closest relatives and provides contextual analysis of the results. The pipeline is implemented using Nextflow, a  workflow management system designed to execute complex analyses across diverse computing environments with high portability. It leverages Docker containers and conda environments to ensure strong reproducibility of results.
+The **nf-core/etd** (Evolving Threat Detector) is a bioinformatics pipeline that analyzes antimicrobial resistome variation of bacterial genomes in comparison to closest relatives and provides contextual analysis of the results. The pipeline is implemented using Nextflow, a  workflow management system designed to execute complex analyses across diverse computing environments with high portability. It leverages Docker containers and conda environments to ensure strong reproducibility of results. As a pipeline, the etd provides:
 
 - **Genome Sketching** 
 	1. Genome sketching with Mash ([`Mash`](https://mash.readthedocs.io/en/latest/)) 
 
-- **Features Prediction** 
-	2. AMR genes with AMRFinderPlus([`AMRFinderPlus`](https://github.com/ncbi/amr)) 
-	3. Plasmids with MOB-Suite ([`MOB-Suite`](https://github.com/phac-nml/mob-suite)) 
-	4. Prophages with PhiSpy ([`PhiSpy`](https://github.com/linsalrob/PhiSpy)) 
-	5. Integrons with IntegronFinder ([`IntegronFinder`](https://github.com/gem-pasteur/Integron_Finder)) 
-	6. ICEs with ICEberg ([`ICEberg`](https://ngdc.cncb.ac.cn/databasecommons/database/id/513)) using DIAMOND homology search ([`DIAMOND`](https://github.com/bbuchfink/diamond)) 
-	7. Transposons with TnComp_finder ([`TnFinder`](https://github.com/danillo-alvarenga/tncomp_finder)) and Tn3+TA_finder ([`Tn3+TA_finder`](https://github.com/danillo-alvarenga/tn3-ta_finder)).
+- **Antimicrobial Resistance Gene Annotation**
 
-The etd pipeline consists of two main sub-workflows:
+	1. AMR genes with AMRFinderPlus([`AMRFinderPlus`](https://github.com/ncbi/amr))
+
+- **Moblie ELement Detection**
+	1. Plasmids with MOB-Suite ([`MOB-Suite`](https://github.com/phac-nml/mob-suite))
+
+	2. Prophages with PhiSpy ([`PhiSpy`](https://github.com/linsalrob/PhiSpy))
+
+	3. Integrons with IntegronFinder ([`IntegronFinder`](https://github.com/gem-pasteur/Integron_Finder))
+
+	4. ICEs with ICEberg ([`ICEberg`](https://ngdc.cncb.ac.cn/databasecommons/database/id/513)) using DIAMOND homology search ([`DIAMOND`](https://github.com/bbuchfink/diamond))
+
+	5. Transposons with TnComp_finder ([`TnFinder`](https://github.com/danillo-alvarenga/tncomp_finder)) and Tn3+TA_finder ([`Tn3+TA_finder`](https://github.com/danillo-alvarenga/tn3-ta_finder)).
+
+- **Closest genomic relative analysis** using Mash distance calculations
+- **Resistome comparison** between query genomes and their closest genomic relatives
+- **Genomic context mapping** to understand resistance gene mobility
+
+
+The etd pipeline is organized into two main sub-workflows:
 
   1. MAKE_DB Sub-workflow
 
@@ -80,23 +92,23 @@ Samplesheet.csv must be formatted as above, with the first column corresponding 
 > [!NOTE]
 > Orgamism name when specified should correspond to the format for organism name specification indicated by AMRFinderPlus. (See [`Organism option`](https://github.com/ncbi/amr/wiki/Running-AMRFinderPlus#--organism-option))
 
-- For analysis, the etd pipeline is organized into two main sub-workflows - make_db, query_db and one combined workflow - all. Each of these can be specified using the --mode parameter. 
+- For analysis, users can either run individual sub-workflows - `make_db`, `query_db` or run the combined workflow - `all`. Each of these can be specified using the `--mode` parameter. 
 
 1. **etd make_db** : This sub-workflow generates the etd reference database from a bunch of suppleid gennomes - gbk format.
    
 ```bash
 nextflow run main.nf \
    --mode make_db \
-   - profile docker_conda \
+   -profile docker_conda \
    --input_make reference_genomes.csv
 ```
 
-2. **etd query_db**:  This sub-workflow analyzes query genome(s) against the closest reference sequences in the database. Must be run only after a refernce database has been built using the make_db subworkflow.
+2. **etd query_db**:  This sub-workflow analyzes query genome(s) against the closest reference sequences in the database. Must be run only after a reference database has been built using the make_db subworkflow.
 
 ```bash
 nextflow run main.nf \
    --mode query_db \
-   - profile docker_conda \
+   -profile docker_conda \
    --input_make reference_genomes.csv
 ```
 
@@ -105,7 +117,7 @@ nextflow run main.nf \
 ```bash
 nextflow run main.nf \
    --mode all \
-   - profile docker_conda \
+   -profile docker_conda \
    --input_make reference_genomes.csv 
 ```
 
@@ -122,13 +134,12 @@ Optional parameters:
  - `--min_alignment_length` : minimum alignment length for diamond homology search (default: 60)
 
 > [!NOTE]
-> To override defaults for optional parameters, please provide pipeline parameters via the CLI
-> E.g. to override the `--number` and `--min_pident` default parameters:
+> To override defaults for optional parameters, please provide pipeline parameters via the CLI. E.g. to override the `--number` and `--min_pident` default parameters:
 
 ```bash
 nextflow run main.nf \
    --mode all \
-   - profile docker_conda \
+   -profile docker_conda \
    --min_pident 80 \
    --number 20 \
    --input_make reference_genomes.csv
@@ -167,7 +178,7 @@ A successful run creates the parent outpyt directory `etd_results` in which othe
 
 ## Credits
 
-nf-core/etd was originally written by Precious Osadebamwen.
+nf-core/etd is currently developed by Precious Osadebamwen.
 
 ## Contributions and Support
 
