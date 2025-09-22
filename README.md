@@ -149,7 +149,7 @@ nextflow run main.nf \
 
 ## Testing
 
-Testing is a crutial part of the development process, ensuring that our tool behaves as expected and that new changes do not introduce bugs. Before running the tests, make sure you have the necessary dependencies installed. You can do this by following the installation instructions in the usage section.
+Testing is a crutial part of the development process, ensuring that our tool behaves as expected and that new changes do not introduce bugs. Before running the tests, make sure you have the necessary dependencies installed. You can do this by following the instructions in the installation section.
 
 To test the worklow on a minimal dataset you can use the test configuration (with -profile docker_conda) by executing the following command:
 
@@ -160,10 +160,10 @@ nextflow run main.nf -profile test,docker_conda
 
 ## Pipeline output
 
-A successful run creates the parent outpyt directory `etd_results` in which other sub annotation and analysis directories are stored. These other directories include:
+A successful run creates the parent output directory `etd_results` in which other sub annotation and analysis directories are stored. These other directories include:
 
 - `parse/` : fasta, protein and .gff3 files derived from supplied input gbk files.
-- `amrfinderplus/` ; houses the updated amrfinderplus database and individual sample amr genes and mutations reports.
+- `amrfinderplus/` : houses the updated amrfinderplus database and individual sample amr genes and mutations reports.
 - `mash/` : combined sketch file for all reference database genomes, individual sample sketch files andmash distance report for query sample(s).
 - `phispy/` : per sample .gbk and tsv report files of annotated prohpages, if present.
 - `integronfinder/` : per sample report directories of annotated integrons, if present.
