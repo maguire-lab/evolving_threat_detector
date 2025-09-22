@@ -5,27 +5,25 @@
   </picture>
 </h1>
 
-[![GitHub Actions CI Status](https://github.com/nf-core/etd/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/etd/actions/workflows/ci.yml)
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23etd-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/etd)[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
 The **nf-core/etd** (Evolving Threat Detector) is a bioinformatics pipeline that analyzes antimicrobial resistome variation of bacterial genomes in comparison to closest relatives and provides contextual analysis of the results. The pipeline is implemented using Nextflow, a  workflow management system designed to execute complex analyses across diverse computing environments with high portability. It leverages Docker containers and conda environments to ensure strong reproducibility of results.
 
-- Genome Sketching 
-1. Genome sketching with Mash ([`Mash`](https://mash.readthedocs.io/en/latest/)) 
+- **Genome Sketching** 
+	1. Genome sketching with Mash ([`Mash`](https://mash.readthedocs.io/en/latest/)) 
 
-- Features Prediction 
-2. AMR genes with AMRFinderPlus([`AMRFinderPlus`](https://github.com/ncbi/amr)) 
-3. Plasmids with MOB-Suite ([`MOB-Suite`](https://github.com/phac-nml/mob-suite)) 
-4. Prophages with PhiSpy ([`PhiSpy`](https://github.com/linsalrob/PhiSpy)) 
-5. Integrons with IntegronFinder ([`IntegronFinder`](https://github.com/gem-pasteur/Integron_Finder)) 
-6. ICEs with ICEberg ([`ICEberg`](https://ngdc.cncb.ac.cn/databasecommons/database/id/513)) using DIAMOND homology search ([`DIAMOND`](https://github.com/bbuchfink/diamond)) 
-7. Transposons with TnComp_finder ([`TnFinder`](https://github.com/danillo-alvarenga/tncomp_finder)) and Tn3+TA_finder ([`Tn3+TA_finder`](https://github.com/danillo-alvarenga/tn3-ta_finder)).
+- **Features Prediction** 
+	2. AMR genes with AMRFinderPlus([`AMRFinderPlus`](https://github.com/ncbi/amr)) 
+	3. Plasmids with MOB-Suite ([`MOB-Suite`](https://github.com/phac-nml/mob-suite)) 
+	4. Prophages with PhiSpy ([`PhiSpy`](https://github.com/linsalrob/PhiSpy)) 
+	5. Integrons with IntegronFinder ([`IntegronFinder`](https://github.com/gem-pasteur/Integron_Finder)) 
+	6. ICEs with ICEberg ([`ICEberg`](https://ngdc.cncb.ac.cn/databasecommons/database/id/513)) using DIAMOND homology search ([`DIAMOND`](https://github.com/bbuchfink/diamond)) 
+	7. Transposons with TnComp_finder ([`TnFinder`](https://github.com/danillo-alvarenga/tncomp_finder)) and Tn3+TA_finder ([`Tn3+TA_finder`](https://github.com/danillo-alvarenga/tn3-ta_finder)).
 
 The etd pipeline consists of two main sub-workflows:
 
@@ -80,8 +78,7 @@ SAMPLE_1,/path/to/gbk/file,Staphylococcus_aureus
 Samplesheet.csv must be formatted as above, with the first column corresponding to sample names, the second column corresponding to the locations of the sample gbk file and the third column corresponding to an optional organism / species name if known. In the event that the organism name is unknown, your samplesheet would only have two - sample,gbk - columns.
 
 > [!NOTE]
-
-Orgamism name when specified should correspond to the format for organism name specification indicated by AMRFinderPlus. (See [`Organism option`](https://github.com/ncbi/amr/wiki/Running-AMRFinderPlus#--organism-option)
+> Orgamism name when specified should correspond to the format for organism name specification indicated by AMRFinderPlus. (See [`Organism option`](https://github.com/ncbi/amr/wiki/Running-AMRFinderPlus#--organism-option))
 
 - For analysis, the etd pipeline is organized into two main sub-workflows - make_db, query_db and one combined workflow - all. Each of these can be specified using the --mode parameter. 
 
@@ -90,7 +87,7 @@ Orgamism name when specified should correspond to the format for organism name s
 ```bash
 nextflow run main.nf \
    --mode make_db \
-   - profile ddocker_conda \
+   - profile docker_conda \
    --input_make reference_genomes.csv
 ```
 
@@ -99,7 +96,7 @@ nextflow run main.nf \
 ```bash
 nextflow run main.nf \
    --mode query_db \
-   - profile ddocker_conda \
+   - profile docker_conda \
    --input_make reference_genomes.csv
 ```
 
@@ -108,7 +105,7 @@ nextflow run main.nf \
 ```bash
 nextflow run main.nf \
    --mode all \
-   - profile ddocker_conda \
+   - profile docker_conda \
    --input_make reference_genomes.csv 
 ```
 
@@ -126,6 +123,18 @@ Optional parameters:
 
 > [!NOTE]
 > To override defaults for optional parameters, please provide pipeline parameters via the CLI
+> E.g. to override the `--number` and `--min_pident` default parameters:
+
+```bash
+nextflow run main.nf \
+   --mode all \
+   - profile docker_conda \
+   --min_pident 80 \
+   --number 20 \
+   --input_make reference_genomes.csv
+```
+
+
 
 ## Testing
 
