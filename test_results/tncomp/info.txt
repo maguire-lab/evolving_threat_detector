@@ -1,3 +1,0 @@
-time:	Mon Sep 22 14:50:27 2025
-working directory:	/home/precious/etd/work/e1/96f1b3d5022a7703be52a078319512
-command line:	/home/precious/etd/bin/tncomp/TnComp_finder.py -f SAMN04875299_contigs.fasta -p 1 -g -e 500 -k

@@ -129,7 +129,7 @@ Parameters used:
 Optional parameters:
 
  - `--number` : Number of closest genomes to consider (default: 5)
- - `--output_forrmat` {json, dataframe} : Output format (default:  json)
+ - `--output_format` {json, dataframe} : Output format (default:  json)
  - `--min_pident` : minimum percentage identity for diamond homology search (default: 60)
  - `--min_alignment_length` : minimum alignment length for diamond homology search (default: 60)
 

@@ -1,6 +1,6 @@
 process TN3_FINDER {
     tag "$meta.id"
-    label 'medium'
+    label 'high'
 
     input:
     tuple val(meta), path(fasta)

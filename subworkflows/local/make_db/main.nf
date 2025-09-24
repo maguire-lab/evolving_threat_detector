@@ -9,8 +9,6 @@ include { MOBSUITE_RECON            } from '../../../modules/local/mobsuite/reco
 include { INTEGRONFINDER            } from '../../../modules/nf-core/integronfinder/main'
 include { PARSE_GBK                 } from '../../../modules/local/parsegbk/main'
 include { PHISPY                    } from '../../../modules/nf-core/phispy/main'
-include { DB_INIT                   } from '../../../modules/local/db_init'
-include { INSERT_GENOMES            } from '../../../modules/local/insert_genomes'
 include { GET_ICEBERG               } from '../../../modules/local/iceberg/main'
 include { DIAMOND_MAKEDB            } from '../../../modules/local/diamond/makedb'
 include { DIAMOND_BLASTP            } from '../../../modules/local/diamond/blastp'
@@ -27,12 +25,6 @@ workflow MAKE_DB {
     ch_proteins
 
     main:
-
-    // Initialize database
-    //etd_db_init = DB_INIT(Channel.value("etd.db"))
-
-    // Insert genomes + organism into the DB
-    //ch_db_insert = INSERT_GENOMES(ch_genomes, etd_db_init)
 
     // Update AMRFinderPlus database
     amrfinder_db = AMRFINDERPLUS_UPDATE()
@@ -67,7 +59,7 @@ workflow MAKE_DB {
     // Step 2: Create DIAMOND database from ICEberg
     DIAMOND_MAKEDB(ch_iceberg_db)
 
-    DIAMOND_MAKEDB.out.db.view { "DB: $it" }
+    //DIAMOND_MAKEDB.out.db.view { "DB: $it" }
 
     // Step 3: Run DIAMOND blastp with protein sequences from PARSE_GBK
 
@@ -77,7 +69,7 @@ workflow MAKE_DB {
         "txt",
         "qseqid sseqid pident slen qlen length mismatch gapopen qstart qend sstart send evalue bitscore"
     )
-    DIAMOND_BLASTP.out.txt.view { "BlastP output channel: $it" }
+    //DIAMOND_BLASTP.out.txt.view { "BlastP output channel: $it" }
 
     // Step 4: Filter the DIAMOND results
     ch_blast_results = DIAMOND_BLASTP.out.txt
@@ -101,54 +93,54 @@ workflow MAKE_DB {
     mob_ch    = MOBSUITE_RECON.out.contig_report
         
     phage_ch  = PHISPY.out.coordinates  
-    phage_ch.view { "phage_ch: $it" }
+    //phage_ch.view { "phage_ch: $it" }
                 
     ice_ch    = FILTER_DIAMOND_HITS.out.filtered_iceberg_hits
-    ice_ch.view { "ice_ch: $it" }
+    //ice_ch.view { "ice_ch: $it" }
   
     tncomp_all = TNCOMP_FINDER.out.gbk.groupTuple()
-    tncomp_all.view { "After groupTuple: $it" }
+    //tncomp_all.view { "After groupTuple: $it" }
 
     sketch_ref = MASH_PASTE.out.reference
-    sketch_ref.view { "sketch_ref: $it" }
+    //sketch_ref.view { "sketch_ref: $it" }
 
     // DEBUG: Count items in each channel
-    amr_ch.count().view { "AMR reports count: $it" }
-    mob_ch.count().view { "MOB reports count: $it" }
-    phage_ch.count().view { "Phage coords count: $it" }
-    ice_ch.count().view { "ICE hits count: $it" }
-    tncomp_all.count().view { "TnComp grouped count: $it" }
+    //amr_ch.count().view { "AMR reports count: $it" }
+    //mob_ch.count().view { "MOB reports count: $it" }
+    //phage_ch.count().view { "Phage coords count: $it" }
+    //ice_ch.count().view { "ICE hits count: $it" }
+    //tncomp_all.count().view { "TnComp grouped count: $it" }
 
     // DEBUG: View the meta IDs in each channel
-    amr_ch.map { meta, files -> meta.id }.collect().view { "AMR IDs: $it" }
-    mob_ch.map { meta, files -> meta.id }.collect().view { "MOB IDs: $it" }
-    phage_ch.map { meta, files -> meta.id }.collect().view { "Phage IDs: $it" }
-    ice_ch.map { meta, files -> meta.id }.collect().view { "ICE IDs: $it" }
-    tncomp_all.map { meta, files -> meta.id }.collect().view { "TnComp IDs: $it" }
+    //amr_ch.map { meta, files -> meta.id }.collect().view { "AMR IDs: $it" }
+    //mob_ch.map { meta, files -> meta.id }.collect().view { "MOB IDs: $it" }
+    //phage_ch.map { meta, files -> meta.id }.collect().view { "Phage IDs: $it" }
+    //ice_ch.map { meta, files -> meta.id }.collect().view { "ICE IDs: $it" }
+    //tncomp_all.map { meta, files -> meta.id }.collect().view { "TnComp IDs: $it" }
 
 
     db_initial = Channel.of(file(params.db_path ?: "etd.db")) 
-    db_initial.view { "db_initial: $it" }  
+    //db_initial.view { "db_initial: $it" }  
  
     // Step 2: Join per genome by meta.id
-    paired = amr_ch.join(mob_ch, by: 0, remainder: true)              // [meta, amr_tsv, contigs_report]
-    paired.count().view { "After first join: $it genomes" }
-    paired.view { "paired: $it" }
+    paired = amr_ch.join(mob_ch, by: 0, remainder: true)
+    //paired.count().view { "After first join: $it genomes" }
+    //paired.view { "paired: $it" }
 
     paired2 = paired
-       .join(ice_ch, by: 0, remainder: true)                    // [meta, amr_tsv, contigs_report, ice_file_or_null]
-    paired2.count().view { "After second join: $it genomes" }
-    paired2.view { "paired2: $it" }
+       .join(ice_ch, by: 0, remainder: true)
+    //paired2.count().view { "After second join: $it genomes" }
+    //paired2.view { "paired2: $it" }
 
     paired3 = paired2
        .join(phage_ch, by: 0, remainder: true)
-    paired3.count().view { "After third join: $it genomes" }
-    paired3.view { "paired3: $it" }
+    //paired3.count().view { "After third join: $it genomes" }
+    //paired3.view { "paired3: $it" }
 
-    paired4 = paired3                    // [meta, amr_tsv, contigs_report, ice_file_or_null, phage_file_or_null]
-       .join(tncomp_all, by: 0, remainder: true)                    // [meta, amr_tsv, contigs_report, ice_file_or_null, phage_file_or_null, gbk_files_list_or_null]
-    paired4.count().view { "After fourth join: $it genomes" }
-    paired4.view { "paired4: $it" }
+    paired4 = paired3
+       .join(tncomp_all, by: 0, remainder: true)
+    //paired4.count().view { "After fourth join: $it genomes" }
+    //paired4.view { "paired4: $it" }
 
     // Step 3: Shape the final per-genome bundle
     to_insert = paired4.map { items -> 
@@ -167,14 +159,15 @@ workflow MAKE_DB {
         tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, gbk_files)
 }
 
-    to_insert.count().view { "Final to_insert count: $it genomes" }
-    to_insert.view {"Final to insert: $it" }
+    //to_insert.count().view { "Final to_insert count: $it genomes" }
+    //to_insert.view {"Final to insert: $it" }
 
     // Initialize empty database if it doesn't exist
     db_initial = file(params.db_path ?: "etd.db")
     if (!db_initial.exists()) {
-        db_initial.text = ""  // Create empty file
+        db_initial.text = ""
     }
+    //db_initial.view { "db_initial: $it" }
 
     // Convert sketch_ref to a value channel so it can be reused
     sketch_value = sketch_ref.first()
@@ -189,8 +182,6 @@ workflow MAKE_DB {
     )
 
     emit:
-    //db_etd               = etd_db_init.sqlite_db
-    //updated_db           = ch_db_insert.sqlite_db
       mash_sketches        = MASH_SKETCH.out.mash
       sketch_reference     = MASH_PASTE.out.reference
       amr_reports          = AMRFINDERPLUS_RUN.out.report
