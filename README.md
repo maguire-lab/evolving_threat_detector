@@ -57,7 +57,7 @@ The etd pipeline is organized into two main sub-workflows:
 ## Installation
 
 1. Install [`Nextflow`](https://nf-co.re/usage/installation). If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow.
-2. Install [`Docker`](https://www.docker.com/products/docker-desktop/) if you donot already have it installed.
+2. Install [`Docker`](https://www.docker.com/products/docker-desktop/) if you do not already have it installed.
 3. Install [`Conda`](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html) if you do not already have it installed.
 4. Clone the repository
 
