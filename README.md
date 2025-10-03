@@ -59,7 +59,7 @@ The etd pipeline is organized into two main sub-workflows:
 
 - Most nf-core modules bundled in this pipeline have pre-built Docker containers available via Biocontainers or Docker Hub, which allows for consistent and reproducible execution.
 
-- Custom modules, including parse_gbk`, `Tn3+TA_finder`, `TnComp_finder`, `insert_db` and `query_resistome`, do not yet have Docker containers, and instead rely on Conda environments defined within the pipeline.
+- Custom modules, including `parse_gbk`, `Tn3+TA_finder`, `TnComp_finder`, `insert_db` and `query_resistome`, do not yet have Docker containers, and instead rely on Conda environments defined within the pipeline.
 
 - The docker_conda profile allows both environments to coexist during execution. This means:
 
