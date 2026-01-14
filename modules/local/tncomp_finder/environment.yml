@@ -1,10 +1,10 @@
 name: tncomp_finder
 channels:
-  - bioconda
   - conda-forge
+  - bioconda
   - defaults
 dependencies:
-  - python>=3.10
+  - python>=3.10,<=3.12
   - biopython>=1.78
-  - blast
+  - blast>=2.12
   - prodigal
