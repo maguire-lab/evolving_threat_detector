@@ -3,6 +3,8 @@ process PARSE_GBK {
     tag "$meta.id"
     label 'process_low'
     
+    container "quay.io/biocontainers/biopython:1.84"    
+
     input:
     tuple val(meta), path(gbk)
 
@@ -11,7 +13,7 @@ process PARSE_GBK {
 
     script:
     """
-    python3 ${projectDir}/bin/parse_gbk.py ${gbk} ${meta.id}
+    python ${projectDir}/bin/parse_gbk.py ${gbk} ${meta.id}
     """
 
     stub:
