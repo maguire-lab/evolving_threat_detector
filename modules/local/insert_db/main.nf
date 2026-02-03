@@ -1,6 +1,9 @@
 process INSERT_DB {
   tag "${meta.id}"
   label 'process_low'
+
+  container "quay.io/biocontainers/biopython:1.84"
+
  // publishDir "${params.outdir}/database", mode: 'copy'
 
   maxForks 1
