@@ -2,7 +2,7 @@ process QUERY_RESISTOME {
   tag "${meta.id}"
   label 'process_medium'
 
-  container "quay.io/precious/biopython-polars@sha256:4d00a1f184d0f50c44f1b04935f0181afbbc0db4eebaa57f1e45910f71105d4e"
+  container "quay.io/precious/biopython-polars@sha256:056f5ae506d293c3bbc8de856e8b1cb5eb74c6179a8aa660ceb85b6828393bc9"
 
   publishDir "${params.outdir}/resistome_analysis", mode: 'copy'
 
