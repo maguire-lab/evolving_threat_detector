@@ -7,7 +7,7 @@ import polars as pl
 import argparse
 from Bio import SeqIO
 import sys
-from aggregate_output import parse_plasmid_annotation, parse_ice_annotation, parse_phage_annotation, parse_composite_transposon_annotation
+from aggregate_output import parse_plasmid_annotation, parse_ice_annotation, parse_phage_annotation, parse_composite_transposon_annotation,parse_tn3_transposon_annotation
 
 def retrieve_closest_relatives(mash_dist_output, number=5):
     try:
@@ -151,7 +151,20 @@ def merge_amr_comp_transposon(query_amr_annotations, composite_transposon_annota
             })
     return amr_comp_transposon_annotations
 
-def merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations=None, phage_amr_annotations=None, ice_amr_annotations=None, comp_transposon_amr_annotations=None):
+def merge_amr_tn3_transposon(query_amr_annotations, tn3_annotations):
+    """Join AMR with Tn3 by contig_id"""
+    amr_tn3_annotations = []
+    for annotation in query_amr_annotations:
+        info = tn3_annotations.get(annotation["contig_id"])
+        if info:
+            amr_tn3_annotations.append({
+                "contig_id": annotation["contig_id"],
+                "amr_gene": annotation["amr_gene"],
+                "tn3_annotation": info.get("tn3_annotation")
+            })
+    return amr_tn3_annotations
+
+def merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations=None, phage_amr_annotations=None, ice_amr_annotations=None, comp_transposon_amr_annotations=None, tn3_amr_annotations=None):
       # Create the base DataFrame
       query_amr_annotations_df = pl.DataFrame(
           query_amr_annotations,
@@ -198,6 +211,20 @@ def merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations=N
               how='left'
           )
 
+      # Join with Tn3 transposon annotations if provided
+      if tn3_amr_annotations:
+          tn3_df = pl.DataFrame(
+                 tn3_amr_annotations,
+                 schema=['contig_id', 'amr_gene', 'tn3_annotation']
+                 )
+         # Rename to avoid duplicate column names
+          merged_df = merged_df.join(
+                 tn3_df.rename({'contig_id': 'tn3_contig_id'}),
+                 on='amr_gene',
+                 how='left'
+         )
+
+
       return merged_df
 
 def compare_amr_annotations(cursor, merged_df, closest_relatives):
@@ -241,7 +268,8 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
               schema=['genome_name', 'gene_name', 'amr_annotation', 'plasmid_annotation',
                      'integron_annotation', 'prophage_annotation',
   'composite_transposon_annotation',
-                     'tn3_transposon_annotation', 'ice_annotation']
+                     'tn3_transposon_annotation', 'ice_annotation'],
+              orient="row"
           )
 
           # Convert to dict for easier lookup
@@ -263,8 +291,8 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
                       'query_plasmid_annotation': query_row.get('plasmid_annotation') or 'None',
                       'query_prophage_annotation': query_row.get('prophage_annotation') or 'None',
                       'query_ice_annotation': query_row.get('ice_annotation') or 'None',
-                      'query_composite_transposon_annotation':
-  query_row.get('composite_transposon_annotation') or 'None',
+                      'query_composite_transposon_annotation':query_row.get('composite_transposon_annotation') or 'None',
+                      'query_tn3_transposon_annotation': query_row.get('tn3_annotation') or 'None',
 
                       # Relative annotations (all "Gene not present" since gene is absent)
                       'relative_amr_annotation': 'Gene not present',
@@ -293,6 +321,7 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
                       'query_prophage_annotation': 'Gene not present',
                       'query_ice_annotation': 'Gene not present',
                       'query_composite_transposon_annotation': 'Gene not present',
+                      'query_tn3_transposon_annotation': 'Gene not present',
 
                       # Relative annotations
                       'relative_amr_annotation': closest_row.get('amr_annotation') or 'None',
@@ -348,6 +377,7 @@ def main():
     parser.add_argument('--filtered_hits_report_path', type=Path, default=None, help='Path to to ICE filtered_hits TSV')
     parser.add_argument('--phage_report_path', type=Path, default=None, help='Path to the prophage report TSV')
     parser.add_argument('--comp_gbk_files', type=Path, nargs='*', default=None, help='Paths to composite transposon GBK files (one per candidate)')
+    parser.add_argument('--tn3_gbk_files', type=Path, nargs='*', default=None, help='Paths to Tn3 transposon GBK files')
     parser.add_argument('--number', type=int, default=5, help='Number of closest genomes to consider. Default is 5.')
     parser.add_argument('--output_format', choices=['json', 'dataframe'], default='json', help='Output format for the resistome differences. Default is json.')
 
@@ -359,6 +389,7 @@ def main():
     ice_amr_annotations = None
     phage_amr_annotations = None
     comp_transposon_amr_annotations = None
+    tn3_amr_annotations = None
 
     # Normalize comp_gbk_files to a list of strings (existing only)
     gbk_list = []
@@ -367,6 +398,14 @@ def main():
             p = Path(p)
             if p.exists():
                 gbk_list.append(str(p))
+
+    # Normalize tn3_gbk_files to a list of strings (existing only)
+    tn3_gbk_list = []
+    if args.tn3_gbk_files:
+        for p in args.tn3_gbk_files:
+            p = Path(p)
+            if p.exists():
+                tn3_gbk_list.append(str(p))
 
 
     db_path = Path(args.db_path)
@@ -401,8 +440,13 @@ def main():
     if query_amr_annotations and gbk_list:
         comp_transposon_annotations = parse_composite_transposon_annotation(gbk_list)
         comp_transposon_amr_annotations = merge_amr_comp_transposon(query_amr_annotations, comp_transposon_annotations)
+
+    # parse and store Tn3 transposon annotations
+    if query_amr_annotations and tn3_gbk_list:
+        tn3_annotations = parse_tn3_transposon_annotation(tn3_gbk_list)
+        tn3_amr_annotations = merge_amr_tn3_transposon(query_amr_annotations, tn3_annotations)
     
-    merged_df =  merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations, phage_amr_annotations, ice_amr_annotations, comp_transposon_amr_annotations)
+    merged_df =  merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations, phage_amr_annotations, ice_amr_annotations, comp_transposon_amr_annotations, tn3_amr_annotations)
 
     differences = compare_amr_annotations(cursor, merged_df, closest_relatives)
 

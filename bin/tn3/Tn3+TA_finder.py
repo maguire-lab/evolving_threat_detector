@@ -339,10 +339,10 @@ def predict_orfs(sequence, start):
 
     for item in prodigal:
         item = item.split("_")
-        if item[3] is '+':
+        if item[3] == '+':
             beginning = int(item[1])
             end = int(item[2])
-        elif item[3] is '-':
+        elif item[3] == '-':
             beginning = int(item[2])
             end = int(item[1])
         sequence_orfs.append((beginning, end))
@@ -444,7 +444,8 @@ def write_gbk(sequence, matched_orfs, filename, organism):
                         description=organism+" predicted Tn3 sequence",
                         annotations={"accession":'.', "version":'.',
                                      "organism":'.', "date":date,
-                                     "data_file_division":"BCT"})
+                                     "data_file_division":"BCT",
+                                     "molecule_type": "genomic DNA"})
 
     for item in matched_orfs:
         if item[0] < item[1]:

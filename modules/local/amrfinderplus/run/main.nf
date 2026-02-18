@@ -28,7 +28,7 @@ process AMRFINDERPLUS_RUN {
     def is_compressed_gff     = gff.getName().endsWith(".gz") ? true : false  
     def is_compressed_db      = db.getName().endsWith(".gz") ? true : false
     prefix = task.ext.prefix ?: "${meta.id}"
-    organism_param = meta.containsKey("organism") ? "--organism ${meta.organism} --mutation_all ${prefix}-mutations.tsv" : ""
+    organism_param = meta.organism ? "--organism ${meta.organism} --mutation_all ${prefix}-mutations.tsv" : ""
     fasta_name   = fasta.getName().replace(".gz", "")
     protein_name = protein.getName().replace(".gz", "")
     gff_name     = gff.getName().replace(".gz", "")

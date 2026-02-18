@@ -22,7 +22,7 @@
             },
             "organism": {
                 "type": "string",
-                "pattern": "^[A-Za-z]+_[a-z]+$",
+                "pattern": "^[A-Za-z]+(_[a-z]+)?$",
                 "description": "AMRFinderPlus organism name (e.g. Staphylococus_aureus)",
                 "errorMessage": "Organism must be and follow the AMRFinderPlus naming format",
                 "meta": ["organism"]

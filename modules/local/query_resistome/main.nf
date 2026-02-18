@@ -12,6 +12,7 @@ process QUERY_RESISTOME {
         path(ice_hits),
         path(phage_coords),
         path(gbk_files),
+        path(tn3_files),
         path(mash_dist_output)
   
   // global (single) files:
@@ -26,9 +27,16 @@ process QUERY_RESISTOME {
 
 
   script:
-  // build an optional GBK argument only if we actually have files
+  // Handle organism
+  def organism_value = meta.organism instanceof List ? "" : (meta.organism ?: "")
+
+  // build GBK argument for tncomp directory files
   def gbkArg = (gbk_files && gbk_files.size() > 0) ? 
     "--comp_gbk_files ${gbk_files.collect{ it.toString() }.join(' ')}" : ""
+
+  // build TN3 argument for tn3 directory files
+  def tn3Arg = (tn3_files && tn3_files.size() > 0) ?
+    "--tn3_gbk_files ${tn3_files.collect{ it.toString() }.join(' ')}" : ""
   """
   set -euo pipefail
 
@@ -39,13 +47,14 @@ process QUERY_RESISTOME {
   python3 ${projectDir}/bin/compare_query.py \\
     --db_path ${db_in} \\
     --fasta_name ${meta.id} \\
-    --organism "${meta.organism}" \\
+    ${organism_value ? "--organism \"${organism_value}\"" : ""} \\
     --mash_dist_output "${mash_dist_output}" \\
     --amrfinder_output "${amr_tsv}" \\
     --contigs_report_path "${contigs_report}" \\
     ${ice_hits && ice_hits.size() > 0 ? "--filtered_hits_report_path ${ice_hits}" : ""} \\
     ${phage_coords && phage_coords.size() > 0 ? "--phage_report_path ${phage_coords}" : ""} \\
     ${gbkArg} \\
+    ${tn3Arg} \\
     --number ${params.number ?: 5} \\
     --output_format ${params.output_format ?: 'json'} \\
           

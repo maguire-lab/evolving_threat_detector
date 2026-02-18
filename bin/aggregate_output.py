@@ -581,6 +581,88 @@ def store_amr_comp_transposon(amr_comp_transposon_annotations, cursor, gbk_files
         total_updated += cursor.rowcount
     return total_updated
 
+def parse_tn3_transposon_annotation(tn3_gbk_files):
+    """
+    Parse Tn3 GBK files and extract transposase family names.
+
+    Returns:
+    dict with 'contig_id' and 'tn3_annotation'
+    """
+    tn3_annotations = {}
+
+    for gbk_file in tn3_gbk_files:
+        try:
+            record = SeqIO.read(gbk_file, "genbank")
+            contig_id = record.description.split()[0]
+
+            # Find transposase features
+            transposases = []
+            for feature in record.features:
+                if feature.type == "misc_feature" and "note" in feature.qualifiers:
+                    note = feature.qualifiers["note"][0]
+                    if "transposase" in note.lower():
+                        # Extract family name only
+                        family = note.split()[0]
+                        transposases.append(family)
+
+            # Accumulate for this contig_id
+            if contig_id not in tn3_annotations:
+                tn3_annotations[contig_id] = {
+                    "contig_id": contig_id,
+                    "tn3_annotation": []
+                }
+
+            tn3_annotations[contig_id]["tn3_annotation"].extend(transposases)
+
+        except Exception as e:
+            print(f"Error parsing {gbk_file}: {e}")
+
+    # Convert lists to comma-separated strings
+    for contig_id in tn3_annotations:
+        elements = tn3_annotations[contig_id]["tn3_annotation"]
+        unique_elements = list(set(elements))
+        tn3_annotations[contig_id]["tn3_annotation"] = ", ".join(unique_elements)
+
+    return tn3_annotations
+
+def merge_amr_tn3_transposon(amr_annotations, tn3_annotations):
+    """Join AMR with Tn3 by contig_id"""
+    amr_tn3_annotations = []
+    for annotation in amr_annotations:
+        info = tn3_annotations.get(annotation["contig_id"])
+        if info:
+            amr_tn3_annotations.append({
+                "genome_id": annotation["genome_id"],
+                "contig_id": annotation["contig_id"],
+                "amr_gene": annotation["amr_gene"],
+                "tn3_annotation": info.get("tn3_annotation")
+            })
+    return amr_tn3_annotations
+
+def store_amr_tn3_transposon(amr_tn3_annotations, cursor, gbk_files):
+    """Update AMR rows with Tn3 info"""
+    output_paths = [str(f) for f in gbk_files]
+    output_path_str = ";".join(output_paths) if gbk_files else ""
+
+    total_updated = 0
+    for row in amr_tn3_annotations:
+        genome_id = row.get("genome_id")
+        gene = row.get("amr_gene")
+        ann = row.get("tn3_annotation")
+
+        cursor.execute(
+            """
+            UPDATE annotations
+               SET tn3_transposon_annotation = ?,
+                   tn3_transposon_output_path = ?
+             WHERE genome_id = ?
+               AND gene_name = ?
+            """,
+            (ann, output_path_str, genome_id, gene)
+        )
+        total_updated += cursor.rowcount
+    return total_updated
+
 def main():
     parser = argparse.ArgumentParser(description='Store sketches and annotations into the ETD DB.')
     parser.add_argument('--db_path', type=Path, default=Path(DATABASE_PATH), help='Path to the SQLite database.')
@@ -592,6 +674,7 @@ def main():
     parser.add_argument('--filtered_hits_report_path', type=Path, default=None, help='Path to to ICE filtered_hits TSV')
     parser.add_argument('--phage_report_path', type=Path, default=None, help='Path to the prophage report TSV')
     parser.add_argument('--comp_gbk_files', type=Path, nargs='*', default=None, help='Paths to composite transposon GBK files (one per candidate)')
+    parser.add_argument('--tn3_gbk_files', type=Path, nargs='*', default=None,help='Paths to Tn3 transposon GBK files')
    
     # Published directory paths (for storing in database)
     parser.add_argument('--sketch_path_published', type=str, help='Published path for sketch file')
@@ -600,6 +683,7 @@ def main():
     parser.add_argument('--filtered_hits_report_path_published', type=str, default=None, help='Published path for ICE output')
     parser.add_argument('--phage_report_path_published', type=str, default=None, help='Published path for phage output')
     parser.add_argument('--comp_gbk_files_published', type=str, nargs='*', default=None, help='Published paths to composite transposon GBK files')
+    parser.add_argument('--tn3_gbk_files_published', type=str, nargs='*', default=None, help='Published paths to Tn3 transposon GBK files')
 
     args = parser.parse_args()
 
@@ -662,6 +746,15 @@ def main():
         if comp_transposon_amr_annotation:
             #comp_transposon_result_path = str(Path(gbk_list[0]).parent)
             store_amr_comp_transposon(comp_transposon_amr_annotation, cursor, args.comp_gbk_files_published)
+
+    # parse and store tn3+TA transposon annotations
+    if amr_annotations and args.tn3_gbk_files:
+        tn3_gbk_list = [str(Path(p)) for p in args.tn3_gbk_files if Path(p).exists()]
+        if tn3_gbk_list:
+            tn3_annotations = parse_tn3_transposon_annotation(tn3_gbk_list)
+            tn3_amr_annotation = merge_amr_tn3_transposon(amr_annotations, tn3_annotations)
+            if tn3_amr_annotation:
+                store_amr_tn3_transposon(tn3_amr_annotation, cursor, args.tn3_gbk_files_published)
 
     conn.commit()
     conn.close()

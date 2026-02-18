@@ -87,6 +87,8 @@ workflow QUERY_DB {
     tncomp_all = TNCOMP_FINDER.out.gbk.groupTuple()
     //tncomp_all.view { "After groupTuple: $it" }
 
+    tn3_all = TN3_FINDER.out.gbk.groupTuple()
+
     mash_dist = MASH_DIST.out.dist
     //mash_dist.view { "mash_dist: $it" }
 
@@ -127,8 +129,11 @@ workflow QUERY_DB {
        .join(tncomp_all, by: 0, remainder: true)
     //paired4.count().view { "After fourth join: $it genomes" }
 
+    paired5 = paired4
+       .join(tn3_all, by: 0, remainder: true)
+
     // Step 3: Shape the final per-genome bundle
-    query_input = paired4
+    query_input = paired5
         .join(mash_dist, by: 0, remainder: true)
         .map { items ->
             def meta = items[0]
@@ -137,11 +142,13 @@ workflow QUERY_DB {
             def ice_file = items[3] ?: []
             def phage_file = items[4] ?: []
             def gbk_files_nested = items[5] ?: []
-            def dist_file = items[6]
+            def tn3_files_nested = items[6] ?: []
+            def dist_file = items[7]
       
      def gbk_files = gbk_files_nested ? [gbk_files_nested].flatten() : []
+     def tn3_files = tn3_files_nested ? [tn3_files_nested].flatten() : []
 
-        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, gbk_files, dist_file)
+        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, gbk_files, tn3_files, dist_file)
 }
 
     //query_input.count().view { "Final query_input count: $it genomes" }
@@ -164,4 +171,5 @@ workflow QUERY_DB {
       phispy_prophage_tsv  = PHISPY.out.prophage_tsv
       phispy_coordinates   = PHISPY.out.coordinates
       tncomp_gbk           = TNCOMP_FINDER.out.gbk
+      tn3_gbk 		   = TN3_FINDER.out.gbk
 }

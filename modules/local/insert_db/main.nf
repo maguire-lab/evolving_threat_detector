@@ -13,7 +13,8 @@ process INSERT_DB {
   tuple val(meta), path(amr_tsv), path(contigs_report),
         path(ice_hits),
         path(phage_coords),
-        path(gbk_files)
+        path(gbk_files),
+        path(tn3_files)
   
   // global (single) files:
   path sketch_msh
@@ -26,9 +27,16 @@ process INSERT_DB {
 
 
   script:
-  // build GBK argument for work directory files (for reading)
+  // Handle organism
+  def organism_value = meta.organism instanceof List ? "" : (meta.organism ?: "")
+
+  // build GBK argument for tnccopm work directory files (for reading)
   def gbkArg = (gbk_files && gbk_files.size() > 0) ? 
     "--comp_gbk_files ${gbk_files.collect{ it.toString() }.join(' ')}" : ""
+
+ // build TN3 argument for tn3 work directory files
+  def tn3Arg = (tn3_files && tn3_files.size() > 0) ?
+    "--tn3_gbk_files ${tn3_files.collect{ it.toString() }.join(' ')}" : ""
 
  // Build published path arguments (for DB storage)
   def amr_published = "${params.outdir}/amrfinder/${meta.id}.tsv"
@@ -44,13 +52,20 @@ process INSERT_DB {
       gbk_published = "--comp_gbk_files_published ${published_gbks.join(' ')}"
     }
 
+  // Build published GBK paths for tn3
+  def tn3_published = ""
+  if (tn3_files && tn3_files.size() > 0) {
+      def published_tn3s = tn3_files.collect { "${params.outdir}/tn3/${meta.id}_${it.name}" }
+      tn3_published = "--tn3_gbk_files_published ${published_tn3s.join(' ')}"
+  }
+
   """
   set -euo pipefail
 
   python3 ${projectDir}/bin/aggregate_output.py \\
     --db_path etd.db \\
     --fasta_name ${meta.id} \\
-    --organism "${meta.organism}" \\
+    ${organism_value ? "--organism \"${organism_value}\"" : ""} \\
     --sketch_path "${sketch_msh}" \\
     --sketch_path_published "${sketch_published}" \\
     --amrfinder_output "${amr_tsv}" \\
@@ -63,6 +78,8 @@ process INSERT_DB {
     ${phage_coords && phage_coords.size() > 0 ? "--phage_report_path_published ${phage_published}" : ""} \\
     ${gbkArg} \\
     ${gbk_published} \\
+    ${tn3Arg} \\
+    ${tn3_published}
 
     2>&1 | tee register.log
 

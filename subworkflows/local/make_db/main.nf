@@ -101,6 +101,8 @@ workflow MAKE_DB {
     tncomp_all = TNCOMP_FINDER.out.gbk.groupTuple()
     //tncomp_all.view { "After groupTuple: $it" }
 
+    tn3_all = TN3_FINDER.out.gbk.groupTuple()
+
     sketch_ref = MASH_PASTE.out.reference
     //sketch_ref.view { "sketch_ref: $it" }
 
@@ -142,21 +144,27 @@ workflow MAKE_DB {
     //paired4.count().view { "After fourth join: $it genomes" }
     //paired4.view { "paired4: $it" }
 
+    paired5 = paired4
+       .join(tn3_all, by: 0, remainder: true)
+
     // Step 3: Shape the final per-genome bundle
-    to_insert = paired4.map { items -> 
+    to_insert = paired5.map { items -> 
         def meta = items[0]
         def amr_tsv = items[1] ?: []
         def contigs_report = items[2] ?: []
         def ice_file = items[3] ?: []
         def phage_file = items[4] ?: []
         def gbk_files_nested = items[5] ?: []
+        def tn3_files_nested = items[6] ?: []
 
-     // Flatten the double-nested gbk files
+     // Flatten the double-nested tncomp and tn3 gbk files
      def gbk_files = gbk_files_nested ? [gbk_files_nested].flatten() : []
+     
+     def tn3_files = tn3_files_nested ? [tn3_files_nested].flatten() : []
 
 
        
-        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, gbk_files)
+        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, gbk_files, tn3_files)
 }
 
     //to_insert.count().view { "Final to_insert count: $it genomes" }
@@ -192,5 +200,6 @@ workflow MAKE_DB {
       phispy_prophage_tsv  = PHISPY.out.prophage_tsv
       phispy_coordinates   = PHISPY.out.coordinates
       tncomp_gbk           = TNCOMP_FINDER.out.gbk
+      tn3_gbk		   = TN3_FINDER.out.gbk
       updated_db           = INSERT_DB.out.db.last() 
 }	
