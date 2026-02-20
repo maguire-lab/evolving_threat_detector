@@ -140,54 +140,48 @@ def gbk_to_files(gbk_file, output_prefix=None):
             # Process features for GFF3 and protein extraction
             for feature in record.features:
                 if feature.type == "source":
-                    continue  # Skip source features
-                
+                    continue
+
                 feature_count += 1
-                
-                # Convert coordinates (BioPython uses 0-based, GFF3 uses 1-based)
+
                 start = int(feature.location.start) + 1
                 end = int(feature.location.end)
                 strand = convert_strand(feature.location.strand)
-                
-                # Format GFF3 line
-                gff_line = [
-                    record.id,                    # seqid
-                    "GenBank",                    # source
-                    feature.type,                 # type
-                    str(start),                   # start
-                    str(end),                     # end
-                    ".",                          # score
-                    strand,                       # strand
-                    ".",                          # phase
-                    format_gff3_attributes(feature)  # attributes
-                ]
-                
-                gff_out.write("\t".join(gff_line) + "\n")
-                
-                # Extract protein sequences from CDS features
-                if feature.type == "CDS" and 'translation' in feature.qualifiers:
+
+                # Generate feature ID
+                if feature.type == "CDS":
                     protein_count += 1
-                    
-                    # Generate protein ID
-                    prot_id = None
-                    if 'locus_tag' in feature.qualifiers:
-                        prot_id = feature.qualifiers['locus_tag'][0]
-                    elif 'gene' in feature.qualifiers:
-                        prot_id = feature.qualifiers['gene'][0]
-                    else:
-                        prot_id = f"protein_{start}_{end}"
-                    
-                    # Write protein FASTA entry
-                    prot_out.write(f">{prot_id}")
-                    
-                    # Add description if available
+                    feature_id = f"{output_prefix}_{protein_count:05d}"
+                elif 'locus_tag' in feature.qualifiers:
+                    feature_id = feature.qualifiers['locus_tag'][0]
+                elif 'gene' in feature.qualifiers:
+                    feature_id = feature.qualifiers['gene'][0]
+                else:
+                    feature_id = f"{feature.type}_{start}_{end}"
+
+                # Build GFF3 attributes
+                attrs = [f"ID={feature_id}"]
+                if 'gene' in feature.qualifiers:
+                    attrs.append(f"Name={feature.qualifiers['gene'][0]}")
+                if 'product' in feature.qualifiers:
+                    product = feature.qualifiers['product'][0].replace(',', '%2C').replace(';', '%3B').replace('=', '%3D')
+                    attrs.append(f"product={product}")
+
+                gff_line = [
+                    record.id, "GenBank", feature.type,
+                    str(start), str(end), ".", strand, ".",
+                    ";".join(attrs)
+                ]
+                gff_out.write("\t".join(gff_line) + "\n")
+
+                # Extract protein sequence from CDS features
+                if feature.type == "CDS" and 'translation' in feature.qualifiers:
+                    prot_out.write(f">{feature_id}")
                     if 'product' in feature.qualifiers:
                         prot_out.write(f" {feature.qualifiers['product'][0]}")
-                    
                     prot_out.write(f" [location={record.id}:{start}..{end}({strand})]")
                     prot_out.write(f"\n")
-                    
-                    # Write protein sequence in 80-character lines
+
                     prot_seq = feature.qualifiers['translation'][0]
                     for i in range(0, len(prot_seq), 80):
                         prot_out.write(prot_seq[i:i+80] + "\n")

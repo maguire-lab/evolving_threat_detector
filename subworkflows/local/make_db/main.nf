@@ -98,13 +98,15 @@ workflow MAKE_DB {
     ice_ch    = FILTER_DIAMOND_HITS.out.filtered_iceberg_hits
     //ice_ch.view { "ice_ch: $it" }
   
-    tncomp_all = TNCOMP_FINDER.out.gbk.groupTuple()
+    tncomp_all = TNCOMP_FINDER.out.report.groupTuple()
     //tncomp_all.view { "After groupTuple: $it" }
 
-    tn3_all = TN3_FINDER.out.gbk.groupTuple()
+    tn3_all = TN3_FINDER.out.report.groupTuple()
 
     sketch_ref = MASH_PASTE.out.reference
     //sketch_ref.view { "sketch_ref: $it" }
+
+    integron_ch = INTEGRONFINDER.out.integrons
 
     // DEBUG: Count items in each channel
     //amr_ch.count().view { "AMR reports count: $it" }
@@ -147,24 +149,28 @@ workflow MAKE_DB {
     paired5 = paired4
        .join(tn3_all, by: 0, remainder: true)
 
+    paired6 = paired5
+       .join(integron_ch, by: 0, remainder: true)
+
     // Step 3: Shape the final per-genome bundle
-    to_insert = paired5.map { items -> 
+    to_insert = paired6.map { items -> 
         def meta = items[0]
         def amr_tsv = items[1] ?: []
         def contigs_report = items[2] ?: []
         def ice_file = items[3] ?: []
         def phage_file = items[4] ?: []
-        def gbk_files_nested = items[5] ?: []
+        def txt_files_nested = items[5] ?: []
         def tn3_files_nested = items[6] ?: []
+        def integron_file = items[7] ?: []
 
      // Flatten the double-nested tncomp and tn3 gbk files
-     def gbk_files = gbk_files_nested ? [gbk_files_nested].flatten() : []
+     def txt_files = txt_files_nested ? [txt_files_nested].flatten() : []
      
      def tn3_files = tn3_files_nested ? [tn3_files_nested].flatten() : []
 
 
        
-        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, gbk_files, tn3_files)
+        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, txt_files, tn3_files, integron_file)
 }
 
     //to_insert.count().view { "Final to_insert count: $it genomes" }
@@ -194,12 +200,12 @@ workflow MAKE_DB {
       sketch_reference     = MASH_PASTE.out.reference
       amr_reports          = AMRFINDERPLUS_RUN.out.report
       mobtyper_results     = MOBSUITE_RECON.out.contig_report
-      integron_summaries   = INTEGRONFINDER.out.summary
+      integron_results      = INTEGRONFINDER.out.integrons
       diamond_db           = DIAMOND_MAKEDB.out.db
       iceberg_hits         = FILTER_DIAMOND_HITS.out.filtered_iceberg_hits
       phispy_prophage_tsv  = PHISPY.out.prophage_tsv
       phispy_coordinates   = PHISPY.out.coordinates
-      tncomp_gbk           = TNCOMP_FINDER.out.gbk
-      tn3_gbk		   = TN3_FINDER.out.gbk
+      tncomp_report           = TNCOMP_FINDER.out.report
+      tn3_report		   = TN3_FINDER.out.report
       updated_db           = INSERT_DB.out.db.last() 
 }	

@@ -420,9 +420,14 @@
       if (root_db.exists()) {
          root_db.delete()
          log.info "✓ Cleaned up etd.db from project root"
+      }
+      if (workflow.success) {
          log.info "✓ ETD Pipeline completed successfully!"
          log.info "✓ Results are available in: ${params.outdir}"
       
+      } else {
+         log.error "✗ ETD Pipeline finished with errors!"
+         log.error "✗ Check .nextflow.log or the work directory for details"
       }
 }
 

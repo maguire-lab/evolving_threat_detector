@@ -11,8 +11,9 @@ process QUERY_RESISTOME {
   tuple val(meta), path(amr_tsv), path(contigs_report),
         path(ice_hits),
         path(phage_coords),
-        path(gbk_files),
+        path(txt_files),
         path(tn3_files),
+        path(integron_file),
         path(mash_dist_output)
   
   // global (single) files:
@@ -30,13 +31,17 @@ process QUERY_RESISTOME {
   // Handle organism
   def organism_value = meta.organism instanceof List ? "" : (meta.organism ?: "")
 
-  // build GBK argument for tncomp directory files
-  def gbkArg = (gbk_files && gbk_files.size() > 0) ? 
-    "--comp_gbk_files ${gbk_files.collect{ it.toString() }.join(' ')}" : ""
+  // build transposons and integron finders argument for directory files
 
-  // build TN3 argument for tn3 directory files
+  def compArg = (txt_files && txt_files.size() > 0) ? 
+    "--comp_txt_files ${txt_files.collect{ it.toString() }.join(' ')}" : ""
+
   def tn3Arg = (tn3_files && tn3_files.size() > 0) ?
-    "--tn3_gbk_files ${tn3_files.collect{ it.toString() }.join(' ')}" : ""
+    "--tn3_txt_files ${tn3_files.collect{ it.toString() }.join(' ')}" : ""
+
+  def integronArg = (integron_file && integron_file.size() > 0) ?
+    "--integron_file ${integron_file}" : ""
+
   """
   set -euo pipefail
 
@@ -53,10 +58,12 @@ process QUERY_RESISTOME {
     --contigs_report_path "${contigs_report}" \\
     ${ice_hits && ice_hits.size() > 0 ? "--filtered_hits_report_path ${ice_hits}" : ""} \\
     ${phage_coords && phage_coords.size() > 0 ? "--phage_report_path ${phage_coords}" : ""} \\
-    ${gbkArg} \\
+    ${compArg} \\
     ${tn3Arg} \\
+    ${integronArg} \\
     --number ${params.number ?: 5} \\
     --output_format ${params.output_format ?: 'json'} \\
+    --max_distance ${params.max_distance}
           
     2>&1 | tee register.log
 

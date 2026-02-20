@@ -84,13 +84,15 @@ workflow QUERY_DB {
     ice_ch    = FILTER_DIAMOND_HITS.out.filtered_iceberg_hits
     //ice_ch.view { "ice_ch: $it" }
 
-    tncomp_all = TNCOMP_FINDER.out.gbk.groupTuple()
+    tncomp_all = TNCOMP_FINDER.out.report.groupTuple()
     //tncomp_all.view { "After groupTuple: $it" }
 
-    tn3_all = TN3_FINDER.out.gbk.groupTuple()
+    tn3_all = TN3_FINDER.out.report.groupTuple()
 
     mash_dist = MASH_DIST.out.dist
     //mash_dist.view { "mash_dist: $it" }
+
+    integron_ch = INTEGRONFINDER.out.integrons
 
     // DEBUG: Count items in each channel
     //amr_ch.count().view { "AMR reports count: $it" }
@@ -132,8 +134,11 @@ workflow QUERY_DB {
     paired5 = paired4
        .join(tn3_all, by: 0, remainder: true)
 
+    paired6 = paired5
+       .join(integron_ch, by: 0, remainder: true)
+
     // Step 3: Shape the final per-genome bundle
-    query_input = paired5
+    query_input = paired6
         .join(mash_dist, by: 0, remainder: true)
         .map { items ->
             def meta = items[0]
@@ -141,14 +146,15 @@ workflow QUERY_DB {
             def contigs_report = items[2] ?: []
             def ice_file = items[3] ?: []
             def phage_file = items[4] ?: []
-            def gbk_files_nested = items[5] ?: []
+            def txt_files_nested = items[5] ?: []
             def tn3_files_nested = items[6] ?: []
-            def dist_file = items[7]
+            def integron_file = items[7] ?: []
+            def dist_file = items[8]
       
-     def gbk_files = gbk_files_nested ? [gbk_files_nested].flatten() : []
+     def txt_files = txt_files_nested ? [txt_files_nested].flatten() : []
      def tn3_files = tn3_files_nested ? [tn3_files_nested].flatten() : []
 
-        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, gbk_files, tn3_files, dist_file)
+        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, txt_files, tn3_files, integron_file, dist_file)
 }
 
     //query_input.count().view { "Final query_input count: $it genomes" }
@@ -166,10 +172,10 @@ workflow QUERY_DB {
       mash_distance        = MASH_DIST.out.dist
       amr_reports          = AMRFINDERPLUS_RUN.out.report
       mobtyper_results     = MOBSUITE_RECON.out.contig_report
-      integron_summaries   = INTEGRONFINDER.out.summary
+      integron_rsults      = INTEGRONFINDER.out.integrons
       iceberg_hits         = FILTER_DIAMOND_HITS.out.filtered_iceberg_hits
       phispy_prophage_tsv  = PHISPY.out.prophage_tsv
       phispy_coordinates   = PHISPY.out.coordinates
-      tncomp_gbk           = TNCOMP_FINDER.out.gbk
-      tn3_gbk 		   = TN3_FINDER.out.gbk
+      tncomp_report        = TNCOMP_FINDER.out.report
+      tn3_report           = TN3_FINDER.out.report
 }

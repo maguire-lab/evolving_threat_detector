@@ -7,22 +7,25 @@ import polars as pl
 import argparse
 from Bio import SeqIO
 import sys
-from aggregate_output import parse_plasmid_annotation, parse_ice_annotation, parse_phage_annotation, parse_composite_transposon_annotation,parse_tn3_transposon_annotation
+from aggregate_output import parse_plasmid_annotation, parse_ice_annotation, parse_phage_annotation, parse_composite_transposon_annotation,parse_tn3_transposon_annotation, parse_integron_annotation, is_proximal
 
 def retrieve_closest_relatives(mash_dist_output, number=5):
     try:
         closest_relatives = []
         with open(mash_dist_output) as f:
             for line in f:
-                fields = line.strip().split('\t')
-                #genome_name = Path(fields[0]).name
-                genome_name = fields[0].split('_')[0]
-                p_value = float(fields[2])
+                fields = line.strip()
+                if not line:
+                    continue
+                fields = line.split('\t')
+                genome_name = fields[0].replace('_contigs.fasta','')
+                mash_distance = float(fields[2])
+                p_value = float(fields[3])
                 numerator, denominator = map(int, fields[4].split('/'))
-                dist = 1 - (numerator / denominator)
-                closest_relatives.append((genome_name, p_value, dist))
+                similarity = numerator / denominator
+                closest_relatives.append((genome_name, mash_distance, p_value, similarity))
 
-        closest_relatives.sort(key=lambda x: x[2])
+        closest_relatives.sort(key=lambda x: x[1])
         closest_relatives = closest_relatives[:number]
     except Exception as e:
         print(f"Error reading Mash file: {e}")
@@ -55,11 +58,15 @@ def parse_query_amr_annotation(amrfinder_output):
                     continue
                 contig_id = parts[1].split()[0]
                 protein_id = parts[0]
+                start = int(parts[2])
+                stop = int(parts[3])
                 gene_name = parts[5]
                 annotation = parts[6]
                 query_amr_annotations.append({
                     "contig_id": contig_id,
                     "protein_id": protein_id,
+                    "start": start,
+                    "stop": stop,
                     "amr_gene": gene_name,
                     "annotation": annotation
                 })
@@ -85,6 +92,8 @@ def merge_amr_plasmid_annotation(query_amr_annotations, plasmid_annotations):
         if info:
             amr_plasmid_annotations.append({
                 "amr_gene": annotation["amr_gene"],
+                "contig_id": annotation["contig_id"],
+                "start": annotation["start"],
                 "plasmid_annotation": info["plasmid"],
                 "plasmid_id": info["contig_id"]
                 })
@@ -108,15 +117,15 @@ def merge_amr_ice_annotation(query_amr_annotations, ice_annotations):
         if info:
             amr_ice_annotations.append({
                 "amr_gene": annotation["amr_gene"],
+                "contig_id": annotation["contig_id"],
+                "start": annotation["start"],
                 "ice_annotation": info["ice"],
                 "ice_id": info["protein_id"]
                 })
 
-    print(f"Created {len(amr_ice_annotations)} AMR-ICE annotations")
-
     return amr_ice_annotations
 
-def merge_amr_phage_annotation(query_amr_annotations, phage_annotations):
+def merge_amr_phage_annotation(query_amr_annotations, phage_annotations, max_distance=5000):
     """
     Join AMR rows with prophage annotations by contig_id.
 
@@ -129,26 +138,38 @@ def merge_amr_phage_annotation(query_amr_annotations, phage_annotations):
     """
     amr_phage_annotations = []
     for annotation in query_amr_annotations:
-        info = phage_annotations.get(annotation["contig_id"])
-        if info:
-            amr_phage_annotations.append({
-                "amr_gene": annotation["amr_gene"],
-                "prophage_annotation": info["prophage"],
-                "phage_id": info["contig_id"]
+        regions = phage_annotations.get(annotation["contig_id"])
+        if regions:
+            proximal_regions = []
+            for r in regions:
+                if is_proximal(annotation["start"], annotation["stop"],
+                               r["start"], r["end"], max_distance):
+                    proximal_regions.append(
+                        f"{r['prophage_id']} ({r['start']}-{r['end']})"
+                    )
+            if proximal_regions:
+                amr_phage_annotations.append({
+                    "amr_gene": annotation["amr_gene"],
+                    "contig_id": annotation["contig_id"],
+                    "start": annotation["start"],
+                    "prophage_annotation": ", ".join(proximal_regions)
                 })
 
     return amr_phage_annotations
 
-def merge_amr_comp_transposon(query_amr_annotations, composite_transposon_annotation):
+def merge_amr_comp_transposon(query_amr_annotations, composite_transposon_annotation, max_distance=5000):
     amr_comp_transposon_annotations = []
     for annotation in query_amr_annotations:
         info = composite_transposon_annotation.get(annotation["contig_id"])
-        if info:
-            amr_comp_transposon_annotations.append({
-                "contig_id": annotation["contig_id"],
-                "amr_gene":  annotation["amr_gene"],
-                "composite_transposon_annotation": info.get("composite_transposon_annotation")
-            })
+        if info and info.get("start") is not None and info.get("end") is not None:
+            if is_proximal(annotation["start"], annotation["stop"],
+                           info["start"], info["end"], max_distance):
+                amr_comp_transposon_annotations.append({
+                    "contig_id": annotation["contig_id"],
+                    "start": annotation["start"],
+                    "amr_gene": annotation["amr_gene"],
+                    "composite_transposon_annotation": info.get("composite_transposon_annotation")
+                })
     return amr_comp_transposon_annotations
 
 def merge_amr_tn3_transposon(query_amr_annotations, tn3_annotations):
@@ -159,16 +180,39 @@ def merge_amr_tn3_transposon(query_amr_annotations, tn3_annotations):
         if info:
             amr_tn3_annotations.append({
                 "contig_id": annotation["contig_id"],
+                "start": annotation["start"],
                 "amr_gene": annotation["amr_gene"],
                 "tn3_annotation": info.get("tn3_annotation")
             })
     return amr_tn3_annotations
 
-def merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations=None, phage_amr_annotations=None, ice_amr_annotations=None, comp_transposon_amr_annotations=None, tn3_amr_annotations=None):
+def merge_amr_integron_annotation(query_amr_annotations, integron_annotations, max_distance=5000):
+    amr_integron_annotations = []
+    for annotation in query_amr_annotations:
+        regions = integron_annotations.get(annotation["contig_id"])
+        if regions:
+            proximal_regions = []
+            for r in regions:
+                if is_proximal(annotation["start"], annotation["stop"],
+                               r["start"], r["end"], max_distance):
+                    proximal_regions.append(
+                        f"{r['integron_id']} ({r['start']}-{r['end']})"
+                    )
+            if proximal_regions:
+                amr_integron_annotations.append({
+                    "amr_gene": annotation["amr_gene"],
+                    "contig_id": annotation["contig_id"],
+                    "start": annotation["start"],
+                    "integron_annotation": ", ".join(proximal_regions)
+                })
+    return amr_integron_annotations
+
+def merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations=None, phage_amr_annotations=None, ice_amr_annotations=None, comp_transposon_amr_annotations=None, tn3_amr_annotations=None, integron_amr_annotations=None):
       # Create the base DataFrame
       query_amr_annotations_df = pl.DataFrame(
           query_amr_annotations,
-          schema=['contig_id', 'protein_id', 'amr_gene', 'annotation']
+          schema=['contig_id', 'protein_id', 'start', 'stop', 'amr_gene', 'annotation'],
+          orient="row"
       )
 
       # Start with the base DataFrame
@@ -178,51 +222,85 @@ def merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations=N
       if plasmid_amr_annotations:
           plasmid_df = pl.DataFrame(
               plasmid_amr_annotations,
-              schema=['plasmid_id', 'amr_gene', 'plasmid_annotation']
+              schema=['amr_gene', 'contig_id', 'start', 'plasmid_annotation', 'plasmid_id'],
+              orient="row"
           )
-          merged_df = merged_df.join(plasmid_df, on='amr_gene', how='left')
+          merged_df = merged_df.join(
+                  plasmid_df.select(['amr_gene', 'contig_id', 'start', 'plasmid_annotation']), 
+                  on=['amr_gene', 'contig_id', 'start'],
+                  how='left'
+                  )
 
       # Join with phage annotations if provided
       if phage_amr_annotations:
           phage_df = pl.DataFrame(
               phage_amr_annotations,
-              schema=['phage_id', 'amr_gene', 'prophage_annotation']
+              schema=['amr_gene', 'contig_id', 'start', 'prophage_annotation'],
+              orient="row"
           )
-          merged_df = merged_df.join(phage_df, on='amr_gene', how='left')
+          merged_df = merged_df.join(
+                  phage_df.select, 
+                  on=['amr_gene', 'contig_id', 'start'], 
+                  how='left'
+                  )
 
       # Join with ICE annotations if provided
       if ice_amr_annotations:
           ice_df = pl.DataFrame(
               ice_amr_annotations,
-              schema=['ice_id', 'amr_gene', 'ice_annotation']
+              schema=['amr_gene', 'contig_id', 'start', 'ice_annotation', 'ice_id'],
+              orient="row"
           )
-          merged_df = merged_df.join(ice_df, on='amr_gene', how='left')
+          merged_df = merged_df.join(
+                  ice_df.select(['amr_gene', 'contig_id', 'start', 'ice_annotation']),
+                  on=['amr_gene', 'contig_id', 'start'],
+                  how='left'
+                  )
 
       # Join with composite transposon annotations if provided
       if comp_transposon_amr_annotations:
           comp_transposon_df = pl.DataFrame(
               comp_transposon_amr_annotations,
-              schema=['contig_id', 'amr_gene', 'composite_transposon_annotation']
+              schema=['contig_id', 'start', 'amr_gene', 'composite_transposon_annotation'],
+              orient="row"
           )
           # Rename to avoid duplicate column names
           merged_df = merged_df.join(
-              comp_transposon_df.rename({'contig_id': 'transposon_contig_id'}),
-              on='amr_gene',
-              how='left'
+              comp_transposon_df,
+              on=['amr_gene', 'contig_id', 'start'],
+              how='left',
+              suffix='_comp'
           )
 
       # Join with Tn3 transposon annotations if provided
       if tn3_amr_annotations:
           tn3_df = pl.DataFrame(
                  tn3_amr_annotations,
-                 schema=['contig_id', 'amr_gene', 'tn3_annotation']
+                 schema=['contig_id','start', 'amr_gene', 'tn3_annotation'],
+                 orient="row"
                  )
          # Rename to avoid duplicate column names
           merged_df = merged_df.join(
-                 tn3_df.rename({'contig_id': 'tn3_contig_id'}),
-                 on='amr_gene',
-                 how='left'
+                 tn3_df,
+                 on=['amr_gene', 'contig_id', 'start'],
+                 how='left',
+                 suffix='_tn3'
          )
+
+    # Join with integron annotations if provided
+      if integron_amr_annotations:
+          integron_df = pl.DataFrame(
+            integron_amr_annotations,
+            schema=['amr_gene', 'contig_id', 'start', 'integron_annotation'],
+            orient="row"
+        )
+          merged_df = merged_df.join(
+            integron_df,
+            on=['amr_gene', 'contig_id', 'start'],
+            how='left'
+        )
+      else:
+          merged_df = merged_df.with_columns(pl.lit(None).alias('integron_annotation'))
 
 
       return merged_df
@@ -244,13 +322,13 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
 
       # Convert merged_df to dictionary for easier lookup
       query_annotations_dict = {
-          row['amr_gene']: row for row in merged_df.to_dicts()
+          (row['amr_gene'], row['contig_id'], row['start']): row for row in merged_df.to_dicts()
       }
 
-      for genome_name, p_value, dist in closest_relatives:
+      for genome_name, mash_distance, p_value, similarity in closest_relatives:
           cursor.execute(
               """
-              SELECT g.genome_name, a.gene_name, a.amr_annotation, 
+              SELECT g.genome_name, a.gene_name, a.contig_id, a.start, a.stop, a.amr_annotation, 
                      a.plasmid_annotation, a.integron_annotation, a.prophage_annotation, 
                      a.composite_transposon_annotation, a.tn3_transposon_annotation, 
   a.ice_annotation
@@ -265,26 +343,33 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
           # Create a Polars DataFrame for the closest annotations
           closest_annotations_df = pl.DataFrame(
               closest_annotations,
-              schema=['genome_name', 'gene_name', 'amr_annotation', 'plasmid_annotation',
-                     'integron_annotation', 'prophage_annotation',
-  'composite_transposon_annotation',
+              schema=['genome_name', 'gene_name', 'contig_id', 'start', 'stop',
+                     'amr_annotation', 'plasmid_annotation','integron_annotation', 
+                     'prophage_annotation','composite_transposon_annotation',
                      'tn3_transposon_annotation', 'ice_annotation'],
               orient="row"
           )
 
           # Convert to dict for easier lookup
           closest_annotations_dict = {
-              row['gene_name']: row for row in closest_annotations_df.to_dicts()
+              (row['gene_name'], row['contig_id'], row['start']): row for row in closest_annotations_df.to_dicts()
           }
 
+          # Build gene-name sets for presence/absence comparison
+          query_gene_names = set(key[0] for key in query_annotations_dict)
+          relative_gene_names = set(key[0] for key in closest_annotations_dict)
+
           # Check for gained genes (genes in query but not in relative)
-          for gene, query_row in query_annotations_dict.items():
-              if gene not in closest_annotations_dict:
+          gained_genes = query_gene_names - relative_gene_names
+          for key, query_row in query_annotations_dict.items():
+              gene = key[0]
+              if gene in gained_genes:
                   differences.append({
                       'relative_genome': genome_name,
                       'gene_name': gene,
+                      'mash_distance': mash_distance,
                       'p_value': p_value,
-                      'distance': dist,
+                      'similarity': similarity,
 
                       # Query annotations
                       'query_amr_annotation': query_row.get('annotation') or 'None',
@@ -307,13 +392,16 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
                   })
 
           # Check for lost genes (genes in relative but not in query)
-          for gene, closest_row in closest_annotations_dict.items():
-              if gene not in query_annotations_dict:
+          lost_genes = relative_gene_names - query_gene_names
+          for key, closest_row in closest_annotations_dict.items():
+              gene = key[0]
+              if gene in lost_genes:
                   differences.append({
                       'relative_genome': genome_name,
                       'gene_name': gene,
+                      'mash_distance': mash_distance,
                       'p_value': p_value,
-                      'distance': dist,
+                      'similarity': similarity,
 
                       # Query annotations (all "Gene not present" since gene is absent)
                       'query_amr_annotation': 'Gene not present',
@@ -376,10 +464,12 @@ def main():
     parser.add_argument('--contigs_report_path', type=Path, help='Path to mobsuite contigs_report.txt')
     parser.add_argument('--filtered_hits_report_path', type=Path, default=None, help='Path to to ICE filtered_hits TSV')
     parser.add_argument('--phage_report_path', type=Path, default=None, help='Path to the prophage report TSV')
-    parser.add_argument('--comp_gbk_files', type=Path, nargs='*', default=None, help='Paths to composite transposon GBK files (one per candidate)')
-    parser.add_argument('--tn3_gbk_files', type=Path, nargs='*', default=None, help='Paths to Tn3 transposon GBK files')
+    parser.add_argument('--comp_txt_files', type=Path, nargs='*', default=None, help='Paths to composite transposon TXT files')
+    parser.add_argument('--tn3_txt_files', type=Path, nargs='*', default=None, help='Paths to Tn3 transposon TXT files')
+    parser.add_argument('--integron_file', type=Path, default=None, help='Path to IntegronFinder .integrons file')
     parser.add_argument('--number', type=int, default=5, help='Number of closest genomes to consider. Default is 5.')
     parser.add_argument('--output_format', choices=['json', 'dataframe'], default='json', help='Output format for the resistome differences. Default is json.')
+    parser.add_argument('--max_distance', type=int, default=5000, help='Maximum distance (bp) between AMR gene and MGE element to consider them co-located (default is 5000)')
 
 
     args = parser.parse_args()
@@ -390,22 +480,23 @@ def main():
     phage_amr_annotations = None
     comp_transposon_amr_annotations = None
     tn3_amr_annotations = None
+    integron_amr_annotations = None
 
     # Normalize comp_gbk_files to a list of strings (existing only)
-    gbk_list = []
-    if args.comp_gbk_files:
-        for p in args.comp_gbk_files:
+    comp_txt_list = []
+    if args.comp_txt_files:
+        for p in args.comp_txt_files:
             p = Path(p)
             if p.exists():
-                gbk_list.append(str(p))
+                comp_txt_list.append(str(p))
 
     # Normalize tn3_gbk_files to a list of strings (existing only)
-    tn3_gbk_list = []
-    if args.tn3_gbk_files:
-        for p in args.tn3_gbk_files:
+    tn3_txt_list = []
+    if args.tn3_txt_files:
+        for p in args.tn3_txt_files:
             p = Path(p)
             if p.exists():
-                tn3_gbk_list.append(str(p))
+                tn3_txt_list.append(str(p))
 
 
     db_path = Path(args.db_path)
@@ -414,39 +505,45 @@ def main():
 
     closest_relatives =  retrieve_closest_relatives(args.mash_dist_output, args.number)
 
-     # parse and store amr_annotations
+     # parse query amr_annotations
     query_amr_annotations = []
     if args.amrfinder_output and Path(args.amrfinder_output).exists():
         query_amr_annotations = parse_query_amr_annotation(args.amrfinder_output)
     else:
         print("Note: No AMR file provided or not found; skipping AMR insert.")
 
-    # parse and store plasmid annotations
+    # parse and merge plasmid annotations
     if query_amr_annotations and args.contigs_report_path and Path(args.contigs_report_path).exists():
         plasmid_annotations = parse_plasmid_annotation(args.contigs_report_path)
         plasmid_amr_annotations = merge_amr_plasmid_annotation(query_amr_annotations, plasmid_annotations)
 
-    # parse and store ICE annotations
+    # parse and merge ICE annotations
     if query_amr_annotations and args.filtered_hits_report_path and Path(args.filtered_hits_report_path).exists():
         ice_annotations = parse_ice_annotation(args.filtered_hits_report_path)
         ice_amr_annotations = merge_amr_ice_annotation(query_amr_annotations, ice_annotations)
 
-    # parse and store prophage annotations
+    # parse and merge prophage annotations
     if query_amr_annotations and args.phage_report_path and Path(args.phage_report_path).exists():
         phage_annotations = parse_phage_annotation(args.phage_report_path)
-        phage_amr_annotations = merge_amr_phage_annotation(query_amr_annotations, phage_annotations)
+        phage_amr_annotations = merge_amr_phage_annotation(query_amr_annotations, phage_annotations, args.max_distance)
 
-    # parse and store composite transposon annotations
-    if query_amr_annotations and gbk_list:
-        comp_transposon_annotations = parse_composite_transposon_annotation(gbk_list)
-        comp_transposon_amr_annotations = merge_amr_comp_transposon(query_amr_annotations, comp_transposon_annotations)
+    # parse and merge composite transposon annotations
+    if query_amr_annotations and comp_txt_list:
+        comp_transposon_annotations = parse_composite_transposon_annotation(comp_txt_list)
+        comp_transposon_amr_annotations = merge_amr_comp_transposon(query_amr_annotations, comp_transposon_annotations, args.max_distance)
 
-    # parse and store Tn3 transposon annotations
-    if query_amr_annotations and tn3_gbk_list:
-        tn3_annotations = parse_tn3_transposon_annotation(tn3_gbk_list)
+    # parse and merge Tn3 transposon annotations
+    if query_amr_annotations and tn3_txt_list:
+        tn3_annotations = parse_tn3_transposon_annotation(tn3_txt_list)
         tn3_amr_annotations = merge_amr_tn3_transposon(query_amr_annotations, tn3_annotations)
+
+    # parse and merge integron annotations
+    if query_amr_annotations and args.integron_file and Path(args.integron_file).exists():
+        integron_annotations = parse_integron_annotation(args.integron_file)
+        if integron_annotations:
+            integron_amr_annotations = merge_amr_integron_annotation(query_amr_annotations, integron_annotations, args.max_distance)
     
-    merged_df =  merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations, phage_amr_annotations, ice_amr_annotations, comp_transposon_amr_annotations, tn3_amr_annotations)
+    merged_df =  merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations, phage_amr_annotations, ice_amr_annotations, comp_transposon_amr_annotations, tn3_amr_annotations, integron_amr_annotations)
 
     differences = compare_amr_annotations(cursor, merged_df, closest_relatives)
 

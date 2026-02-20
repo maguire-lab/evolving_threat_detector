@@ -45,6 +45,9 @@ def init_db(db_path=DATABASE_PATH):
                           id INTEGER PRIMARY KEY,
                           genome_id INTEGER REFERENCES genomes(id),
                           gene_name TEXT,
+                          contig_id TEXT,
+                          start INTEGER,
+                          stop INTEGER,
                           amr_annotation TEXT,
                           amr_output_path TEXT,
                           plasmid_annotation TEXT,
@@ -59,12 +62,12 @@ def init_db(db_path=DATABASE_PATH):
                           tn3_transposon_output_path TEXT,
                           ice_annotation TEXT,
                           ice_output_path TEXT,
-                          UNIQUE(genome_id, gene_name))''')
+                          UNIQUE(genome_id, gene_name, contig_id, start))''')
 
         # Index to speed up UPDATE/SELECT by (genome_id, gene_name)
         cursor.execute("""
         CREATE INDEX IF NOT EXISTS ix_annotations_gid_gene
-        ON annotations(genome_id, gene_name)
+        ON annotations(genome_id, gene_name, contig_id, start)
         """)
 
         conn.commit()
@@ -153,12 +156,16 @@ def parse_amr_annotation(amrfinder_output, genome_id):
                     continue
                 contig_id = parts[1].split()[0]
                 protein_id = parts[0]
+                start = int(parts[2])
+                stop = int(parts[3])
                 gene_name = parts[5]
                 annotation = parts[6]
                 amr_annotations.append({
                     "genome_id": genome_id,
                     "contig_id": contig_id,
                     "protein_id": protein_id,
+                    "start": start,
+                    "stop": stop,
                     "amr_gene": gene_name,
                     "annotation": annotation
                 })
@@ -182,11 +189,49 @@ def store_amr_annotation(amr_annotations, cursor, output_path):
     try:
         for annotation in amr_annotations:
             cursor.execute(
-                "INSERT OR REPLACE INTO annotations (genome_id, gene_name, amr_annotation, amr_output_path) VALUES (?, ?, ?, ?)",
-                (annotation['genome_id'], annotation['amr_gene'], annotation['annotation'], out_str))
+                """
+                INSERT INTO annotations 
+                (genome_id, gene_name, contig_id, start, stop, amr_annotation, amr_output_path) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(genome_id, gene_name, contig_id, start)
+                DO UPDATE SET amr_annotation = excluded.amr_annotation,
+                              amr_output_path = excluded.amr_output_path
+                """,
+                (
+                    annotation['genome_id'], 
+                    annotation['amr_gene'], 
+                    annotation['contig_id'], 
+                    annotation['start'], 
+                    annotation['stop'], 
+                    annotation['annotation'], 
+                    out_str
+                    )
+                )
     except sqlite3.Error as e:
         print(f"Error storing AMR annotations: {e}")
         raise
+
+def is_proximal(amr_start, amr_stop, element_start, element_end, max_distance):
+    """
+    Test whether an AMR gene is within max_distance bp of a genomic element.
+
+    Returns True if:
+      - The AMR gene overlaps the element, OR
+      - The gap between the nearest edges is <= max_distance
+
+    All coordinates are 1-based genomic positions on the same contig.
+    """
+    # Normalise so start <= stop (handles reverse strand)
+    a_lo, a_hi = min(amr_start, amr_stop), max(amr_start, amr_stop)
+    e_lo, e_hi = min(element_start, element_end), max(element_start, element_end)
+
+    # If they overlap, distance is 0
+    if a_lo <= e_hi and e_lo <= a_hi:
+        return True
+
+    # Otherwise, compute gap between nearest edges
+    gap = max(a_lo - e_hi, e_lo - a_hi)
+    return gap <= max_distance
 
 def parse_plasmid_annotation(contigs_report_path):
     """
@@ -250,6 +295,8 @@ def merge_amr_plasmid_annotation(amr_annotations, plasmid_annotations):
         if info:
             amr_plasmid_annotations.append({
                 "genome_id": annotation["genome_id"],
+                "contig_id": annotation["contig_id"],
+                "start": annotation["start"],
                 "amr_gene": annotation["amr_gene"],
                 "plasmid_annotation": info["plasmid"],
                 "plasmid_id": info["contig_id"]
@@ -273,6 +320,8 @@ def store_amr_plasmid_annotations(amr_plasmid_annotations, cursor, output_path):
     for row in amr_plasmid_annotations:
         genome_id = row.get("genome_id")
         gene      = row.get("amr_gene")
+        contig_id = row.get("contig_id")
+        start     = row.get("start")
         plasmid   = row.get("plasmid_annotation")
 
         cursor.execute(
@@ -282,8 +331,10 @@ def store_amr_plasmid_annotations(amr_plasmid_annotations, cursor, output_path):
                     plasmid_output_path = ?
             WHERE genome_id = ?
                 AND gene_name = ?
+                AND contig_id = ?
+                AND start = ?
             """,
-                (plasmid, out_str, genome_id, gene)
+                (plasmid, out_str, genome_id, gene, contig_id, start)
             )
         total_updated += cursor.rowcount
     return total_updated
@@ -337,39 +388,14 @@ def merge_amr_ice_annotation(amr_annotations, ice_annotations):
             "ice_annotation": ...,
         }
     """
-    # Debug: print sample contig IDs from both sources
-    amr_contigs = set(a["contig_id"] for a in amr_annotations)
-    ice_contigs = set(ice_annotations.keys())
-
-    print(f"AMR contig IDs (first 5): {list(amr_contigs)[:5]}")
-    print(f"ICE contig IDs (first 5): {list(ice_contigs)[:5]}")
-
-    # Find matches
-    matches = amr_contigs.intersection(ice_contigs)
-    print(f"Matching contigs: {len(matches)} out of {len(amr_contigs)} AMR and {len(ice_contigs)} ICE")
-
-    # Write debug info to file
-    debug_file = Path("ice_merge_debug.txt")
-    with open(debug_file, 'w') as debug:
-        amr_contigs = set(a["protein_id"] for a in amr_annotations)
-        ice_contigs = set(ice_annotations.keys())
-        
-        debug.write(f"AMR contigs (all): {list(amr_contigs)[:]}\n")
-        debug.write(f"ICE contigs (all): {list(ice_contigs)[:]}\n")
-        
-        # Try to find pattern matches
-        for amr_contig in list(amr_contigs):
-            debug.write(f"\nChecking AMR contig: {amr_contig}\n")
-            for ice_contig in list(ice_contigs):
-                if amr_contig in ice_contig or ice_contig in amr_contig:
-                    debug.write(f"  Potential match: {ice_contig}\n")
-
     amr_ice_annotations = []
     for annotation in amr_annotations:
         info = ice_annotations.get(annotation["protein_id"])
         if info:
             amr_ice_annotations.append({
                 "genome_id": annotation["genome_id"],
+                "contig_id": annotation["contig_id"],
+                "start": annotation["start"],
                 "amr_gene": annotation["amr_gene"],
                 "ice_annotation": info["ice"],
                 "ice_id": info["protein_id"]
@@ -394,6 +420,8 @@ def store_amr_ice_annotations(amr_ice_annotations, cursor, output_path):
     for row in amr_ice_annotations:
         genome_id = row.get("genome_id")
         gene      = row.get("amr_gene")
+        contig_id = row.get("contig_id")
+        start     = row.get("start")
         ice   = row.get("ice_annotation")
 
         cursor.execute(
@@ -403,40 +431,52 @@ def store_amr_ice_annotations(amr_ice_annotations, cursor, output_path):
                     ice_output_path = ?
             WHERE genome_id = ?
                 AND gene_name = ?
+                AND contig_id = ?
+                AND start = ?
             """,
-                (ice, str(out_str), genome_id, gene)
+                (ice, str(out_str), genome_id, gene, contig_id, start)
             )
         total_updated += cursor.rowcount
     return total_updated
 
 def parse_phage_annotation(phage_report_path):
     """
-    Read in the phage report.tsv and return a dict of prophage annotations
+    Read in the PhiSpy prophage_coordinates.tsv and return a dict of prophage annotations.
+
+    Each contig maps to a list of prophage regions with their boundaries.
 
     Parameters:
-    phage_report_path (str): Path to the output file from upstream prophage module
+    phage_report_path (str): Path to the output file from upstream PhiSpy module
 
     Returns:
-    phage annotations (dict): dict of prophage annotations.
+    dict: {contig_id: [{"prophage_id": str, "start": int, "end": int}, ...]}
     """
     try:
         phage_annotations = {}
         with open(phage_report_path) as f:
-            #next(f, None)
             for line in f:
-                parts = line.strip().split("\t")
-                if len(parts) < 11:
+                line = line.strip()
+                if not line:
+                    continue
+                parts = line.split("\t")
+                if len(parts) < 4:
                     continue
 
+                prophage_id = parts[0]
                 contig_id = parts[1]
                 if not contig_id:
                     continue
-                annotation = parts[10]
+                phage_start = int(parts[2])
+                phage_end = int(parts[3])
 
-                phage_annotations[contig_id] = {
-                    "contig_id": contig_id,
-                    "prophage": annotation
-                }
+                if contig_id not in phage_annotations:
+                    phage_annotations[contig_id] = []
+
+                phage_annotations[contig_id].append({
+                    "prophage_id": prophage_id,
+                    "start": phage_start,
+                    "end": phage_end
+                })
 
         if not phage_annotations:
             print(f"Warning: No phage annotation found in {phage_report_path}")
@@ -447,26 +487,33 @@ def parse_phage_annotation(phage_report_path):
         print(f"An unexpected error occurred while parsing {phage_report_path}: {e}")
         raise
 
-def merge_amr_phage_annotation(amr_annotations, phage_annotations):
+def merge_amr_phage_annotation(amr_annotations, phage_annotations, max_distance=5000):
     """
     Join AMR rows with prophage annotations by contig_id.
+    A contig may contain multiple prophage regions.
 
     Returns:
-        list of dicts: {
-            "genome_id": ...,
-            "amr_gene": ...,
-            "prophage_annotation": ...,
-        }
+        list of dicts with genome_id, contig_id, start, amr_gene, prophage_annotation
     """
     amr_phage_annotations = []
     for annotation in amr_annotations:
-        info = phage_annotations.get(annotation["contig_id"])
-        if info:
-            amr_phage_annotations.append({
-                "genome_id": annotation["genome_id"],
-                "amr_gene": annotation["amr_gene"],
-                "prophage_annotation": info["prophage"],
-                "phage_id": info["contig_id"]
+        regions = phage_annotations.get(annotation["contig_id"])
+        if regions:
+            # Build annotation string from proximal prophage regions on this contig
+            proximal_regions = []
+            for r in regions:
+                if is_proximal(annotation["start"], annotation["stop"],
+                               r["start"], r["end"], max_distance):
+                    proximal_regions.append(
+                        f"{r['prophage_id']} ({r['start']}-{r['end']})"
+                    )
+            if proximal_regions:
+                amr_phage_annotations.append({
+                    "genome_id": annotation["genome_id"],
+                    "contig_id": annotation["contig_id"],
+                    "start": annotation["start"],
+                    "amr_gene": annotation["amr_gene"],
+                    "prophage_annotation": ", ".join(proximal_regions)
                 })
 
     return amr_phage_annotations
@@ -474,7 +521,7 @@ def merge_amr_phage_annotation(amr_annotations, phage_annotations):
 def store_amr_phage_annotations(amr_phage_annotations, cursor, output_path):
     """
     Update existing AMR rows with prophage info.
-g
+
     amr_phage_annotations: list of dicts like:
       {"genome_id": int, "contig_id": str, "amr_gene": str, "prophage_annotation": str}
 
@@ -486,6 +533,8 @@ g
     for row in amr_phage_annotations:
         genome_id = row.get("genome_id")
         gene      = row.get("amr_gene")
+        contig_id = row.get("contig_id")
+        start     = row.get("start")
         prophage   = row.get("prophage_annotation")
 
         cursor.execute(
@@ -495,68 +544,124 @@ g
                     prophage_output_path = ?
             WHERE genome_id   = ?
                 AND gene_name = ?
+                AND contig_id = ?
+                AND start     = ?
             """,
-                (prophage, str(out_str), genome_id, gene)
+                (prophage, str(out_str), genome_id, gene, contig_id, start)
             )
         total_updated += cursor.rowcount
     return total_updated
 
-def parse_composite_transposon_annotation(comp_gbk_files):
+def parse_composite_transposon_annotation(comp_txt_files):
     """
-    Parse multiple GBK files, but flatten to contig_id level.
-    
+    Parse composite transposon TXT output files.
+
+    Each file has:
+      Line 1: QUERY: <contig_id> <organism> ...
+      Then *Candidate N* blocks with a Feature table.
+      Feature table columns: Feature, Position, Strand, Length(bp), Type
+
+    Extract the IS element names (Type column) from rows where
+    Feature contains 'transposon'.
+
     Returns:
-    dict with 'contig_id' and 'is_element_id'
+        dict keyed by contig_id, each value is a dict with
+        'contig_id' and 'composite_transposon_annotation' (comma-separated string).
     """
     composite_transposon_annotations = {}
-    
-    for gbk_file in comp_gbk_files:
+
+    for txt_file in comp_txt_files:
         try:
-            record = SeqIO.read(gbk_file, "genbank")
-            contig_id = record.description.split()[0]
-            
-            # Collect all IS elements from this candidate
+            contig_id = None
             is_elements = []
-            for feature in record.features:
-                if feature.type == "misc_feature" and "note" in feature.qualifiers:
-                    note = feature.qualifiers["note"][0]
-                    if note.startswith("insertion sequence"):
-                        is_element = note.replace("insertion sequence ", "")
-                        is_elements.append(is_element)
-            
-            # Accumulate IS elements for this contig_id (from all candidates)
-            if contig_id not in composite_transposon_annotations:
-                composite_transposon_annotations[contig_id] = {
-                    "contig_id": contig_id,
-                    "composite_transposon_annotation": []
-                }
-            
-            # Add all IS elements found in this candidate
-            composite_transposon_annotations[contig_id]["composite_transposon_annotation"].extend(is_elements)
-            
+            positions = []
+            in_feature_table = False
+
+            with open(txt_file) as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        in_feature_table = False
+                        continue
+
+                    # Extract contig_id from QUERY line
+                    if line.startswith("QUERY:"):
+                        contig_id = line.split()[1]
+                        continue
+
+                    # Skip candidate headers, length/distance/order lines
+                    if line.startswith("*Candidate") or line.startswith("Length:") or line.startswith("Distance:") or line.startswith("Order:"):
+                        continue
+
+                    # Detect the Feature table header
+                    if line.startswith("Feature") and "Position" in line:
+                        in_feature_table = True
+                        continue
+
+                    # Parse Feature table rows
+                    if in_feature_table:
+                        parts = line.split()
+                        if len(parts) >= 5 and "transposon" in parts[1].lower():
+                            # parts: [A/B, transposon, start..end, strand, length, type]
+                            # But "A transposon" is split as ['A', 'transposon', ...]
+                            is_type = parts[5] if len(parts) >= 6 else parts[4]
+                            is_elements.append(is_type)
+
+                            # Extract genomic positions
+                            pos_str = parts[2]  # e.g. "14294..15082"
+                            if ".." in pos_str:
+                                pos_parts = pos_str.split("..")
+                                positions.append(int(pos_parts[0]))
+                                positions.append(int(pos_parts[1]))
+
+                    # Stop parsing at sequence sections
+                    if line.startswith(">") or line.startswith("Predicted ORFs"):
+                        in_feature_table = False
+                        break
+
+            if contig_id and is_elements:
+                if contig_id not in composite_transposon_annotations:
+                    composite_transposon_annotations[contig_id] = {
+                        "contig_id": contig_id,
+                        "composite_transposon_annotation": [],
+                        "start": None,
+                        "end": None
+                    }
+                composite_transposon_annotations[contig_id]["composite_transposon_annotation"].extend(is_elements)
+                # Update boundaries
+                if positions:
+                    existing_start = composite_transposon_annotations[contig_id]["start"]
+                    existing_end = composite_transposon_annotations[contig_id]["end"]
+                    new_start = min(positions)
+                    new_end = max(positions)
+                    composite_transposon_annotations[contig_id]["start"] = min(new_start, existing_start) if existing_start is not None else new_start
+                    composite_transposon_annotations[contig_id]["end"] = max(new_end, existing_end) if existing_end is not None else new_end
+
         except Exception as e:
-            print(f"Error parsing {gbk_file}: {e}")
-    
-    # Convert lists to comma-separated strings for compatibility
+            print(f"Error parsing {txt_file}: {e}")
+
+    # Deduplicate and convert to comma-separated strings
     for contig_id in composite_transposon_annotations:
         elements = composite_transposon_annotations[contig_id]["composite_transposon_annotation"]
-        # Remove duplicates and join
         unique_elements = list(set(elements))
         composite_transposon_annotations[contig_id]["composite_transposon_annotation"] = ", ".join(unique_elements)
-    
+
     return composite_transposon_annotations
 
-def merge_amr_comp_transposon(amr_annotations, composite_transposon_annotation):
+def merge_amr_comp_transposon(amr_annotations, composite_transposon_annotation, max_distance=5000):
     amr_comp_transposon_annotations = []
     for annotation in amr_annotations:
         info = composite_transposon_annotation.get(annotation["contig_id"])
-        if info:
-            amr_comp_transposon_annotations.append({
-                "genome_id": annotation["genome_id"],
-                "contig_id": annotation["contig_id"],
-                "amr_gene":  annotation["amr_gene"],
-                "composite_transposon_annotation": info.get("composite_transposon_annotation")
-            })
+        if info and info.get("start") is not None and info.get("end") is not None:
+            if is_proximal(annotation["start"], annotation["stop"],
+                           info["start"], info["end"], max_distance):
+                amr_comp_transposon_annotations.append({
+                    "genome_id": annotation["genome_id"],
+                    "contig_id": annotation["contig_id"],
+                    "start": annotation["start"],
+                    "amr_gene": annotation["amr_gene"],
+                    "composite_transposon_annotation": info.get("composite_transposon_annotation")
+                })
     return amr_comp_transposon_annotations
 
 def store_amr_comp_transposon(amr_comp_transposon_annotations, cursor, gbk_files):
@@ -567,6 +672,8 @@ def store_amr_comp_transposon(amr_comp_transposon_annotations, cursor, gbk_files
     for row in amr_comp_transposon_annotations:
         genome_id = row.get("genome_id")
         gene      = row.get("amr_gene")
+        contig_id = row.get("contig_id")
+        start     = row.get("start")
         ann       = row.get("composite_transposon_annotation")
         cursor.execute(
             """
@@ -575,49 +682,84 @@ def store_amr_comp_transposon(amr_comp_transposon_annotations, cursor, gbk_files
                    composite_transposon_output_path = ?
              WHERE genome_id = ?
                AND gene_name = ?
+               AND contig_ID = ?
+               AND start = ?
             """,
-            (ann, str(output_path_str), genome_id, gene)
+            (ann, str(output_path_str), genome_id, gene, contig_id, start)
         )
         total_updated += cursor.rowcount
     return total_updated
 
-def parse_tn3_transposon_annotation(tn3_gbk_files):
+def parse_tn3_transposon_annotation(tn3_txt_files):
     """
-    Parse Tn3 GBK files and extract transposase family names.
+    Parse Tn3 transposon TXT output files.
+
+    Each file has:
+      Line 1: QUERY: <contig_id> <organism> ...
+      Then *Candidate N* blocks with a Feature table.
+      Feature table columns: Feature, Position, Strand, Length(bp), Type, Positives(%), Coverage(%)
+
+    Extract the family name (Type column) from rows where
+    Feature == 'transposase'.
 
     Returns:
-    dict with 'contig_id' and 'tn3_annotation'
+        dict keyed by contig_id, each value is a dict with
+        'contig_id' and 'tn3_annotation' (comma-separated string).
     """
     tn3_annotations = {}
 
-    for gbk_file in tn3_gbk_files:
+    for txt_file in tn3_txt_files:
         try:
-            record = SeqIO.read(gbk_file, "genbank")
-            contig_id = record.description.split()[0]
-
-            # Find transposase features
+            contig_id = None
             transposases = []
-            for feature in record.features:
-                if feature.type == "misc_feature" and "note" in feature.qualifiers:
-                    note = feature.qualifiers["note"][0]
-                    if "transposase" in note.lower():
-                        # Extract family name only
-                        family = note.split()[0]
-                        transposases.append(family)
+            in_feature_table = False
 
-            # Accumulate for this contig_id
-            if contig_id not in tn3_annotations:
-                tn3_annotations[contig_id] = {
-                    "contig_id": contig_id,
-                    "tn3_annotation": []
-                }
+            with open(txt_file) as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        in_feature_table = False
+                        continue
 
-            tn3_annotations[contig_id]["tn3_annotation"].extend(transposases)
+                    # Extract contig_id from QUERY line
+                    if line.startswith("QUERY:"):
+                        contig_id = line.split()[1]
+                        continue
+
+                    # Skip candidate headers, metadata lines
+                    if line.startswith("*Candidate") or line.startswith("Length:") or line.startswith("Distance:") or line.startswith("Order:"):
+                        continue
+
+                    # Detect the Feature table header
+                    if line.startswith("Feature") and "Position" in line:
+                        in_feature_table = True
+                        continue
+
+                    # Parse Feature table rows
+                    if in_feature_table:
+                        parts = line.split()
+                        if len(parts) >= 5 and parts[0].lower() == "transposase":
+                            # parts: [transposase, start..end, strand, length, type, positives%, coverage%]
+                            family = parts[4]
+                            transposases.append(family)
+
+                    # Stop parsing at sequence sections
+                    if line.startswith(">") or line.startswith("Predicted ORFs"):
+                        in_feature_table = False
+                        break
+
+            if contig_id and transposases:
+                if contig_id not in tn3_annotations:
+                    tn3_annotations[contig_id] = {
+                        "contig_id": contig_id,
+                        "tn3_annotation": []
+                    }
+                tn3_annotations[contig_id]["tn3_annotation"].extend(transposases)
 
         except Exception as e:
-            print(f"Error parsing {gbk_file}: {e}")
+            print(f"Error parsing {txt_file}: {e}")
 
-    # Convert lists to comma-separated strings
+    # Deduplicate and convert to comma-separated strings
     for contig_id in tn3_annotations:
         elements = tn3_annotations[contig_id]["tn3_annotation"]
         unique_elements = list(set(elements))
@@ -634,6 +776,7 @@ def merge_amr_tn3_transposon(amr_annotations, tn3_annotations):
             amr_tn3_annotations.append({
                 "genome_id": annotation["genome_id"],
                 "contig_id": annotation["contig_id"],
+                "start": annotation["start"],
                 "amr_gene": annotation["amr_gene"],
                 "tn3_annotation": info.get("tn3_annotation")
             })
@@ -647,8 +790,10 @@ def store_amr_tn3_transposon(amr_tn3_annotations, cursor, gbk_files):
     total_updated = 0
     for row in amr_tn3_annotations:
         genome_id = row.get("genome_id")
-        gene = row.get("amr_gene")
-        ann = row.get("tn3_annotation")
+        gene      = row.get("amr_gene")
+        contig_id = row.get("contig_id")
+        start     = row.get("start")
+        ann       = row.get("tn3_annotation")
 
         cursor.execute(
             """
@@ -657,8 +802,123 @@ def store_amr_tn3_transposon(amr_tn3_annotations, cursor, gbk_files):
                    tn3_transposon_output_path = ?
              WHERE genome_id = ?
                AND gene_name = ?
+               AND contig_id = ?
+               AND start = ?
             """,
-            (ann, output_path_str, genome_id, gene)
+            (ann, output_path_str, genome_id, gene, contig_id, start)
+        )
+        total_updated += cursor.rowcount
+    return total_updated
+
+def parse_integron_annotation(integron_file_path):
+    """
+    Parse an IntegronFinder .integrons file.
+
+    Only complete integrons are retained (type == 'complete').
+
+    Returns:
+        dict keyed by contig_id (ID_replicon), each value is a list of dicts:
+        [{"integron_id": str, "start": int, "end": int}, ...]
+    """
+    try:
+        integron_annotations = {}
+        # Temporary structure to collect per-integron boundaries
+        # Key: (ID_replicon, ID_integron), Value: {"start": int, "end": int}
+        integron_bounds = {}
+
+        with open(integron_file_path) as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                # Skip the header line
+                if line.startswith("ID_integron"):
+                    continue
+
+                parts = line.split("\t")
+                if len(parts) < 11:
+                    continue
+
+                integron_type = parts[10].strip()
+                if integron_type != "complete":
+                    continue
+
+                integron_id = parts[0].strip()
+                contig_id = parts[1].strip()
+                pos_beg = int(parts[3])
+                pos_end = int(parts[4])
+
+                key = (contig_id, integron_id)
+                if key not in integron_bounds:
+                    integron_bounds[key] = {
+                        "start": pos_beg,
+                        "end": pos_end
+                    }
+                else:
+                    integron_bounds[key]["start"] = min(integron_bounds[key]["start"], pos_beg)
+                    integron_bounds[key]["end"] = max(integron_bounds[key]["end"], pos_end)
+
+        # Convert to the contig_id-keyed structure
+        for (contig_id, integron_id), bounds in integron_bounds.items():
+            if contig_id not in integron_annotations:
+                integron_annotations[contig_id] = []
+            integron_annotations[contig_id].append({
+                "integron_id": integron_id,
+                "start": bounds["start"],
+                "end": bounds["end"]
+            })
+
+        if not integron_annotations:
+            print(f"Note: No complete integrons found in {integron_file_path}")
+
+        return integron_annotations
+
+    except Exception as e:
+        print(f"An unexpected error occurred while parsing {integron_file_path}: {e}")
+        raise
+
+def merge_amr_integron_annotation(amr_annotations, integron_annotations, max_distance=5000):
+    amr_integron_annotations = []
+    for annotation in amr_annotations:
+        regions = integron_annotations.get(annotation["contig_id"])
+        if regions:
+            proximal_regions = []
+            for r in regions:
+                if is_proximal(annotation["start"], annotation["stop"],
+                               r["start"], r["end"], max_distance):
+                    proximal_regions.append(
+                        f"{r['integron_id']} ({r['start']}-{r['end']})"
+                    )
+            if proximal_regions:
+                amr_integron_annotations.append({
+                    "genome_id": annotation["genome_id"],
+                    "contig_id": annotation["contig_id"],
+                    "start": annotation["start"],
+                    "amr_gene": annotation["amr_gene"],
+                    "integron_annotation": ", ".join(proximal_regions)
+                })
+    return amr_integron_annotations
+
+def store_amr_integron_annotations(amr_integron_annotations, cursor, output_path):
+    out_str = str(output_path)
+    total_updated = 0
+    for row in amr_integron_annotations:
+        genome_id = row.get("genome_id")
+        gene = row.get("amr_gene")
+        contig_id = row.get("contig_id")
+        start = row.get("start")
+        ann = row.get("integron_annotation")
+        cursor.execute(
+            """
+            UPDATE annotations
+               SET integron_annotation = ?,
+                   integron_output_path = ?
+             WHERE genome_id = ?
+               AND gene_name = ?
+               AND contig_id = ?
+               AND start = ?
+            """,
+            (ann, out_str, genome_id, gene, contig_id, start)
         )
         total_updated += cursor.rowcount
     return total_updated
@@ -673,8 +933,10 @@ def main():
     parser.add_argument('--contigs_report_path', type=Path, help='Path to mobsuite contigs_report.txt')
     parser.add_argument('--filtered_hits_report_path', type=Path, default=None, help='Path to to ICE filtered_hits TSV')
     parser.add_argument('--phage_report_path', type=Path, default=None, help='Path to the prophage report TSV')
-    parser.add_argument('--comp_gbk_files', type=Path, nargs='*', default=None, help='Paths to composite transposon GBK files (one per candidate)')
-    parser.add_argument('--tn3_gbk_files', type=Path, nargs='*', default=None,help='Paths to Tn3 transposon GBK files')
+    parser.add_argument('--comp_txt_files', type=Path, nargs='*', default=None, help='Paths to composite transposon TXT files')
+    parser.add_argument('--tn3_txt_files', type=Path, nargs='*', default=None,help='Paths to Tn3 transposon TXT files')
+    parser.add_argument('--integron_file', type=Path, default=None, help='Path to IntegronFinder .integrons file')
+    parser.add_argument('--max_distance', type=int, default=5000, help='Maximum distance (bp) between AMR gene and MGE element to consider them co-located (default is 5000)')
    
     # Published directory paths (for storing in database)
     parser.add_argument('--sketch_path_published', type=str, help='Published path for sketch file')
@@ -682,18 +944,19 @@ def main():
     parser.add_argument('--contigs_report_path_published', type=str, help='Published path for contigs report')
     parser.add_argument('--filtered_hits_report_path_published', type=str, default=None, help='Published path for ICE output')
     parser.add_argument('--phage_report_path_published', type=str, default=None, help='Published path for phage output')
-    parser.add_argument('--comp_gbk_files_published', type=str, nargs='*', default=None, help='Published paths to composite transposon GBK files')
-    parser.add_argument('--tn3_gbk_files_published', type=str, nargs='*', default=None, help='Published paths to Tn3 transposon GBK files')
+    parser.add_argument('--comp_txt_files_published', type=str, nargs='*', default=None, help='Published paths to composite transposon TXT files')
+    parser.add_argument('--tn3_txt_files_published', type=str, nargs='*', default=None, help='Published paths to Tn3 transposon TXT files')
+    parser.add_argument('--integron_file_published', type=str, default=None, help='Published path for IntegronFinder output')
 
     args = parser.parse_args()
 
     # Normalize comp_gbk_files to a list of strings (existing only)
-    gbk_list = []
-    if args.comp_gbk_files:
-        for p in args.comp_gbk_files:
-            p = Path(p)
+    comp_txt_list = []
+    if args.comp_txt_files:
+        for p in args.comp_txt_files:
+            #p = Path(p)
             if p.exists():
-                gbk_list.append(str(p))
+                comp_txt_list.append(str(p))
 
 
     db_path = Path(args.db_path)
@@ -735,26 +998,35 @@ def main():
     # parse and store prophage annotations
     if amr_annotations and args.phage_report_path and Path(args.phage_report_path).exists():
         phage_annotations = parse_phage_annotation(args.phage_report_path)
-        phage_amr_annotation = merge_amr_phage_annotation(amr_annotations, phage_annotations)
+        phage_amr_annotation = merge_amr_phage_annotation(amr_annotations, phage_annotations, args.max_distance)
         if phage_amr_annotation:
             store_amr_phage_annotations(phage_amr_annotation, cursor, args.phage_report_path_published)
 
     # parse and store composite transposon annotations
-    if amr_annotations and gbk_list:
-        comp_transposon_annotations = parse_composite_transposon_annotation(gbk_list)
-        comp_transposon_amr_annotation = merge_amr_comp_transposon(amr_annotations, comp_transposon_annotations)
+    if amr_annotations and comp_txt_list:
+        comp_transposon_annotations = parse_composite_transposon_annotation(comp_txt_list)
+        comp_transposon_amr_annotation = merge_amr_comp_transposon(amr_annotations, comp_transposon_annotations, args.max_distance)
         if comp_transposon_amr_annotation:
             #comp_transposon_result_path = str(Path(gbk_list[0]).parent)
-            store_amr_comp_transposon(comp_transposon_amr_annotation, cursor, args.comp_gbk_files_published)
+            store_amr_comp_transposon(comp_transposon_amr_annotation, cursor, args.comp_txt_files_published)
 
     # parse and store tn3+TA transposon annotations
-    if amr_annotations and args.tn3_gbk_files:
-        tn3_gbk_list = [str(Path(p)) for p in args.tn3_gbk_files if Path(p).exists()]
-        if tn3_gbk_list:
-            tn3_annotations = parse_tn3_transposon_annotation(tn3_gbk_list)
-            tn3_amr_annotation = merge_amr_tn3_transposon(amr_annotations, tn3_annotations)
-            if tn3_amr_annotation:
-                store_amr_tn3_transposon(tn3_amr_annotation, cursor, args.tn3_gbk_files_published)
+    tn3_txt_list = []
+    if args.tn3_txt_files:
+        tn3_txt_list = [str(p) for p in args.tn3_txt_files if p.exists()]
+    if amr_annotations and args.tn3_txt_files:
+        tn3_annotations = parse_tn3_transposon_annotation(tn3_txt_list)
+        tn3_amr_annotation = merge_amr_tn3_transposon(amr_annotations, tn3_annotations)
+        if tn3_amr_annotation:
+            store_amr_tn3_transposon(tn3_amr_annotation, cursor, args.tn3_txt_files_published)
+
+    # parse and store integron annotations
+    if amr_annotations and args.integron_file and Path(args.integron_file).exists():
+        integron_annotations = parse_integron_annotation(args.integron_file)
+        if integron_annotations:
+            integron_amr_annotation = merge_amr_integron_annotation(amr_annotations, integron_annotations, args.max_distance)
+            if integron_amr_annotation:
+                store_amr_integron_annotations(integron_amr_annotation, cursor, args.integron_file_published)
 
     conn.commit()
     conn.close()

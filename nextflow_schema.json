@@ -256,7 +256,52 @@
                     "hidden": true
                 }
             }
-        }
+        },
+	"etd_pipeline_options": {
+            "title": "ETD pipeline options",
+            "type": "object",
+            "fa_icon": "fas fa-flask",
+            "description": "Parameters specific to the ETD pipeline analysis.",
+            "properties": {
+                "number": {
+                    "type": "integer",
+                    "default": 5,
+                    "description": "Number of closest relatives to retrieve from Mash distance results.",
+                    "fa_icon": "fas fa-sort-numeric-down"
+                },
+                "min_pident": {
+                    "type": "integer",
+                    "default": 60,
+                    "description": "Minimum percent identity threshold for DIAMOND BLASTP hits against ICEberg.",
+                    "fa_icon": "fas fa-percentage"
+               },
+	       "min_alignment_length": {
+                    "type": "integer",
+                    "default": 60,
+                    "description": "Minimum alignment length threshold for DIAMOND BLASTP hits against ICEberg.",
+                    "fa_icon": "fas fa-ruler-horizontal"
+                },
+                "db_path": {
+                    "type": "string",
+                    "default": null,
+                    "description": "Path to an existing ETD SQLite database. If null, a new database is created.",
+                    "fa_icon": "fas fa-database"
+                },
+                "output_format": {
+                    "type": "string",
+                    "default": "json",
+                    "description": "Output format for pipeline results.",
+                    "fa_icon": "fas fa-file-export",
+                    "enum": ["json", "tsv"]
+                },
+                "max_distance": {
+                    "type": "integer",
+                    "default": 5000,
+                    "description": "Maximum distance in base pairs for AMR-MGE proximity testing.",
+                    "fa_icon": "fas fa-arrows-alt-h"
+                }
+	    }
+	}
     },
     "allOf": [
         {
@@ -270,6 +315,9 @@
         },
         {
             "$ref": "#/$defs/generic_options"
+        },
+	{
+            "$ref": "#/$defs/etd_pipeline_options"
         }
     ]
 }
