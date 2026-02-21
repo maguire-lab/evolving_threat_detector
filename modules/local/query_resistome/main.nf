@@ -63,8 +63,7 @@ process QUERY_RESISTOME {
     ${integronArg} \\
     --number ${params.number ?: 5} \\
     --output_format ${params.output_format ?: 'json'} \\
-    --max_distance ${params.max_distance}
-          
+    --max_distance ${params.max_distance} \\
     2>&1 | tee register.log
 
     """

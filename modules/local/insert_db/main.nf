@@ -90,8 +90,7 @@ process INSERT_DB {
     ${tn3_published}\\
     ${integronArg} \\
     ${integron_published ? "--integron_file_published ${integron_published}" : ""} \\
-    --max_distance ${params.max_distance}
-
+    --max_distance ${params.max_distance} \\
     2>&1 | tee register.log
 
   # Capture any debug files created

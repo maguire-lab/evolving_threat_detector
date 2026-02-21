@@ -2,6 +2,8 @@ process TN3_FINDER {
     tag "$meta.id"
     label 'high'
 
+    container 'quay.io/biocontainers/tn3_ta_finder:1.0.1--hdfd78af_0'
+
     input:
     tuple val(meta), path(fasta)
 
@@ -13,7 +15,7 @@ process TN3_FINDER {
 
     script:
     """
-    python3 ${projectDir}/bin/tn3/Tn3+TA_finder.py \\
+    Tn3+TA_finder.py \\
         -f $fasta \\
         -g \\
         -t ${task.cpus}

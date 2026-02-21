@@ -2,6 +2,8 @@ process TNCOMP_FINDER {
     tag "$meta.id"
     label 'high'
 
+    container 'quay.io/biocontainers/tncomp_finder:1.0.0--hdfd78af_0'
+
     input:
     tuple val(meta), path(fasta)
     
@@ -13,7 +15,7 @@ process TNCOMP_FINDER {
 
     script:
     """
-    python3 ${projectDir}/bin/tncomp/TnComp_finder.py \\
+    TnComp_finder.py \\
         -f $fasta \\
         -p ${task.cpus} \\
         -g -e 500 -k
