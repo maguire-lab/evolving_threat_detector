@@ -17,8 +17,8 @@
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.gbk?$",
-                "errorMessage": "GenBank file must be provided, cannot contain spaces and must end in 'gb' or '.gbk'"
+                "pattern": "^\\S+\\.gb(k|ff)?$",
+                "errorMessage": "GenBank file must be provided, cannot contain spaces and must end in '.gb' or '.gbk', or '.gbff'"
             },
             "organism": {
                 "type": "string",
