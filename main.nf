@@ -160,6 +160,7 @@
           diamond_db_out = MAKE_DB_V1.out.diamond_db ?: Channel.empty()
           reference_out = MAKE_DB_V1.out.sketch_reference ?: Channel.empty()
           etd_db_out = MAKE_DB_V1.out.updated_db ?: Channel.empty()
+          iceberg_fasta_out = MAKE_DB_V1.out.iceberg_fasta ?: Channel.empty()
 
           //log.info "MAKE_DB workflow completed successfully"
       }
@@ -218,6 +219,7 @@
               diamond_db = diamond_db_out
               reference = reference_out
               etd_db_last = etd_db_out
+              iceberg_fasta = iceberg_fasta_out
           } else {
               // Use existing databases (query-only mode)
               //log.info "Loading existing databases from ${params.outdir}"
@@ -251,11 +253,12 @@
                       //log.info "Found ETD database: ${db_file}"
                       return db_file
                   }
+             iceberg_fasta = Channel.value(file("${params.outdir}/get/ICE_aa_experimental_reformatted.fas"))
           }
 
           // Run the QUERY_DB subworkflow
           QUERY_DB_V1(ch_samplesheet_query, ch_amrfinder_input_query, ch_genomes_query,
-  ch_proteins_query, reference, diamond_db, etd_db_last)
+  ch_proteins_query, reference, diamond_db, etd_db_last, iceberg_fasta)
 
           //log.info "QUERY_DB workflow completed successfully"
       }

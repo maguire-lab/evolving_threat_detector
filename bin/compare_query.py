@@ -7,7 +7,7 @@ import polars as pl
 import argparse
 from Bio import SeqIO
 import sys
-from aggregate_output import parse_plasmid_annotation, parse_ice_annotation, parse_phage_annotation, parse_composite_transposon_annotation,parse_tn3_transposon_annotation, parse_integron_annotation, is_proximal
+from aggregate_output import parse_plasmid_annotation, parse_ice_annotation, parse_phage_annotation, parse_composite_transposon_annotation,parse_tn3_transposon_annotation, parse_integron_annotation, is_proximal, build_protein_contig_map, build_ice_element_metadata
 
 def retrieve_closest_relatives(mash_dist_output, number=5):
     try:
@@ -100,29 +100,56 @@ def merge_amr_plasmid_annotation(query_amr_annotations, plasmid_annotations):
 
     return amr_plasmid_annotations
 
-def merge_amr_ice_annotation(query_amr_annotations, ice_annotations):
+#def merge_amr_ice_annotation(query_amr_annotations, ice_annotations):
+#    """
+#    Join AMR rows with ice annotations by contig_id.
+#
+#    Returns:
+#        list of dicts: {
+#            "genome_id": ...,
+#            "amr_gene": ...,
+#            "ice_annotation": ...,
+#        }
+#    """
+#    amr_ice_annotations = []
+#    for annotation in query_amr_annotations:
+#        info = ice_annotations.get(annotation["protein_id"])
+#        if info:
+#            amr_ice_annotations.append({
+#                "amr_gene": annotation["amr_gene"],
+#                "contig_id": annotation["contig_id"],
+#                "start": annotation["start"],
+#                "ice_annotation": info["ice"],
+#                "ice_id": info["protein_id"]
+#                })
+#
+#    return amr_ice_annotations
+
+def merge_amr_ice_annotation(query_amr_annotations, ice_annotations, max_distance=5000):
     """
-    Join AMR rows with ice annotations by contig_id.
+    Join query AMR rows with ICE annotations by contig proximity.
 
     Returns:
-        list of dicts: {
-            "genome_id": ...,
-            "amr_gene": ...,
-            "ice_annotation": ...,
-        }
+        list of dicts: {amr_gene, contig_id, start, ice_annotation}
     """
     amr_ice_annotations = []
     for annotation in query_amr_annotations:
-        info = ice_annotations.get(annotation["protein_id"])
-        if info:
-            amr_ice_annotations.append({
-                "amr_gene": annotation["amr_gene"],
-                "contig_id": annotation["contig_id"],
-                "start": annotation["start"],
-                "ice_annotation": info["ice"],
-                "ice_id": info["protein_id"]
+        regions = ice_annotations.get(annotation["contig_id"])
+        if regions:
+            proximal_elements = []
+            for r in regions:
+                if is_proximal(annotation["start"], annotation["stop"],
+                               r["start"], r["end"], max_distance):
+                    proximal_elements.append(
+                        f"{r['ice_label']} ({r['start']}-{r['end']})"
+                    )
+            if proximal_elements:
+                amr_ice_annotations.append({
+                    "amr_gene": annotation["amr_gene"],
+                    "contig_id": annotation["contig_id"],
+                    "start": annotation["start"],
+                    "ice_annotation": ", ".join(proximal_elements)
                 })
-
     return amr_ice_annotations
 
 def merge_amr_phage_annotation(query_amr_annotations, phage_annotations, max_distance=5000):
@@ -182,7 +209,7 @@ def merge_amr_tn3_transposon(query_amr_annotations, tn3_annotations):
                 "contig_id": annotation["contig_id"],
                 "start": annotation["start"],
                 "amr_gene": annotation["amr_gene"],
-                "tn3_annotation": info.get("tn3_annotation")
+                "tn3_transposon_annotation": info.get("tn3_annotation")
             })
     return amr_tn3_annotations
 
@@ -239,7 +266,7 @@ def merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations=N
               orient="row"
           )
           merged_df = merged_df.join(
-                  phage_df.select, 
+                  phage_df.select(['amr_gene', 'contig_id', 'start', 'prophage_annotation']), 
                   on=['amr_gene', 'contig_id', 'start'], 
                   how='left'
                   )
@@ -248,7 +275,7 @@ def merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations=N
       if ice_amr_annotations:
           ice_df = pl.DataFrame(
               ice_amr_annotations,
-              schema=['amr_gene', 'contig_id', 'start', 'ice_annotation', 'ice_id'],
+              schema=['amr_gene', 'contig_id', 'start', 'ice_annotation'],
               orient="row"
           )
           merged_df = merged_df.join(
@@ -276,7 +303,7 @@ def merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations=N
       if tn3_amr_annotations:
           tn3_df = pl.DataFrame(
                  tn3_amr_annotations,
-                 schema=['contig_id','start', 'amr_gene', 'tn3_annotation'],
+                 schema=['contig_id','start', 'amr_gene', 'tn3_transposon_annotation'],
                  orient="row"
                  )
          # Rename to avoid duplicate column names
@@ -304,6 +331,47 @@ def merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations=N
 
 
       return merged_df
+
+def determine_mge_context(row):
+    """
+    Determine the MGE context(s) for a gene based on its annotation row.
+
+    Inspects each MGE annotation column. If any has a non-null, non-empty
+    value, the corresponding MGE type is added to the context set.
+    If no MGE associations are found, the gene is assumed chromosomal.
+
+    Parameters:
+        row (dict): A single gene's annotation dict (from query merged_df
+                    or from the relative's DB-fetched DataFrame).
+
+    Returns:
+        context (set): e.g. set{"Plasmid", "ICE"} or set{"Chromosome"}.
+    """
+    contexts = set()
+
+    def has_value(val):
+        """Return True if val is non-null, non-empty, and not a placeholder string."""
+        return val is not None and str(val).strip() not in ('', 'None', 'Gene not present')
+
+    # Each column maps to an MGE type label
+    if has_value(row.get('plasmid_annotation')):
+        contexts.add("Plasmid")
+    if has_value(row.get('ice_annotation')):
+        contexts.add("ICE")
+    if has_value(row.get('prophage_annotation')):
+        contexts.add("Prophage")
+    if has_value(row.get('composite_transposon_annotation')):
+        contexts.add("Composite Tn")
+    if has_value(row.get('tn3_transposon_annotation')):
+        contexts.add("Tn3")
+    if has_value(row.get('integron_annotation')):
+        contexts.add("Integron")
+
+    # No MGE associations, gene sits on the chromosome
+    if not contexts:
+        contexts.add("Chromosome")
+
+    return contexts
 
 def compare_amr_annotations(cursor, merged_df, closest_relatives):
       """
@@ -374,10 +442,11 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
                       # Query annotations
                       'query_amr_annotation': query_row.get('annotation') or 'None',
                       'query_plasmid_annotation': query_row.get('plasmid_annotation') or 'None',
+                      'query_integron_annotation': query_row.get('integron_annotation') or 'None',
                       'query_prophage_annotation': query_row.get('prophage_annotation') or 'None',
                       'query_ice_annotation': query_row.get('ice_annotation') or 'None',
                       'query_composite_transposon_annotation':query_row.get('composite_transposon_annotation') or 'None',
-                      'query_tn3_transposon_annotation': query_row.get('tn3_annotation') or 'None',
+                      'query_tn3_transposon_annotation': query_row.get('tn3_transposon_annotation') or 'None',
 
                       # Relative annotations (all "Gene not present" since gene is absent)
                       'relative_amr_annotation': 'Gene not present',
@@ -387,6 +456,9 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
                       'relative_composite_transposon_annotation': 'Gene not present',
                       'relative_tn3_transposon_annotation': 'Gene not present',
                       'relative_ice_annotation': 'Gene not present',
+                      # Summary: human-readable MGE context
+                      'query_mge_context': ", ".join(sorted(determine_mge_context(query_row))),
+                      'relative_mge_context': 'Gene not present',
 
                       'difference_type': 'gained_gene'
                   })
@@ -406,6 +478,7 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
                       # Query annotations (all "Gene not present" since gene is absent)
                       'query_amr_annotation': 'Gene not present',
                       'query_plasmid_annotation': 'Gene not present',
+                      'query_integron_annotation': 'Gene not present',
                       'query_prophage_annotation': 'Gene not present',
                       'query_ice_annotation': 'Gene not present',
                       'query_composite_transposon_annotation': 'Gene not present',
@@ -424,8 +497,65 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
   closest_row.get('tn3_transposon_annotation') or 'None',
                       'relative_ice_annotation': closest_row.get('ice_annotation') or 'None',
 
+                      # Summary: human-readable MGE context
+                      'query_mge_context': 'Gene not present',
+                      'relative_mge_context': ", ".join(sorted(determine_mge_context(closest_row))),
+
                       'difference_type': 'lost_gene'
                   })
+
+          # Check for changed genes (present in both query and relative,
+          # but associated with different MGE contexts)
+          shared_genes = query_gene_names & relative_gene_names
+          for key, query_row in query_annotations_dict.items():
+              gene = key[0]
+              if gene not in shared_genes:
+                  continue
+
+              # Collect all relative rows for the same gene name
+              # (a gene can appear on multiple contigs/positions in the relative)
+              matching_relative_rows = [
+                  (rkey, rrow) for rkey, rrow in closest_annotations_dict.items()
+                  if rkey[0] == gene
+              ]
+
+              for rkey, closest_row in matching_relative_rows:
+                  query_context = determine_mge_context(query_row)
+                  relative_context = determine_mge_context(closest_row)
+
+                  # Only report if MGE contexts actually differ
+                  if query_context != relative_context:
+                      differences.append({
+                          'relative_genome': genome_name,
+                          'gene_name': gene,
+                          'mash_distance': mash_distance,
+                          'p_value': p_value,
+                          'similarity': similarity,
+
+                          # Query annotations (actual values from the merged DataFrame)
+                          'query_amr_annotation': query_row.get('annotation') or 'None',
+                          'query_plasmid_annotation': query_row.get('plasmid_annotation') or 'None',
+                          'query_prophage_annotation': query_row.get('prophage_annotation') or 'None',
+                          'query_ice_annotation': query_row.get('ice_annotation') or 'None',
+                          'query_composite_transposon_annotation': query_row.get('composite_transposon_annotation') or 'None',
+                          'query_tn3_transposon_annotation': query_row.get('tn3_transposon_annotation') or 'None',
+                          'query_integron_annotation': query_row.get('integron_annotation') or 'None',
+
+                          # Relative annotations (actual values from the DB)
+                          'relative_amr_annotation': closest_row.get('amr_annotation') or 'None',
+                          'relative_plasmid_annotation': closest_row.get('plasmid_annotation') or 'None',
+                          'relative_integron_annotation': closest_row.get('integron_annotation') or 'None',
+                          'relative_prophage_annotation': closest_row.get('prophage_annotation') or 'None',
+                          'relative_composite_transposon_annotation': closest_row.get('composite_transposon_annotation') or 'None',
+                          'relative_tn3_transposon_annotation': closest_row.get('tn3_transposon_annotation') or 'None',
+                          'relative_ice_annotation': closest_row.get('ice_annotation') or 'None',
+
+                          # Summary: human-readable MGE context for quick comparison
+                          'query_mge_context': ", ".join(sorted(query_context)),
+                          'relative_mge_context': ", ".join(sorted(relative_context)),
+
+                          'difference_type': 'changed_gene'
+                      })
 
       return pl.DataFrame(differences)
 
@@ -470,7 +600,10 @@ def main():
     parser.add_argument('--number', type=int, default=5, help='Number of closest genomes to consider. Default is 5.')
     parser.add_argument('--output_format', choices=['json', 'dataframe'], default='json', help='Output format for the resistome differences. Default is json.')
     parser.add_argument('--max_distance', type=int, default=5000, help='Maximum distance (bp) between AMR gene and MGE element to consider them co-located (default is 5000)')
-
+    parser.add_argument('--gbk_path', type=Path, default=None,
+                        help='Path to genome GBK file (for protein-to-contig mapping in ICE analysis)')
+    parser.add_argument('--iceberg_fasta', type=Path, default=None,
+                        help='Path to ICEberg reference FASTA (for element metadata)')
 
     args = parser.parse_args()
 
@@ -518,9 +651,23 @@ def main():
         plasmid_amr_annotations = merge_amr_plasmid_annotation(query_amr_annotations, plasmid_annotations)
 
     # parse and merge ICE annotations
+#    if query_amr_annotations and args.filtered_hits_report_path and Path(args.filtered_hits_report_path).exists():
+#        ice_annotations = parse_ice_annotation(args.filtered_hits_report_path)
+#        ice_amr_annotations = merge_amr_ice_annotation(query_amr_annotations, ice_annotations)
+
+    # parse and merge ICE annotations (element-level detection)
     if query_amr_annotations and args.filtered_hits_report_path and Path(args.filtered_hits_report_path).exists():
-        ice_annotations = parse_ice_annotation(args.filtered_hits_report_path)
-        ice_amr_annotations = merge_amr_ice_annotation(query_amr_annotations, ice_annotations)
+        # Build the two lookup maps for element-level detection
+        protein_contig_map = {}
+        if args.gbk_path and Path(args.gbk_path).exists():
+            protein_contig_map = build_protein_contig_map(args.gbk_path)
+        ice_element_metadata = {}
+        if args.iceberg_fasta and Path(args.iceberg_fasta).exists():
+            ice_element_metadata = build_ice_element_metadata(args.iceberg_fasta)
+        ice_annotations = parse_ice_annotation(
+            args.filtered_hits_report_path, protein_contig_map, ice_element_metadata)
+        ice_amr_annotations = merge_amr_ice_annotation(
+            query_amr_annotations, ice_annotations, args.max_distance)
 
     # parse and merge prophage annotations
     if query_amr_annotations and args.phage_report_path and Path(args.phage_report_path).exists():

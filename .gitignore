@@ -12,3 +12,5 @@ work_new/
 2_etd_results/
 test_results/
 stub_results/
+mash_distances.nf
+prokka_annotate.nf

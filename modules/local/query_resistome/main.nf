@@ -14,10 +14,12 @@ process QUERY_RESISTOME {
         path(txt_files),
         path(tn3_files),
         path(integron_file),
-        path(mash_dist_output)
+        path(mash_dist_output),
+        path(gbk_file)
   
   // global (single) files:
   path db_in
+  path iceberg_fasta
 
   output:
   path "${meta.id}_resistome_differences.*"       , emit: differences
@@ -61,6 +63,8 @@ process QUERY_RESISTOME {
     ${compArg} \\
     ${tn3Arg} \\
     ${integronArg} \\
+    ${gbk_file && gbk_file.size() > 0 ? "--gbk_path ${gbk_file}" : ""} \\
+    --iceberg_fasta ${iceberg_fasta} \\
     --number ${params.number ?: 5} \\
     --output_format ${params.output_format ?: 'json'} \\
     --max_distance ${params.max_distance} \\

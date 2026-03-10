@@ -24,6 +24,7 @@ workflow QUERY_DB {
     reference
     diamond_db
     etd_db_last
+    iceberg_fasta
 
     main:
 
@@ -79,34 +80,16 @@ workflow QUERY_DB {
     mob_ch    = MOBSUITE_RECON.out.contig_report
 
     phage_ch  = PHISPY.out.coordinates
-    //phage_ch.view { "phage_ch: $it" }
 
     ice_ch    = FILTER_DIAMOND_HITS.out.filtered_iceberg_hits
-    //ice_ch.view { "ice_ch: $it" }
 
     tncomp_all = TNCOMP_FINDER.out.report.groupTuple()
-    //tncomp_all.view { "After groupTuple: $it" }
 
     tn3_all = TN3_FINDER.out.report.groupTuple()
 
     mash_dist = MASH_DIST.out.dist
-    //mash_dist.view { "mash_dist: $it" }
 
     integron_ch = INTEGRONFINDER.out.integrons
-
-    // DEBUG: Count items in each channel
-    //amr_ch.count().view { "AMR reports count: $it" }
-    //mob_ch.count().view { "MOB reports count: $it" }
-    //phage_ch.count().view { "Phage coords count: $it" }
-    //ice_ch.count().view { "ICE hits count: $it" }
-    //tncomp_all.count().view { "TnComp grouped count: $it" }
-
-    // DEBUG: View the meta IDs in each channel
-    //amr_ch.map { meta, files -> meta.id }.collect().view { "AMR IDs: $it" }
-    //mob_ch.map { meta, files -> meta.id }.collect().view { "MOB IDs: $it" }
-    //phage_ch.map { meta, files -> meta.id }.collect().view { "Phage IDs: $it" }
-    //ice_ch.map { meta, files -> meta.id }.collect().view { "ICE IDs: $it" }
-    //tncomp_all.map { meta, files -> meta.id }.collect().view { "TnComp IDs: $it" }
 
 
     //etd_db_last =  Channel.value(file("${params.outdir}/insert/etd.db"))
@@ -114,22 +97,15 @@ workflow QUERY_DB {
 
     // Step 2: Join per genome by meta.id
     paired = amr_ch.join(mob_ch, by: 0, remainder: true)
-    //paired.count().view { "After first join: $it genomes" }
-    //paired.view { "paired: $it" }
 
     paired2 = paired
        .join(ice_ch, by: 0, remainder: true)
-    //paired2.count().view { "After second join: $it genomes" }
-    //paired2.view { "paired2: $it" }
 
     paired3 = paired2
        .join(phage_ch, by: 0, remainder: true)
-    //paired3.count().view { "After third join: $it genomes" }
-    //paired3.view { "paired3: $it" }
 
     paired4 = paired3
        .join(tncomp_all, by: 0, remainder: true)
-    //paired4.count().view { "After fourth join: $it genomes" }
 
     paired5 = paired4
        .join(tn3_all, by: 0, remainder: true)
@@ -137,8 +113,12 @@ workflow QUERY_DB {
     paired6 = paired5
        .join(integron_ch, by: 0, remainder: true)
 
+    paired7 = paired6
+       .join(ch_samplesheet, by: 0, remainder: true)
+
+
     // Step 3: Shape the final per-genome bundle
-    query_input = paired6
+    query_input = paired7
         .join(mash_dist, by: 0, remainder: true)
         .map { items ->
             def meta = items[0]
@@ -149,22 +129,21 @@ workflow QUERY_DB {
             def txt_files_nested = items[5] ?: []
             def tn3_files_nested = items[6] ?: []
             def integron_file = items[7] ?: []
-            def dist_file = items[8]
+            def gbk_file      = items[8] ?: []
+            def dist_file = items[9]
       
      def txt_files = txt_files_nested ? [txt_files_nested].flatten() : []
      def tn3_files = tn3_files_nested ? [tn3_files_nested].flatten() : []
 
-        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, txt_files, tn3_files, integron_file, dist_file)
+        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, txt_files, tn3_files, integron_file, dist_file, gbk_file)
 }
-
-    //query_input.count().view { "Final query_input count: $it genomes" }
-    //query_input.view { "Query input structure: $it" }
 
     // Call QUERY_DB
 
     QUERY_RESISTOME(
        query_input,
-       etd_db_last
+       etd_db_last,
+       iceberg_fasta
     )
 
 

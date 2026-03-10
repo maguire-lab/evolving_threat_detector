@@ -16,6 +16,15 @@ The **nf-core/etd** (Evolving Threat Detector) is a bioinformatics pipeline that
 
 - **Genome Sketching** 
 	1. Genome sketching with Mash ([`Mash`](https://mash.readthedocs.io/en/latest/)) 
+        2. Batch sketch pasting for large reference databases
+
+> [!NOTE]
+> For reference databases exceeding 50,000 genomes, the pipeline automatically splits 
+> sketches into batches of 50,000 before merging them into a final combined sketch. 
+> This avoids hitting the Linux kernel's memory-mapped file limit 
+> (`vm.max_map_count`) that causes single-pass `mash paste` to fail on very large 
+> collections. The intermediate batch files are automatically removed after the 
+> final sketch is produced, so no additional storage is consumed.
 
 - **Antimicrobial Resistance Gene Annotation**
 
@@ -101,7 +110,7 @@ Across its execution, the ETD interacts with a number of databases. These can be
 
 ## Usage
 
-The etd pipeline accepts gbk files whose paths are specified in a samplesheet.csv file as input. 
+The etd pipeline accepts **annotated** GenBank files (.gbk/.gbff/.gb) whose paths are specified via a samplesheet.csv file as input. Unannotated GenBank files (i.e, those containing only raw nucleotide sequences without CDS features) will cause downstream tools to fail.
 
 To run your analysis, first, prepare a samplesheet with your input data that looks as follows:
 
@@ -159,7 +168,7 @@ Optional parameters:
  - `--output_format` {json, dataframe} : Output format (default:  json)
  - `--min_pident` : minimum percentage identity for diamond homology search (default: 60)
  - `--min_alignment_length` : minimum alignment length for diamond homology search (default: 60)
- - `--max_distance` : maximum co-location distance between AMR and MGE (default: 5000) 
+ - `--max_distance` : maximum co-location distance in base pairs between AMR and MGE (default: 5000) 
 
 > [!NOTE]
 > To override defaults for optional parameters, please provide pipeline parameters via the CLI. E.g. to override the `--number` and `--min_pident` default parameters:

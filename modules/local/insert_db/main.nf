@@ -15,11 +15,13 @@ process INSERT_DB {
         path(phage_coords),
         path(txt_files),
         path(tn3_files),
-        path(integron_file)
+        path(integron_file),
+        path(gbk_file)
   
   // global (single) files:
   path sketch_msh
   path db_in
+  path iceberg_fasta
 
   output:
   path "etd.db"       , emit: db
@@ -90,6 +92,8 @@ process INSERT_DB {
     ${tn3_published}\\
     ${integronArg} \\
     ${integron_published ? "--integron_file_published ${integron_published}" : ""} \\
+    ${gbk_file && gbk_file.size() > 0 ? "--gbk_path ${gbk_file}" : ""} \\
+    --iceberg_fasta ${iceberg_fasta} \\
     --max_distance ${params.max_distance} \\
     2>&1 | tee register.log
 
