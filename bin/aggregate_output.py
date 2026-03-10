@@ -342,12 +342,23 @@ def build_ice_element_metadata(iceberg_fasta_path):
             "category": str        # one of: integrase, relaxase, t4cp, t4ss, cargo
         }}
     """
-    # Keywords that indicate signature ICE functional proteins
-    INTEGRASE_KW  = ['integrase', 'int(', 'xerc', 'xerd', 'recombinase']
-    RELAXASE_KW   = ['relaxase', 'mobe', 'mobf', 'moba', 'tram', 'nic']
-    T4CP_KW       = ['t4cp', 'virb4', 'trae', 'coupling']
-    T4SS_KW       = ['t4ss', 'virb', 'mpf', 'trabc', 'trag', 'trad',
-                     'secretion', 'type iv']
+    # Keywords validated against ICEberg FASTA protein names
+    INTEGRASE_KW = ['integrase', 'recombinase', 'xerc', 'xerd', 'excisionase']
+
+    RELAXASE_KW  = ['relaxase', 'moba', 'mobb', 'mobc',
+                    'mobilization_protein', 'mobilisation_protein']
+
+    T4CP_KW      = ['virb4', 'coupling', 'trae', 'vird4']
+
+    T4SS_KW      = ['virb', 'sex_pilus', 'pilus_assembly', 'mating_pair',
+                    'conjugative_transfer', 'conjugal_transfer',
+                    'type_iv_secret', 'type-iv_secret',
+                    'type_iv_b_pilus', 'type_iv_pilus', 'type_4_pilus',
+                    'traa', 'trab', 'traf', 'trah', 'trai',
+                    'trak', 'tral', 'trau', 'traw', 'traq',
+                    'trbb', 'trbc', 'trbd', 'trbe', 'trbf', 'trbg',
+                    'trbi', 'trbj', 'trbl',
+                    'conjugation_signal_peptidase']
 
     metadata = {}
     for record in SeqIO.parse(str(iceberg_fasta_path), 'fasta'):
@@ -380,6 +391,14 @@ def build_ice_element_metadata(iceberg_fasta_path):
         elif any(kw in name_lower for kw in T4CP_KW):
             category = "t4cp"
         elif any(kw in name_lower for kw in T4SS_KW):
+            category = "t4ss"
+        # Special case: TraC — catch without matching tetracycline/extracellular/bacitracin
+        elif 'trac' in name_lower and not any(x in name_lower for x in
+                ['tetrac', 'extrac', 'intrac', 'bacitrac']):
+            category = "t4ss"
+        # Special case: TraN — only match at word boundaries to avoid transcription/transposase
+        elif ('_tran_' in name_lower or name_lower.endswith('_tran') or
+              name_lower.startswith('tran_') or name_lower == 'tran'):
             category = "t4ss"
 
         metadata[sid] = {
