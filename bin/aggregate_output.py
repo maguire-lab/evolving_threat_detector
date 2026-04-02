@@ -291,38 +291,39 @@ def is_proximal(amr_start, amr_stop, element_start, element_end, max_distance):
     gap = max(a_lo - e_hi, e_lo - a_hi)
     return gap <= max_distance
 
-def build_protein_contig_map(gbk_path):
+def build_protein_contig_map(gbk_path, genome_id):
     """
     Parse a GenBank file to build a mapping from protein locus_tag
     to its contig location and coordinates.
 
     Parameters:
         gbk_path (str/Path): Path to the genome's GBK/GBFF file.
+        genome_id (str): Genome identifier (e.g. "GCA_000290555.2"),
+                         used as prefix for sequential protein IDs.
 
     Returns:
-        dict: {locus_tag: {
+        dict: {protein_id: {
             "contig_id": str,  # the contig/record this CDS sits on
             "start": int,      # 1-based start position
             "end": int         # 1-based end position
         }}
     """
     protein_map = {}
+    protein_count = 0
     for record in SeqIO.parse(str(gbk_path), 'genbank'):
         contig_id = record.id                   # e.g. "NZ_CP012345.1"
         for feat in record.features:
             if feat.type != "CDS":
                 continue
-            # Extract the locus_tag (primary key used by DIAMOND query IDs)
-            locus_tag = feat.qualifiers.get("locus_tag", [None])[0]
-            if not locus_tag:
-                # Fall back to protein_id if no locus_tag
-                locus_tag = feat.qualifiers.get("protein_id", [None])[0]
-            if locus_tag:
-                protein_map[locus_tag] = {
-                    "contig_id": contig_id,
-                    "start": int(feat.location.start) + 1,  # BioPython is 0-based
-                    "end": int(feat.location.end)
-                }
+            # Increment counter for every CDS (same order as parse_gbk.py)
+            protein_count += 1
+            # Build the same ID that parse_gbk.py writes to the protein FASTA
+            prot_id = f"{genome_id}_{protein_count:05d}"
+            protein_map[prot_id] = {
+                "contig_id": contig_id,
+                "start": int(feat.location.start) + 1,  # BioPython is 0-based
+                "end": int(feat.location.end)
+            }
     print(f'Built protein-contig map: {len(protein_map)} proteins from {gbk_path}')
     return protein_map
 
@@ -1347,7 +1348,7 @@ def main():
         # Build the two lookup maps needed for element-level ICE detection
         protein_contig_map = {}
         if args.gbk_path and Path(args.gbk_path).exists():
-            protein_contig_map = build_protein_contig_map(args.gbk_path)
+            protein_contig_map = build_protein_contig_map(args.gbk_path, args.fasta_name)
         ice_element_metadata = {}
         if args.iceberg_fasta and Path(args.iceberg_fasta).exists():
             ice_element_metadata = build_ice_element_metadata(args.iceberg_fasta)

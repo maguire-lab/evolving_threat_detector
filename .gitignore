@@ -14,3 +14,5 @@ test_results/
 stub_results/
 mash_distances.nf
 prokka_annotate.nf
+parse_gbk_standalone.nf
+parse_gbk.config

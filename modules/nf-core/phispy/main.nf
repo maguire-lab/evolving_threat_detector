@@ -44,7 +44,8 @@ process PHISPY {
         $gbk
 
     mv ${prefix}_prophage_coordinates.tsv ${prefix}.tsv
-    mv ${prefix}_${gbk} ${prefix}${gbk_extension}
+    #mv ${prefix}_${gbk} ${prefix}${gbk_extension}
+    mv ${prefix}_${gbk} ${prefix}.gbk
     mv ${prefix}_phispy.log ${prefix}.log
 
     cat <<-END_VERSIONS > versions.yml

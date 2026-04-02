@@ -660,7 +660,7 @@ def main():
         # Build the two lookup maps for element-level detection
         protein_contig_map = {}
         if args.gbk_path and Path(args.gbk_path).exists():
-            protein_contig_map = build_protein_contig_map(args.gbk_path)
+            protein_contig_map = build_protein_contig_map(args.gbk_path, args.fasta_name)
         ice_element_metadata = {}
         if args.iceberg_fasta and Path(args.iceberg_fasta).exists():
             ice_element_metadata = build_ice_element_metadata(args.iceberg_fasta)
