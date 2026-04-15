@@ -1,6 +1,6 @@
 process TNCOMP_FINDER {
     tag "$meta.id"
-    label 'high'
+    label 'process_high'
 
     container 'quay.io/biocontainers/tncomp_finder:1.0.0--hdfd78af_0'
 

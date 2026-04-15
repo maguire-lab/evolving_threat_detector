@@ -15,4 +15,4 @@ stub_results/
 mash_distances.nf
 prokka_annotate.nf
 parse_gbk_standalone.nf
-parse_gbk.config
+pars_gbk.config

@@ -13,8 +13,8 @@ include { GET_ICEBERG                       } from '../../../modules/local/icebe
 include { DIAMOND_MAKEDB                    } from '../../../modules/local/diamond/makedb'
 include { DIAMOND_BLASTP                    } from '../../../modules/local/diamond/blastp'
 include { FILTER_DIAMOND_HITS               } from '../../../modules/local/filter_hits'
-include { TNCOMP_FINDER                     } from '../../../modules/local/tncomp_finder'
-include { TN3_FINDER                        } from '../../../modules/local/tn3finder'
+//include { TNCOMP_FINDER                     } from '../../../modules/local/tncomp_finder'
+//include { TN3_FINDER                        } from '../../../modules/local/tn3finder'
 include { INSERT_DB                         } from '../../../modules/local/insert_db'
 
 workflow MAKE_DB {
@@ -100,10 +100,10 @@ workflow MAKE_DB {
     )
 
    // Run Tncompfinder
-    TNCOMP_FINDER(ch_genomes)
+    //TNCOMP_FINDER(ch_genomes)
 
    // Run Tn3finder
-    TN3_FINDER(ch_genomes)
+    //TN3_FINDER(ch_genomes)
 
     // Insert genomes into db
     // Step 1: Define short aliases for module outputs
@@ -114,9 +114,13 @@ workflow MAKE_DB {
                 
     ice_ch    = FILTER_DIAMOND_HITS.out.filtered_iceberg_hits
   
-    tncomp_all = TNCOMP_FINDER.out.report.groupTuple()
+    //tncomp_all = TNCOMP_FINDER.out.report.groupTuple()
 
-    tn3_all = TN3_FINDER.out.report.groupTuple()
+    //tn3_all = TN3_FINDER.out.report.groupTuple()
+
+    tncomp_all = ch_genomes.map { meta, fasta -> tuple(meta, []) }
+
+    tn3_all    = ch_genomes.map { meta, fasta -> tuple(meta, []) }
 
     sketch_ref = MASH_PASTE_FINAL.out.reference
 
@@ -200,8 +204,8 @@ workflow MAKE_DB {
       iceberg_hits         = FILTER_DIAMOND_HITS.out.filtered_iceberg_hits
       phispy_prophage_tsv  = PHISPY.out.prophage_tsv
       phispy_coordinates   = PHISPY.out.coordinates
-      tncomp_report        = TNCOMP_FINDER.out.report
-      tn3_report           = TN3_FINDER.out.report
+      //tncomp_report        = TNCOMP_FINDER.out.report
+      //tn3_report           = TN3_FINDER.out.report
       updated_db           = INSERT_DB.out.db.last() 
       iceberg_fasta        = ch_iceberg_db
 }	
