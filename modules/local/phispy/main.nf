@@ -12,7 +12,7 @@ process PHISPY {
 
     output:
     tuple val(genomeID), path("${prefix}.tsv")                     , emit: coordinates
-    tuple val(genomeID), path("${prefix}.gb*")                     , emit: gbk
+    //tuple val(genomeID), path("${prefix}.gb*")                     , emit: gbk
     tuple val(genomeID), path("${prefix}.log")                     , emit: log
     tuple val(genomeID), path("${prefix}_prophage_information.tsv"), optional:true, emit: information
     tuple val(genomeID), path("${prefix}_bacteria.fasta")          , optional:true, emit: bacteria_fasta
@@ -49,6 +49,10 @@ process PHISPY {
     mv ${prefix}_prophage_coordinates.tsv ${prefix}.tsv
     mv ${prefix}_${gbk} ${prefix}${gbk_extension}
     mv ${prefix}_phispy.log ${prefix}.log
+
+    # Remove annotated GBK -- not consumed downstream
+    rm -f ${prefix}*.gbk ${prefix}.gb*
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

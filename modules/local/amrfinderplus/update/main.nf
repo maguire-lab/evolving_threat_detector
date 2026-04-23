@@ -4,11 +4,11 @@ process AMRFINDERPLUS_UPDATE {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ncbi-amrfinderplus:3.12.8--h283d18e_0':
-        'biocontainers/ncbi-amrfinderplus:3.12.8--h283d18e_0' }"
+        'https://depot.galaxyproject.org/singularity/ncbi-amrfinderplus:4.2.7--hf69ffd2_0':
+        'biocontainers/ncbi-amrfinderplus:4.2.7--hf69ffd2_0' }"
 
     output:
-    path "amrfinderdb.tar.gz", emit: db
+    path "amrfinderdb", emit: db
     path "versions.yml"      , emit: versions
 
     when:
@@ -17,7 +17,6 @@ process AMRFINDERPLUS_UPDATE {
     script:
     """
     amrfinder_update -d amrfinderdb
-    tar czvf amrfinderdb.tar.gz -C amrfinderdb/\$(readlink amrfinderdb/latest) ./
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

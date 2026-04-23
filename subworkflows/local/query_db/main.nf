@@ -1,7 +1,7 @@
 /*
  * Import required modules
  */
-include { AMRFINDERPLUS_UPDATE      } from '../../../modules/nf-core/amrfinderplus/update'
+//include { AMRFINDERPLUS_UPDATE      } from '../../../modules/local/amrfinderplus/update'
 include { AMRFINDERPLUS_RUN         } from '../../../modules/local/amrfinderplus/run'
 include { MASH_DIST                 } from '../../../modules/nf-core/mash/dist'
 include { MOBSUITE_RECON            } from '../../../modules/local/mobsuite/recon'
@@ -25,17 +25,18 @@ workflow QUERY_DB {
     diamond_db
     etd_db_last
     iceberg_fasta
+    amrfinder_db
 
     main:
 
     // Update AMRFinderPlus database
-    amrfinder_db = AMRFINDERPLUS_UPDATE()
+    //amrfinder_db = AMRFINDERPLUS_UPDATE()
 
     // Run MASH distance estimation
     MASH_DIST(ch_genomes, reference)
 
     // Run AMRFinderPlus with updated DB
-    AMRFINDERPLUS_RUN(ch_amrfinder_input, amrfinder_db[0])
+    AMRFINDERPLUS_RUN(ch_amrfinder_input, amrfinder_db)
 
     // Run MOB-suite
     MOBSUITE_RECON(ch_genomes)

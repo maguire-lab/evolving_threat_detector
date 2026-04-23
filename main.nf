@@ -23,6 +23,7 @@
   include { PARSE_GBK               } from './modules/local/parsegbk/main'
   include { PARSE_GBK as PARSE_GBK_MAKE } from './modules/local/parsegbk/main'
   include { PARSE_GBK as PARSE_GBK_QUERY } from './modules/local/parsegbk/main'
+  include { AMRFINDERPLUS_UPDATE         } from './modules/local/amrfinderplus/update'
 
   /*
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -104,6 +105,8 @@
       diamond_db_out = Channel.empty()
       reference_out = Channel.empty()
       etd_db_out = Channel.empty()
+      // Update AMRFinderPlus database once for all modes
+      AMRFINDERPLUS_UPDATE()
 
       //
       // WORKFLOW: Build database if requested
@@ -154,7 +157,7 @@
               .set { ch_proteins_make }
 
           // Run the MAKE_DB subworkflow
-          MAKE_DB_V1(ch_samplesheet_make, ch_amrfinder_input_make, ch_genomes_make, ch_proteins_make)
+          MAKE_DB_V1(ch_samplesheet_make, ch_amrfinder_input_make, ch_genomes_make, ch_proteins_make, AMRFINDERPLUS_UPDATE.out.db)
 
           // Store outputs for potential use by QUERY_DB
           diamond_db_out = MAKE_DB_V1.out.diamond_db ?: Channel.empty()
@@ -258,7 +261,7 @@
 
           // Run the QUERY_DB subworkflow
           QUERY_DB_V1(ch_samplesheet_query, ch_amrfinder_input_query, ch_genomes_query,
-  ch_proteins_query, reference, diamond_db, etd_db_last, iceberg_fasta)
+  ch_proteins_query, reference, diamond_db, etd_db_last, iceberg_fasta, AMRFINDERPLUS_UPDATE.out.db)
 
           //log.info "QUERY_DB workflow completed successfully"
       }
@@ -306,6 +309,8 @@
           .map { meta, gbk -> [meta, gbk] }
           .set { ch_samplesheet }
 
+      AMRFINDERPLUS_UPDATE()
+
       ch_samplesheet | PARSE_GBK
 
       PARSE_GBK.out
@@ -329,7 +334,7 @@
           .set { ch_proteins }
 
       // Run the MAKE_DB subworkflow
-      MAKE_DB_V1(ch_samplesheet, ch_amrfinder_input, ch_genomes, ch_proteins)
+      MAKE_DB_V1(ch_samplesheet, ch_amrfinder_input, ch_genomes, ch_proteins, AMRFINDERPLUS_UPDATE.out.db)
       
 
       emit:
@@ -357,6 +362,8 @@
           .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
           .map { meta, gbk -> [meta, gbk] }
           .set { ch_samplesheet }
+
+      AMRFINDERPLUS_UPDATE()
 
       ch_samplesheet | PARSE_GBK
 
@@ -394,7 +401,7 @@
 
       // Run the QUERY_DB subworkflow
       QUERY_DB_V1(ch_samplesheet, ch_amrfinder_input, ch_genomes, ch_proteins, reference,
-  diamond_db, etd_db_last)
+  diamond_db, etd_db_last, AMRFINDERPLUS_UPDATE.out.db)
 
       emit:
       resistome_differences = QUERY_DB_V1.out.resistome_differences

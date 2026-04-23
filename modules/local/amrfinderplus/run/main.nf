@@ -4,8 +4,8 @@ process AMRFINDERPLUS_RUN {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ncbi-amrfinderplus:3.12.8--h283d18e_0':
-        'biocontainers/ncbi-amrfinderplus:3.12.8--h283d18e_0' }"
+        'https://depot.galaxyproject.org/singularity/ncbi-amrfinderplus:4.2.7--hf69ffd2_0':
+        'biocontainers/ncbi-amrfinderplus:4.2.7--hf69ffd2_0' }"
 
     input:
     tuple val(meta), path(fasta), path(protein), path(gff)
@@ -26,7 +26,7 @@ process AMRFINDERPLUS_RUN {
     def is_compressed_fasta   = fasta.getName().endsWith(".gz") ? true : false
     def is_compressed_protein = protein.getName().endsWith(".gz") ? true : false
     def is_compressed_gff     = gff.getName().endsWith(".gz") ? true : false  
-    def is_compressed_db      = db.getName().endsWith(".gz") ? true : false
+    //def is_compressed_db      = db.getName().endsWith(".gz") ? true : false
     prefix = task.ext.prefix ?: "${meta.id}"
     organism_param = meta.organism ? "--organism ${meta.organism} --mutation_all ${prefix}-mutations.tsv" : ""
     fasta_name   = fasta.getName().replace(".gz", "")
@@ -54,12 +54,8 @@ process AMRFINDERPLUS_RUN {
         gzip -c -d $gff > $gff_name
     fi
 
-    if [ "$is_compressed_db" == "true" ]; then
-        mkdir amrfinderdb
-        tar xzvf $db -C amrfinderdb
-    else
-        mv $db amrfinderdb
-    fi
+    # use db already an extracted directory
+    # ln -s ${db} amrfinderdb
 
     # combined amrfinderplus run
 
@@ -70,16 +66,16 @@ process AMRFINDERPLUS_RUN {
         --annotation_format $annotation_format \\
         $organism_param \\
         $args \\
-        --database amrfinderdb \\
+        --database ${db}/latest \\
         --threads $task.cpus > ${prefix}.tsv
 
     VER=\$(amrfinder --version)
-    DBVER=\$(echo \$(amrfinder --database amrfinderdb --database_version 2> stdout) | rev | cut -f 1 -d ' ' | rev)
+    DBVER=\$(echo \$(amrfinder --database ${db}/latest --database_version 2> stdout) | rev | cut -f 1 -d ' ' | rev)
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         amrfinderplus: \$(amrfinder --version)
-        amrfinderplus-database: \$(echo \$(echo \$(amrfinder --database amrfinderdb --database_version 2> stdout) | rev | cut -f 1 -d ' ' | rev))
+        amrfinderplus-database: \$(echo \$(echo \$(amrfinder --database ${db}/latest --database_version 2> stdout) | rev | cut -f 1 -d ' ' | rev))
     END_VERSIONS
     """
 

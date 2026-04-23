@@ -1,7 +1,7 @@
 /*
  * Import required modules
  */
-include { AMRFINDERPLUS_UPDATE              } from '../../../modules/nf-core/amrfinderplus/update'
+//include { AMRFINDERPLUS_UPDATE              } from '../../../modules/local/amrfinderplus/update'
 include { AMRFINDERPLUS_RUN                 } from '../../../modules/local/amrfinderplus/run'
 include { MASH_SKETCH                       } from '../../../modules/nf-core/mash/sketch'
 include { MASH_PASTE_BATCH; MASH_PASTE_FINAL} from '../../../modules/local/mash_paste'
@@ -23,11 +23,12 @@ workflow MAKE_DB {
     ch_amrfinder_input
     ch_genomes
     ch_proteins
+    amrfinder_db
 
     main:
 
     // Update AMRFinderPlus database
-    amrfinder_db = AMRFINDERPLUS_UPDATE()
+    //amrfinder_db = AMRFINDERPLUS_UPDATE()
 
     // Run MASH sketching
     MASH_SKETCH(ch_genomes)
@@ -58,7 +59,7 @@ workflow MAKE_DB {
     MASH_PASTE_FINAL(MASH_PASTE_BATCH.out.batch_msh.collect())
 
     // Run AMRFinderPlus with updated DB
-    AMRFINDERPLUS_RUN(ch_amrfinder_input, amrfinder_db[0])
+    AMRFINDERPLUS_RUN(ch_amrfinder_input, amrfinder_db)
 
     // Run MOB-suite
     MOBSUITE_RECON(ch_genomes)
