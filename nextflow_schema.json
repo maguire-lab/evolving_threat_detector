@@ -294,13 +294,64 @@
                     "fa_icon": "fas fa-file-export",
                     "enum": ["json", "tsv"]
                 },
+		"amrfinder_db": { 
+		"type": "string", 
+		"format": "directory-path", 
+		"description": "Path to pre-downloaded AMRFinderPlus database" 
+		},
+                "iceberg_db": { 
+		"type": "string", 
+		"format": "file-path", 
+		"description": "Path to pre-downloaded ICEberg FASTA" 
+		},
+                "enable_conda": { 
+		"type": "boolean", 
+		"default": false, 
+		"hidden": true 
+		},
+                "keep_all": { 
+		"type": "boolean", 
+		"default": false, 
+		"description": "Publish all intermediate and output files", 
+		"fa_icon": "fas fa-archive" 
+		},
                 "max_distance": {
                     "type": "integer",
                     "default": 5000,
                     "description": "Maximum distance in base pairs for AMR-MGE proximity testing.",
                     "fa_icon": "fas fa-arrows-alt-h"
                 }
-	    }
+
+	      }
+	    },
+	    "max_resource_options": {
+            "title": "Max resource options",
+            "type": "object",
+            "fa_icon": "fas fa-microchip",
+            "description": "Resource limits set by institutional configs.",
+            "hidden": true,
+            "properties": {
+                "max_cpus": { 
+		"type": "integer", 
+		"hidden": true, 
+		"description": "Maximum CPUs per process" 
+		},
+                "max_memory": { 
+		"type": "string", 
+		"hidden": true, 
+		"description": "Maximum memory per process" 
+		},
+                "max_time": { 
+		"type": "string", 
+		"hidden": true, 
+		"description": "Maximum wall time per process" 
+		},
+                "cluster_name": { 
+		"type": "string", 
+		"hidden": true, 
+		"description": "HPC cluster name" 
+		}
+	   }	
 	}
     },
     "allOf": [
@@ -318,6 +369,9 @@
         },
 	{
             "$ref": "#/$defs/etd_pipeline_options"
-        }
+        },
+	{ 
+	    "$ref": "#/$defs/max_resource_options" 
+	}
     ]
 }

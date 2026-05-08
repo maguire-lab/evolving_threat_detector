@@ -105,9 +105,16 @@
       diamond_db_out = Channel.empty()
       reference_out = Channel.empty()
       etd_db_out = Channel.empty()
-      // Update AMRFinderPlus database once for all modes
-      AMRFINDERPLUS_UPDATE()
+       
+      // Pre-downloaded database channels (for clusters without internet on compute nodes)
+      ch_amrfinder_db = params.amrfinder_db ? Channel.value(file(params.amrfinder_db)) : null
+      ch_iceberg_db   = params.iceberg_db   ? Channel.value(file(params.iceberg_db))   : null
 
+      // Update AMRFinderPlus database once for all modes
+      if (!params.amrfinder_db) {
+          AMRFINDERPLUS_UPDATE()
+      }
+      amrfinder_db_ch = params.amrfinder_db ? ch_amrfinder_db : AMRFINDERPLUS_UPDATE.out.db
       //
       // WORKFLOW: Build database if requested
       //
@@ -157,7 +164,7 @@
               .set { ch_proteins_make }
 
           // Run the MAKE_DB subworkflow
-          MAKE_DB_V1(ch_samplesheet_make, ch_amrfinder_input_make, ch_genomes_make, ch_proteins_make, AMRFINDERPLUS_UPDATE.out.db)
+          MAKE_DB_V1(ch_samplesheet_make, ch_amrfinder_input_make, ch_genomes_make, ch_proteins_make, amrfinder_db_ch, ch_iceberg_db)
 
           // Store outputs for potential use by QUERY_DB
           diamond_db_out = MAKE_DB_V1.out.diamond_db ?: Channel.empty()
@@ -261,7 +268,7 @@
 
           // Run the QUERY_DB subworkflow
           QUERY_DB_V1(ch_samplesheet_query, ch_amrfinder_input_query, ch_genomes_query,
-  ch_proteins_query, reference, diamond_db, etd_db_last, iceberg_fasta, AMRFINDERPLUS_UPDATE.out.db)
+  ch_proteins_query, reference, diamond_db, etd_db_last, iceberg_fasta, amrfinder_db_ch)
 
           //log.info "QUERY_DB workflow completed successfully"
       }
@@ -333,8 +340,10 @@
           }
           .set { ch_proteins }
 
+      ch_iceberg_db = params.iceberg_db ? Channel.value(file(params.iceberg_db)) : null	  
+
       // Run the MAKE_DB subworkflow
-      MAKE_DB_V1(ch_samplesheet, ch_amrfinder_input, ch_genomes, ch_proteins, AMRFINDERPLUS_UPDATE.out.db)
+      MAKE_DB_V1(ch_samplesheet, ch_amrfinder_input, ch_genomes, ch_proteins, AMRFINDERPLUS_UPDATE.out.db, ch_iceberg_db)
       
 
       emit:
@@ -401,7 +410,7 @@
 
       // Run the QUERY_DB subworkflow
       QUERY_DB_V1(ch_samplesheet, ch_amrfinder_input, ch_genomes, ch_proteins, reference,
-  diamond_db, etd_db_last, AMRFINDERPLUS_UPDATE.out.db)
+  diamond_db, etd_db_last, iceberg_fasta, AMRFINDERPLUS_UPDATE.out.db)
 
       emit:
       resistome_differences = QUERY_DB_V1.out.resistome_differences

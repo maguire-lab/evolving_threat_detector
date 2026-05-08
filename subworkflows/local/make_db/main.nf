@@ -24,6 +24,7 @@ workflow MAKE_DB {
     ch_genomes
     ch_proteins
     amrfinder_db
+    iceberg_db
 
     main:
 
@@ -74,9 +75,13 @@ workflow MAKE_DB {
     // Run ICEberg annotation
 
     // Step 1: Get the database
-    GET_ICEBERG()
-    GET_ICEBERG.out.iceberg
-        .set { ch_iceberg_db }
+    if (iceberg_db) {
+        ch_iceberg_db = iceberg_db
+    } else {
+        GET_ICEBERG()
+        GET_ICEBERG.out.iceberg
+            .set { ch_iceberg_db }
+    }
 
     // Step 2: Create DIAMOND database from ICEberg
     DIAMOND_MAKEDB(ch_iceberg_db)

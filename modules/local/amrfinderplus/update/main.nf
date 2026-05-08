@@ -26,8 +26,9 @@ process AMRFINDERPLUS_UPDATE {
 
     stub:
     """
-    touch amrfinderdb.tar
-    gzip amrfinderdb.tar
+    #touch amrfinderdb.tar
+    #gzip amrfinderdb.tar
+    mkdir -p amrfinderdb
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

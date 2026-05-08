@@ -16,3 +16,5 @@ mash_distances.nf
 prokka_annotate.nf
 parse_gbk_standalone.nf
 pars_gbk.config
+run_stub.sh
+run_test.sh
