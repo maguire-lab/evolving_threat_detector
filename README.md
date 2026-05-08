@@ -39,8 +39,6 @@ The **nf-core/etd** (Evolving Threat Detector) is a bioinformatics pipeline that
 
 	4. ICEs with ICEberg ([`ICEberg`](https://ngdc.cncb.ac.cn/databasecommons/database/id/513)) using DIAMOND homology search ([`DIAMOND`](https://github.com/bbuchfink/diamond))
 
-	5. Transposons with TnComp_finder ([`TnFinder`](https://github.com/danillo-alvarenga/tncomp_finder)) and Tn3+TA_finder ([`Tn3+TA_finder`](https://github.com/danillo-alvarenga/tn3-ta_finder)).
-
 - **Closest genomic relative analysis** using Mash distance calculations
 - **Resistome comparison** between query genomes and their closest genomic relatives
 - **Genomic context mapping** to understand resistance gene mobility
@@ -66,9 +64,9 @@ The etd pipeline is organized into two main sub-workflows:
 
 - The ETD pipeline uses docker to manage dependencies across its various components.
 
-- nf-core modules bundled in this pipeline have pre-built Docker containers available via Biocontainers or Docker Hub, which allows for consistent and reproducible execution.
+- nf-core modules bundled in this pipeline have pre-built Docker containers available via Biocontainers or Docker Hub, which allows for consistent and reproducible execution. This pipeline also supports Singularity/Apptainer for HPC environments where Docker is unavailable.
 
-- Custom modules, including `parse_gbk`, `Tn3+TA_finder`, `TnComp_finder`, `insert_db` and `query_resistome`, also use Docker containers.
+- Custom modules, including `parse_gbk`, `insert_db` and `query_resistome`, also use Docker containers.
 
 ## Databases and External Resources
 Across its execution, the ETD interacts with a number of databases. These can be classified into three categories: databases downloaded at runtime, databases bundled within tool containers, and databases generated during the pipeline run. 
@@ -78,10 +76,6 @@ Across its execution, the ETD interacts with a number of databases. These can be
 - AMRFinderPlus Reference Database: at the start of each run, the ETD pipeline automatically downloads the latest version of the curated antimicrobial resistance gene database hosted by NCBI. This download requires internet access and is achieved via the `AMRFINDERPLUS_UPDATE` process.
 - ICEberg Protein Database: The ICEberg datatbase houses experimentally verified integrative and conjugative element (ICE) protein sequences. Via the `GET_ICEBERG` process, the ETD pipeline downloads this database, reformats the FASTA headers for compatibility with DIAMOND, and builds a DIAMOND index from it. This download happens once per pipeline run and requires internet access.
 
-- Databases Bundled with Tool Containers
-- The following databases are bundled in their respective tool Docker containers:
-- TnConp_Finder Database: Houses a curated nucleotide database of known insertion sequence elements named `transposons.fna` and  used as BLAST references for composite transposon detection.
-- Tn3+TA_Finder Database: This database houses the `T+A.faa` (toxin-antitoxin gene families) and `Tn3+R.faa` (Tn3-family transposase sequences) - used as BLAST references for Tn3+TA transposon identification. 
 - Other tools such as `MOB-suite`, `IntegronFinder` and `PhiSpy` have their databses and respective models bundled with the tool, and requires no user configuration.
 
 - Databases Generated During Pipeline Execution
@@ -92,7 +86,7 @@ Across its execution, the ETD interacts with a number of databases. These can be
 ## Installation
 
 1. Install [`Nextflow`](https://nf-co.re/usage/installation). If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow.
-2. Install [`Docker`](https://www.docker.com/products/docker-desktop/) if you do not already have it installed.
+2. Install [`Docker`](https://www.docker.com/products/docker-desktop/) if you do not already have it installed or Singularity/Apptainer if running on an HPC cluster where Docker is not available.
 3. Install [`Conda`](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html) if you do not already have it installed.
 4. Clone the repository
 
@@ -107,6 +101,39 @@ Across its execution, the ETD interacts with a number of databases. These can be
    ``` bash
    nextflow run main.nf -profile test_stub,docker -stub
    ```
+
+## Running on Shared HPC Clusters
+On most shared HPC clusters, compute nodes do not have internet access. Pre-download all required databases and container images on a login node before submitting jobs.
+
+1. Pre-download the AMRFinderPlus database:
+   ``` bash
+   amrfinder_update -d amrfinderdb
+   ```
+   Note the path to the resulting amrfinderdb directory for use with `--amrfinder_db`.
+
+2. Pre-download and reformat the ICEberg database:
+   ``` bash
+   curl https://bioinfo-mml.sjtu.edu.cn/ICEberg2/download/ICE_aa_experimental.fas \
+   --output ICE_aa_experimental.fas
+
+   sed -E 's/>(ICEberg\|[0-9]+)\s+(gi.*\|)\s+(.*)\s+\[(.*)\]/>\1_\3_\2_[\4]/' \
+   < ICE_aa_experimental.fas | tr ' ' '_' > ICE_aa_experimental_reformatted.fas
+   ```
+   Note the path to ICE_aa_experimental_reformatted.fas for use with `--iceberg_db`.
+
+3. Pre-download container images:
+   Set a persistent cache directory for Singularity images:
+   ``` bash
+   export NXF_SINGULARITY_CACHEDIR=/path/to/persistent/singularity_cache
+   mkdir -p $NXF_SINGULARITY_CACHEDIR
+   ```
+   Then, run the test profile on a login node to pull all required container images:
+   ``` bash
+   nextflow run main.nf -profile test,singularity
+   ```
+   This executes the full pipeline on a minimal test dataset, forcing Nextflow to download and cache all Singularity images into NXF_SINGULARITY_CACHEDIR. On subsequent runs (including on compute nodes without internet), the cached images will be used automatically.
+
+4. Set offline mode and submit:In your SLURM job script, set `NXF_OFFLINE` to `true` and `NXF_SINGULARITY_CACHEDIR` to `/path/to/persistent/singularity_cache`
 
 ## Usage
 
@@ -154,13 +181,15 @@ nextflow run main.nf \
    --mode all \
    -profile docker \
    --input_make reference_genomes.csv \
-   --input_query query_genomes.csv 
+   --input_query query_genomes.csv \
+   --keep_all
 ```
 
 Parameters used:
 -  `--mode` : **(Required)** specifies which subworkflow/workflow to run. 
 -  `--input_make` : Path to the reference genomes input samplesheet.csv file. **Required** for the `make_db` and `all` modes.
 -  `--input_query` : Path to the query genome(s) input samplesheet.csv file. **Required** for the `query_db` and `all` modes.
+-  `--keep_all` : When specified, publishes all intermediae output files from individual process (default: `false`). By default, only essential files are published.
 
 Optional parameters:
 
@@ -169,6 +198,9 @@ Optional parameters:
  - `--min_pident` : minimum percentage identity for diamond homology search (default: 60)
  - `--min_alignment_length` : minimum alignment length for diamond homology search (default: 60)
  - `--max_distance` : maximum co-location distance in base pairs between AMR and MGE (default: 5000) 
+ - `--amrfinder_db` : path to a pre-downloaded AMRFinderPlus database directory. When provided, the pipeline skips the AMRFINDERPLUS_UPDATE step (useful for HPC compute nodes without internet).
+ - `--iceberg_db` : path to a pre-downloaded ICEberg protein FASTA file. When provided, the pipeline skips the iceberg database download step (useful for HPC compute nodes without internet).
+ - `--keep_all` : 
 
 > [!NOTE]
 > To override defaults for optional parameters, please provide pipeline parameters via the CLI. E.g. to override the `--number` and `--min_pident` default parameters:
@@ -193,19 +225,23 @@ To test the worklow on a minimal dataset you can use the test configuration (wit
 nextflow run main.nf -profile test,docker
 ```
 
+> On HPC systems using Singularity/Apptainer, replace `docker` with the appropriate Singularity-based profile. If on a compute node without internet, ensure databases and containers are pre-downloaded and pass `--amrfinder_db` and `--iceberg_db`.
+
+``` bash
+  nextflow run main.nf -profile test,singularity --amrfinder_db /path/to/amrfinderdb --iceberg_db /path/to/iceberg.fas
+  ```
+
 
 ## Pipeline output
 
-A successful run creates the parent output directory `etd_results` in which other sub annotation and analysis directories are stored. These other directories include:
+A successful run creates the parent output directory `etd_results` in which other sub annotation and analysis directories are stored. By default, only essential output files are published to minimize filesystem usage. When `--keep_all` is specified, all intermediate files are published.These other directories include:
 
 - `parse/` : fasta, protein and .gff3 files derived from supplied input gbk files.
-- `amrfinderplus/` : houses the updated amrfinderplus database and individual sample amr genes and mutations reports.
-- `mash/` : combined sketch file for all reference database genomes, individual sample sketch files andmash distance report for query sample(s).
-- `phispy/` : per sample .gbk and tsv report files of annotated prohpages, if present.
-- `integronfinder/` : per sample report directories of annotated integrons, if present.
-- `mobsuite/` : per sample report directories of predicted plamid results including chromosome and plasmid fasta files, if present, contig reports and mob_typer results. 
-- `tncomp/` : per sample gbk and .txt reports of annotated composite transposons
-- `tn3/` : per sample gnk and .txt reports of annotated tn3 transposons
+- `amrfinderplus/` : default: per-sample .tsv report only. With `--keep_all`: also includes mutation reports.
+- `mash/` : default: combined sketch file for all reference database genomes, and mash distance report for query sample(s). With `--keep_all`: includes individual sketch files.
+- `phispy/` : default: per-sample .tsv coordinates file only. With `--keep_all`: also includes annotated .gbk files.
+- `integronfinder/` : default: summary and .integrons files only. With `--keep_all`: full report directories.
+- `mobsuite/` : default: contig report only. With --keep_all: also includes mob_typer results, chromosome/plasmid FASTA files.
 - `get/` : ICEberg database proteins
 - `diamond/` : reformatted iceberg database proteins, and per sample blastp .txt reports.
 - `filter/`: report of predicted ICEs following homology search and threshold filtering.
