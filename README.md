@@ -91,9 +91,9 @@ Across its execution, the ETD interacts with a number of databases. These can be
 4. Clone the repository
 
    ```bash
-   git clone -b etd-v0.1 https://git.cs.dal.ca/research1/maguirelab/people/precious-adebola/etd.git
+   git clone -b etdv0.1 https://github.com/maguire-lab/evolving_threat_detector.git
 
-   cd etd
+   cd evolving_threat_detection
    ```
 
 5. Test with a stub-run. The stub-run will ensure that the pipeline is able to download and use containers as well as execute in the proper logic.
