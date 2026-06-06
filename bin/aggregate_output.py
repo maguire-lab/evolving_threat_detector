@@ -1229,6 +1229,215 @@ def store_amr_integron_annotations(amr_integron_annotations, cursor, output_path
         total_updated += cursor.rowcount
     return total_updated
 
+def insert_genome(cursor, fasta_name, organism, args_dict, ice_element_metadata=None):
+    """
+    Insert a single genome and all its annotations into the database.
+    Called by main() for standalone use, or by batch_insert.py in a loop.
+
+    Parameters:
+        cursor: SQLite cursor (caller owns the connection and commits)
+        fasta_name: genome ID string (e.g. 'GCA_037674615.1')
+        organism: organism name string (e.g. 'Neisseria_gonorrhoeae')
+        args_dict: dict with keys:
+            sketch_path, sketch_path_published,
+            amrfinder_output, amrfinder_output_published,
+            contigs_report_path, contigs_report_path_published,
+            filtered_hits_report_path, filtered_hits_report_path_published,
+            phage_report_path, phage_report_path_published,
+            comp_txt_files, comp_txt_files_published,
+            tn3_txt_files, tn3_txt_files_published,
+            integron_file, integron_file_published,
+            max_distance, gbk_path, iceberg_fasta
+        ice_element_metadata: pre-loaded dict from build_ice_element_metadata().
+            If None, will be loaded from args_dict["iceberg_fasta"].
+    """
+    # Create genome entry
+    genome_id = create_genome_entry(cursor, fasta_name, organism)
+
+    # Store sketch file
+    sketch_published = args_dict.get("sketch_path_published")
+    if sketch_published:
+        store_sketch(sketch_published, cursor)
+
+    # Parse and store AMR annotations
+    amr_annotations = []
+    amrfinder_output = args_dict.get("amrfinder_output")
+    if amrfinder_output and Path(amrfinder_output).exists():
+        amr_annotations = parse_amr_annotation(amrfinder_output, genome_id)
+        if amr_annotations:
+            store_amr_annotation(amr_annotations, cursor, args_dict.get("amrfinder_output_published"))
+    else:
+        print("Note: No AMR file provided or not found; skipping AMR insert.")
+
+    # Parse and store plasmid annotations
+    plasmid_annotations = {}
+    contigs_report_path = args_dict.get("contigs_report_path")
+    if contigs_report_path and Path(contigs_report_path).exists():
+        plasmid_annotations = parse_plasmid_annotation(contigs_report_path)
+        if plasmid_annotations:
+            plasmid_mge_records = [
+                {
+                    "genome_id": genome_id,
+                    "mge_type": "plasmid",
+                    "mge_name": record["plasmid"],
+                    "contig_id": record["contig_id"],
+                    "start_pos": None,
+                    "end_pos": None
+                }
+                for record in plasmid_annotations.values()
+            ]
+            store_mge_elements(plasmid_mge_records, cursor, args_dict.get("contigs_report_path_published"))
+
+    if amr_annotations and plasmid_annotations:
+        plasmid_amr_annotation = merge_amr_plasmid_annotation(amr_annotations, plasmid_annotations)
+        if plasmid_amr_annotation:
+            store_amr_plasmid_annotations(plasmid_amr_annotation, cursor, args_dict.get("contigs_report_path_published"))
+
+    # Parse and store ICE annotations (element-level detection)
+    ice_annotations = {}
+    filtered_hits_report_path = args_dict.get("filtered_hits_report_path")
+    if filtered_hits_report_path and Path(filtered_hits_report_path).exists():
+        protein_contig_map = {}
+        gbk_path = args_dict.get("gbk_path")
+        if gbk_path and Path(gbk_path).exists():
+            protein_contig_map = build_protein_contig_map(gbk_path, fasta_name)
+
+        # Use pre-loaded metadata if available, otherwise load it
+        if ice_element_metadata is None:
+            ice_element_metadata = {}
+            iceberg_fasta = args_dict.get("iceberg_fasta")
+            if iceberg_fasta and Path(iceberg_fasta).exists():
+                ice_element_metadata = build_ice_element_metadata(iceberg_fasta)
+
+        ice_annotations = parse_ice_annotation(
+            filtered_hits_report_path, protein_contig_map, ice_element_metadata)
+
+        if ice_annotations:
+            ice_mge_records = []
+            for contig_id, elements in ice_annotations.items():
+                for elem in elements:
+                    ice_mge_records.append({
+                        "genome_id": genome_id,
+                        "mge_type": "ice",
+                        "mge_name": elem["ice_label"],
+                        "contig_id": contig_id,
+                        "start_pos": elem["start"],
+                        "end_pos": elem["end"]
+                    })
+            store_mge_elements(ice_mge_records, cursor, args_dict.get("filtered_hits_report_path_published"))
+
+    max_distance = args_dict.get("max_distance", 5000)
+
+    if amr_annotations and ice_annotations:
+        ice_amr_annotations = merge_amr_ice_annotation(
+            amr_annotations, ice_annotations, max_distance)
+        if ice_amr_annotations:
+            store_amr_ice_annotations(ice_amr_annotations, cursor, args_dict.get("filtered_hits_report_path_published"))
+
+    # Parse and store prophage annotations
+    phage_annotations = {}
+    phage_report_path = args_dict.get("phage_report_path")
+    if phage_report_path and Path(phage_report_path).exists():
+        phage_annotations = parse_phage_annotation(phage_report_path)
+        if phage_annotations:
+            phage_mge_records = []
+            for contig_id, regions in phage_annotations.items():
+                for region in regions:
+                    phage_mge_records.append({
+                        "genome_id": genome_id,
+                        "mge_type": "prophage",
+                        "mge_name": region["prophage_id"],
+                        "contig_id": contig_id,
+                        "start_pos": region["start"],
+                        "end_pos": region["end"]
+                    })
+            store_mge_elements(phage_mge_records, cursor, args_dict.get("phage_report_path_published"))
+
+    if amr_annotations and phage_annotations:
+        phage_amr_annotation = merge_amr_phage_annotation(amr_annotations, phage_annotations, max_distance)
+        if phage_amr_annotation:
+            store_amr_phage_annotations(phage_amr_annotation, cursor, args_dict.get("phage_report_path_published"))
+
+    # Parse and store composite transposon annotations
+    comp_transposon_annotations = {}
+    comp_txt_list = []
+    comp_txt_files = args_dict.get("comp_txt_files")
+    if comp_txt_files:
+        for p in comp_txt_files:
+            if Path(p).exists():
+                comp_txt_list.append(str(p))
+    if comp_txt_list:
+        comp_transposon_annotations = parse_composite_transposon_annotation(comp_txt_list)
+        if comp_transposon_annotations:
+            comp_mge_records = [
+                {
+                    "genome_id": genome_id,
+                    "mge_type": "composite_transposon",
+                    "mge_name": record["composite_transposon_annotation"],
+                    "contig_id": record["contig_id"],
+                    "start_pos": record.get("start"),
+                    "end_pos": record.get("end")
+                }
+                for record in comp_transposon_annotations.values()
+            ]
+            store_mge_elements(comp_mge_records, cursor, args_dict.get("comp_txt_files_published"))
+
+    if amr_annotations and comp_transposon_annotations:
+        comp_transposon_amr_annotation = merge_amr_comp_transposon(amr_annotations, comp_transposon_annotations, max_distance)
+        if comp_transposon_amr_annotation:
+            store_amr_comp_transposon(comp_transposon_amr_annotation, cursor, args_dict.get("comp_txt_files_published"))
+
+    # Parse and store Tn3 transposon annotations
+    tn3_annotations = {}
+    tn3_txt_list = []
+    tn3_txt_files = args_dict.get("tn3_txt_files")
+    if tn3_txt_files:
+        tn3_txt_list = [str(p) for p in tn3_txt_files if Path(p).exists()]
+    if tn3_txt_list:
+        tn3_annotations = parse_tn3_transposon_annotation(tn3_txt_list)
+        if tn3_annotations:
+            tn3_mge_records = [
+                {
+                    "genome_id": genome_id,
+                    "mge_type": "tn3_transposon",
+                    "mge_name": record["tn3_annotation"],
+                    "contig_id": record["contig_id"],
+                    "start_pos": None,
+                    "end_pos": None
+                }
+                for record in tn3_annotations.values()
+            ]
+            store_mge_elements(tn3_mge_records, cursor, args_dict.get("tn3_txt_files_published"))
+
+    if amr_annotations and tn3_annotations:
+        tn3_amr_annotation = merge_amr_tn3_transposon(amr_annotations, tn3_annotations)
+        if tn3_amr_annotation:
+            store_amr_tn3_transposon(tn3_amr_annotation, cursor, args_dict.get("tn3_txt_files_published"))
+
+    # Parse and store integron annotations
+    integron_annotations = {}
+    integron_file = args_dict.get("integron_file")
+    if integron_file and Path(integron_file).exists():
+        integron_annotations = parse_integron_annotation(integron_file)
+        if integron_annotations:
+            integron_mge_records = []
+            for contig_id, regions in integron_annotations.items():
+                for region in regions:
+                    integron_mge_records.append({
+                        "genome_id": genome_id,
+                        "mge_type": "integron",
+                        "mge_name": region["integron_id"],
+                        "contig_id": contig_id,
+                        "start_pos": region["start"],
+                        "end_pos": region["end"]
+                    })
+            store_mge_elements(integron_mge_records, cursor, args_dict.get("integron_file_published"))
+
+    if amr_annotations and integron_annotations:
+        integron_amr_annotation = merge_amr_integron_annotation(amr_annotations, integron_annotations, max_distance)
+        if integron_amr_annotation:
+            store_amr_integron_annotations(integron_amr_annotation, cursor, args_dict.get("integron_file_published"))
+
 def main():
     parser = argparse.ArgumentParser(description='Store sketches and annotations into the ETD DB.')
     parser.add_argument('--db_path', type=Path, default=Path(DATABASE_PATH), help='Path to the SQLite database.')
@@ -1262,12 +1471,12 @@ def main():
     args = parser.parse_args()
 
     # Normalize comp_gbk_files to a list of strings (existing only)
-    comp_txt_list = []
-    if args.comp_txt_files:
-        for p in args.comp_txt_files:
-            #p = Path(p)
-            if p.exists():
-                comp_txt_list.append(str(p))
+#    comp_txt_list = []
+#    if args.comp_txt_files:
+#        for p in args.comp_txt_files:
+#            #p = Path(p)
+#            if p.exists():
+#                comp_txt_list.append(str(p))
 
 
     db_path = Path(args.db_path)
@@ -1276,46 +1485,46 @@ def main():
     cursor = conn.cursor()
 
     # Create genome entry
-    genome_id = create_genome_entry(cursor, args.fasta_name, args.organism)
+ #   genome_id = create_genome_entry(cursor, args.fasta_name, args.organism)
 
 
     # store sketch file
-    if args.sketch_path and Path(args.sketch_path).exists():
-        store_sketch(args.sketch_path_published, cursor)
+ #   if args.sketch_path and Path(args.sketch_path).exists():
+ #       store_sketch(args.sketch_path_published, cursor)
 
     # parse and store amr_annotations
-    amr_annotations = []
-    if args.amrfinder_output and Path(args.amrfinder_output).exists():
-        amr_annotations = parse_amr_annotation(args.amrfinder_output, genome_id)
-        if amr_annotations:
-            store_amr_annotation(amr_annotations, cursor, args.amrfinder_output_published)
-    else:
-        print("Note: No AMR file provided or not found; skipping AMR insert.")
+ #   amr_annotations = []
+ #   if args.amrfinder_output and Path(args.amrfinder_output).exists():
+ #       amr_annotations = parse_amr_annotation(args.amrfinder_output, genome_id)
+ #       if amr_annotations:
+ #           store_amr_annotation(amr_annotations, cursor, args.amrfinder_output_published)
+ #   else:
+ #       print("Note: No AMR file provided or not found; skipping AMR insert.")
 
     # parse and store plasmid annotations
-    plasmid_annotations = {}
-    if args.contigs_report_path and Path(args.contigs_report_path).exists():
-        plasmid_annotations = parse_plasmid_annotation(args.contigs_report_path)
-         # Store ALL plasmid elements in mge_elements table
-        if plasmid_annotations:
-            plasmid_mge_records = [
-                {
-                    "genome_id": genome_id,
-                    "mge_type": "plasmid",
-                    "mge_name": record["plasmid"],
-                    "contig_id": record["contig_id"],
-                    "start_pos": None,
-                    "end_pos": None
-                }
-                for record in plasmid_annotations.values()
-            ]
-            store_mge_elements(plasmid_mge_records, cursor, args.contigs_report_path_published)
+ #   plasmid_annotations = {}
+ #   if args.contigs_report_path and Path(args.contigs_report_path).exists():
+ #       plasmid_annotations = parse_plasmid_annotation(args.contigs_report_path)
+ #        # Store ALL plasmid elements in mge_elements table
+ #       if plasmid_annotations:
+ #           plasmid_mge_records = [
+ #               {
+ #                   "genome_id": genome_id,
+ #                   "mge_type": "plasmid",
+ #                   "mge_name": record["plasmid"],
+ #                   "contig_id": record["contig_id"],
+ #                   "start_pos": None,
+ #                   "end_pos": None
+ #               }
+ #               for record in plasmid_annotations.values()
+ #           ]
+ #           store_mge_elements(plasmid_mge_records, cursor, args.contigs_report_path_published)
 
     # Merge with AMR only if AMR annotations exist
-    if amr_annotations and plasmid_annotations:
-        plasmid_amr_annotation = merge_amr_plasmid_annotation(amr_annotations, plasmid_annotations)
-        if plasmid_amr_annotation:
-            store_amr_plasmid_annotations(plasmid_amr_annotation, cursor, args.contigs_report_path_published)
+ #   if amr_annotations and plasmid_annotations:
+ #       plasmid_amr_annotation = merge_amr_plasmid_annotation(amr_annotations, plasmid_annotations)
+ #       if plasmid_amr_annotation:
+ #           store_amr_plasmid_annotations(plasmid_amr_annotation, cursor, args.contigs_report_path_published)
 
     # parse and store ICE annotations
 #    ice_annotations = {}
@@ -1343,148 +1552,172 @@ def main():
 #            store_amr_ice_annotations(ice_amr_annotations, cursor, args.filtered_hits_report_path_published)
 
     # parse and store ICE annotations (element-level detection)
-    ice_annotations = {}
-    if args.filtered_hits_report_path and Path(args.filtered_hits_report_path).exists():
+#    ice_annotations = {}
+#    if args.filtered_hits_report_path and Path(args.filtered_hits_report_path).exists():
         # Build the two lookup maps needed for element-level ICE detection
-        protein_contig_map = {}
-        if args.gbk_path and Path(args.gbk_path).exists():
-            protein_contig_map = build_protein_contig_map(args.gbk_path, args.fasta_name)
-        ice_element_metadata = {}
-        if args.iceberg_fasta and Path(args.iceberg_fasta).exists():
-            ice_element_metadata = build_ice_element_metadata(args.iceberg_fasta)
+#        protein_contig_map = {}
+#        if args.gbk_path and Path(args.gbk_path).exists():
+#            protein_contig_map = build_protein_contig_map(args.gbk_path, args.fasta_name)
+#        ice_element_metadata = {}
+#        if args.iceberg_fasta and Path(args.iceberg_fasta).exists():
+#            ice_element_metadata = build_ice_element_metadata(args.iceberg_fasta)
 
         # Parse with element-level grouping and 2-category filter
-        ice_annotations = parse_ice_annotation(
-            args.filtered_hits_report_path, protein_contig_map, ice_element_metadata)
+#       ice_annotations = parse_ice_annotation(
+#           args.filtered_hits_report_path, protein_contig_map, ice_element_metadata)
 
         # Store all confirmed ICE elements in mge_elements table
-        if ice_annotations:
-            ice_mge_records = []
-            for contig_id, elements in ice_annotations.items():
-                for elem in elements:
-                    ice_mge_records.append({
-                        "genome_id": genome_id,
-                        "mge_type": "ice",
-                        "mge_name": elem["ice_label"],
-                        "contig_id": contig_id,
-                        "start_pos": elem["start"],
-                        "end_pos": elem["end"]
-                    })
-            store_mge_elements(ice_mge_records, cursor, args.filtered_hits_report_path_published)
+#       if ice_annotations:
+#           ice_mge_records = []
+#           for contig_id, elements in ice_annotations.items():
+#               for elem in elements:
+#                   ice_mge_records.append({
+#                       "genome_id": genome_id,
+#                       "mge_type": "ice",
+#                       "mge_name": elem["ice_label"],
+#                       "contig_id": contig_id,
+#                       "start_pos": elem["start"],
+#                       "end_pos": elem["end"]
+#                   })
+#           store_mge_elements(ice_mge_records, cursor, args.filtered_hits_report_path_published)
 
     # Merge with AMR only if AMR annotations exist
-    if amr_annotations and ice_annotations:
-        ice_amr_annotations = merge_amr_ice_annotation(
-            amr_annotations, ice_annotations, args.max_distance)
-        if ice_amr_annotations:
-            store_amr_ice_annotations(ice_amr_annotations, cursor, args.filtered_hits_report_path_published)
+#   if amr_annotations and ice_annotations:
+#      ice_amr_annotations = merge_amr_ice_annotation(
+#            amr_annotations, ice_annotations, args.max_distance)
+#        if ice_amr_annotations:
+#            store_amr_ice_annotations(ice_amr_annotations, cursor, args.filtered_hits_report_path_published)
 
     # parse and store prophage annotations
-    phage_annotations = {}
-    if args.phage_report_path and Path(args.phage_report_path).exists():
-        phage_annotations = parse_phage_annotation(args.phage_report_path)
+#    phage_annotations = {}
+#    if args.phage_report_path and Path(args.phage_report_path).exists():
+#        phage_annotations = parse_phage_annotation(args.phage_report_path)
         # Store ALL prophage elements in mge_elements table
         # phage_annotations is {contig_id: [{"prophage_id": ..., "start": ..., "end": ...}, ...]}
-        if phage_annotations:
-            phage_mge_records = []
-            for contig_id, regions in phage_annotations.items():
-                for region in regions:
-                    phage_mge_records.append({
-                        "genome_id": genome_id,
-                        "mge_type": "prophage",
-                        "mge_name": region["prophage_id"],
-                        "contig_id": contig_id,
-                        "start_pos": region["start"],
-                        "end_pos": region["end"]
-                    })
-            store_mge_elements(phage_mge_records, cursor, args.phage_report_path_published)
+#        if phage_annotations:
+#            phage_mge_records = []
+#            for contig_id, regions in phage_annotations.items():
+#                for region in regions:
+#                    phage_mge_records.append({
+#                        "genome_id": genome_id,
+#                        "mge_type": "prophage",
+#                        "mge_name": region["prophage_id"],
+#                        "contig_id": contig_id,
+#                        "start_pos": region["start"],
+#                        "end_pos": region["end"]
+#                    })
+#            store_mge_elements(phage_mge_records, cursor, args.phage_report_path_published)
 
     # Merge with AMR only if AMR annotations exist
-    if amr_annotations and phage_annotations:
-        phage_amr_annotation = merge_amr_phage_annotation(amr_annotations, phage_annotations, args.max_distance)
-        if phage_amr_annotation:
-            store_amr_phage_annotations(phage_amr_annotation, cursor, args.phage_report_path_published)
+#    if amr_annotations and phage_annotations:
+#        phage_amr_annotation = merge_amr_phage_annotation(amr_annotations, phage_annotations, args.max_distance)
+#        if phage_amr_annotation:
+#            store_amr_phage_annotations(phage_amr_annotation, cursor, args.phage_report_path_published)
 
 
     # parse and store composite transposon annotations
-    comp_transposon_annotations = {}
-    if comp_txt_list:
-        comp_transposon_annotations = parse_composite_transposon_annotation(comp_txt_list)
+#    comp_transposon_annotations = {}
+#    if comp_txt_list:
+#        comp_transposon_annotations = parse_composite_transposon_annotation(comp_txt_list)
         # Store ALL composite transposon elements in mge_elements table
-        if comp_transposon_annotations:
-            comp_mge_records = [
-                {
-                    "genome_id": genome_id,
-                    "mge_type": "composite_transposon",
-                    "mge_name": record["composite_transposon_annotation"],
-                    "contig_id": record["contig_id"],
-                    "start_pos": record.get("start"),
-                    "end_pos": record.get("end")
-                }
-                for record in comp_transposon_annotations.values()
-            ]
-            store_mge_elements(comp_mge_records, cursor, args.comp_txt_files_published)
+#        if comp_transposon_annotations:
+#            comp_mge_records = [
+#                {
+#                    "genome_id": genome_id,
+#                    "mge_type": "composite_transposon",
+#                    "mge_name": record["composite_transposon_annotation"],
+#                    "contig_id": record["contig_id"],
+#                    "start_pos": record.get("start"),
+#                    "end_pos": record.get("end")
+#                }
+#                for record in comp_transposon_annotations.values()
+#            ]
+#            store_mge_elements(comp_mge_records, cursor, args.comp_txt_files_published)
 
     # Merge with AMR only if AMR annotations exist
-    if amr_annotations and comp_transposon_annotations:
-        comp_transposon_amr_annotation = merge_amr_comp_transposon(amr_annotations, comp_transposon_annotations, args.max_distance)
-        if comp_transposon_amr_annotation:
-            store_amr_comp_transposon(comp_transposon_amr_annotation, cursor, args.comp_txt_files_published)
+ #   if amr_annotations and comp_transposon_annotations:
+ #       comp_transposon_amr_annotation = merge_amr_comp_transposon(amr_annotations, comp_transposon_annotations, args.max_distance)
+ #       if comp_transposon_amr_annotation:
+ #           store_amr_comp_transposon(comp_transposon_amr_annotation, cursor, args.comp_txt_files_published)
 
     # parse and store tn3+TA transposon annotations
-    tn3_annotations = {}
-    tn3_txt_list = []
-    if args.tn3_txt_files:
-        tn3_txt_list = [str(p) for p in args.tn3_txt_files if p.exists()]
-    if tn3_txt_list:
-        tn3_annotations = parse_tn3_transposon_annotation(tn3_txt_list)
+#    tn3_annotations = {}
+#    tn3_txt_list = []
+#    if args.tn3_txt_files:
+#        tn3_txt_list = [str(p) for p in args.tn3_txt_files if p.exists()]
+#    if tn3_txt_list:
+#        tn3_annotations = parse_tn3_transposon_annotation(tn3_txt_list)
         # Store ALL Tn3 elements in mge_elements table
-        if tn3_annotations:
-            tn3_mge_records = [
-                {
-                    "genome_id": genome_id,
-                    "mge_type": "tn3_transposon",
-                    "mge_name": record["tn3_annotation"],
-                    "contig_id": record["contig_id"],
-                    "start_pos": None,
-                    "end_pos": None
-                }
-                for record in tn3_annotations.values()
-            ]
-            store_mge_elements(tn3_mge_records, cursor, args.tn3_txt_files_published)
+#        if tn3_annotations:
+#            tn3_mge_records = [
+#                {
+#                    "genome_id": genome_id,
+#                    "mge_type": "tn3_transposon",
+#                    "mge_name": record["tn3_annotation"],
+#                    "contig_id": record["contig_id"],
+#                    "start_pos": None,
+#                    "end_pos": None
+#                }
+#                for record in tn3_annotations.values()
+#            ]
+#            store_mge_elements(tn3_mge_records, cursor, args.tn3_txt_files_published)
 
     # Merge with AMR only if AMR annotations exist
-    if amr_annotations and tn3_annotations:
-        tn3_amr_annotation = merge_amr_tn3_transposon(amr_annotations, tn3_annotations)
-        if tn3_amr_annotation:
-            store_amr_tn3_transposon(tn3_amr_annotation, cursor, args.tn3_txt_files_published)
+#    if amr_annotations and tn3_annotations:
+#        tn3_amr_annotation = merge_amr_tn3_transposon(amr_annotations, tn3_annotations)
+#        if tn3_amr_annotation:
+#            store_amr_tn3_transposon(tn3_amr_annotation, cursor, args.tn3_txt_files_published)
 
 
     # parse and store integron annotations
-    integron_annotations = {}
-    if args.integron_file and Path(args.integron_file).exists():
-        integron_annotations = parse_integron_annotation(args.integron_file)
+#    integron_annotations = {}
+#    if args.integron_file and Path(args.integron_file).exists():
+#        integron_annotations = parse_integron_annotation(args.integron_file)
         # Store ALL integron elements in mge_elements table
         # integron_annotations is {contig_id: [{"integron_id": ..., "start": ..., "end": ...}, ...]}
-        if integron_annotations:
-            integron_mge_records = []
-            for contig_id, regions in integron_annotations.items():
-                for region in regions:
-                    integron_mge_records.append({
-                        "genome_id": genome_id,
-                        "mge_type": "integron",
-                        "mge_name": region["integron_id"],
-                        "contig_id": contig_id,
-                        "start_pos": region["start"],
-                        "end_pos": region["end"]
-                    })
-            store_mge_elements(integron_mge_records, cursor, args.integron_file_published)
+#        if integron_annotations:
+#            integron_mge_records = []
+#            for contig_id, regions in integron_annotations.items():
+#                for region in regions:
+#                    integron_mge_records.append({
+#                        "genome_id": genome_id,
+#                        "mge_type": "integron",
+#                        "mge_name": region["integron_id"],
+#                        "contig_id": contig_id,
+#                        "start_pos": region["start"],
+#                        "end_pos": region["end"]
+#                    })
+#            store_mge_elements(integron_mge_records, cursor, args.integron_file_published)
 
     # Merge with AMR only if AMR annotations exist
-    if amr_annotations and integron_annotations:
-        integron_amr_annotation = merge_amr_integron_annotation(amr_annotations, integron_annotations, args.max_distance)
-        if integron_amr_annotation:
-            store_amr_integron_annotations(integron_amr_annotation, cursor, args.integron_file_published)
+#    if amr_annotations and integron_annotations:
+#        integron_amr_annotation = merge_amr_integron_annotation(amr_annotations, integron_annotations, args.max_distance)
+#        if integron_amr_annotation:
+#            store_amr_integron_annotations(integron_amr_annotation, cursor, args.integron_file_published)
+
+    args_dict = {
+        "sketch_path": args.sketch_path,
+        "sketch_path_published": args.sketch_path_published,
+        "amrfinder_output": args.amrfinder_output,
+        "amrfinder_output_published": args.amrfinder_output_published,
+        "contigs_report_path": args.contigs_report_path,
+        "contigs_report_path_published": args.contigs_report_path_published,
+        "filtered_hits_report_path": args.filtered_hits_report_path,
+        "filtered_hits_report_path_published": args.filtered_hits_report_path_published,
+        "phage_report_path": args.phage_report_path,
+        "phage_report_path_published": args.phage_report_path_published,
+        "comp_txt_files": args.comp_txt_files,
+        "comp_txt_files_published": args.comp_txt_files_published,
+        "tn3_txt_files": args.tn3_txt_files,
+        "tn3_txt_files_published": args.tn3_txt_files_published,
+        "integron_file": args.integron_file,
+        "integron_file_published": args.integron_file_published,
+        "max_distance": args.max_distance,
+        "gbk_path": args.gbk_path,
+        "iceberg_fasta": args.iceberg_fasta,
+    }
+
+    insert_genome(cursor, args.fasta_name, args.organism, args_dict)
 
     conn.commit()
     conn.close()
