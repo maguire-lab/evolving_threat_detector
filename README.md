@@ -164,6 +164,16 @@ nextflow run main.nf \
    -profile docker \
    --input_make reference_genomes.csv
 ```
+**Multi-batch database building:**
+To append to an existing database from a previous run, supply the path to
+the previous database using `--db_path`:
+
+```bash
+nextflow run main.nf \
+   --mode make_db \
+   --input_make reference_genomes.csv \
+   --db_path /path/to/previous_run/insert/etd.db
+```
 
 2. **etd query_db**:  This sub-workflow analyzes query genome(s) against the closest reference sequences in the database. Must be run only after a reference database has been built using the make_db subworkflow.
 
@@ -245,7 +255,7 @@ A successful run creates the parent output directory `etd_results` in which othe
 - `get/` : ICEberg database proteins
 - `diamond/` : reformatted iceberg database proteins, and per sample blastp .txt reports.
 - `filter/`: report of predicted ICEs following homology search and threshold filtering.
-- `insert/`: houses the created etd reference db and any log files.
+- `insert/`: houses the etd reference SQLite db and any log files. For multi-batch runs, use this database as input to subsequent batches via `--db_path`.
 - `resistome_analysis/` : per sample report of resistome differences between query and closest relatives.
 
 ## Credits

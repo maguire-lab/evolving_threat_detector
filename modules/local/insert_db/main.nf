@@ -72,6 +72,11 @@ process INSERT_DB {
   """
   set -euo pipefail
 
+  # Seed from provided DB (previous task's output or initial DB)
+  #if [ -s "seed.db" ]; then
+      #cp "seed.db" etd.db
+  #fi
+
   python3 ${projectDir}/bin/aggregate_output.py \\
     --db_path etd.db \\
     --fasta_name ${meta.id} \\
@@ -106,5 +111,50 @@ process INSERT_DB {
   touch etd.db
   touch register.log
   touch ${meta.id}_debug.txt
+  """
+}
+
+process INSERT_DB_BATCH {
+  label 'process_medium'
+
+  container "quay.io/biocontainers/biopython:1.84"
+
+  //publishDir "${params.outdir}/insert", mode: 'copy'
+
+  input:
+  path manifest
+  path sketch_msh
+  path db_in, stageAs: 'seed.db'
+  path iceberg_fasta
+
+  output:
+  path "etd.db",       emit: db
+  path "register.log", emit: log
+
+  script:
+  def iceberg_arg = iceberg_fasta.name != 'NO_ICEBERG' ? "--iceberg_fasta ${iceberg_fasta}" : ""
+  """
+  set -euo pipefail
+
+  # Start from seed database if it has content; otherwise start fresh
+  if [ -s seed.db ]; then
+    cp seed.db etd.db
+  fi
+
+  python3 ${projectDir}/bin/batch_insert.py \\
+    --manifest ${manifest} \\
+    --db_path etd.db \\
+    --sketch_path_published "${params.outdir}/mash/all_genomes.msh" \\
+    ${iceberg_arg} \\
+    --max_distance ${params.max_distance} \\
+    --outdir ${params.outdir} \\
+    --commit_every 500 \\
+    2>&1 | tee register.log
+  """
+
+  stub:
+  """
+  touch etd.db
+  touch register.log
   """
 }

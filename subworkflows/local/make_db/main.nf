@@ -16,6 +16,8 @@ include { FILTER_DIAMOND_HITS               } from '../../../modules/local/filte
 //include { TNCOMP_FINDER                     } from '../../../modules/local/tncomp_finder'
 //include { TN3_FINDER                        } from '../../../modules/local/tn3finder'
 include { INSERT_DB                         } from '../../../modules/local/insert_db'
+include { INSERT_DB_BATCH                   } from '../../../modules/local/insert_db'
+
 
 workflow MAKE_DB {
     take:
@@ -193,8 +195,50 @@ workflow MAKE_DB {
 
     // Call INSERT_DB
     
-     INSERT_DB(
-        to_insert,
+    // INSERT_DB(
+      //  to_insert,
+      //  sketch_value,
+      //  db_initial,
+      //  iceberg_fasta_value
+   // )
+
+    // Build manifest CSV from per-genome annotation bundles
+    ch_manifest = to_insert
+        .map { items ->
+            def meta           = items[0]
+            def amr_tsv        = items[1]
+            def contigs_report = items[2]
+            def ice_file       = items[3]
+            def phage_file     = items[4]
+            def txt_files      = items[5]
+            def tn3_files      = items[6]
+            def integron_file  = items[7]
+            def gbk_file       = items[8]
+
+            def s = { v ->
+                if (v == null) return 'NA'
+                if (v instanceof List && v.size() == 0) return 'NA'
+                return v.toString()
+            }
+            def slist = { v ->
+                if (v == null) return 'NA'
+                if (v instanceof List && v.size() > 0) return v.collect{it.toString()}.join(';')
+                return 'NA'
+            }
+
+            [meta.id, meta.organism ?: '', s(amr_tsv), s(contigs_report),
+             s(ice_file), s(phage_file), slist(txt_files), slist(tn3_files),
+             s(integron_file), s(gbk_file)].join(',')
+        }
+        .collectFile(
+            name: 'manifest.csv',
+            newLine: true,
+            seed: 'genome_id,organism,amr_tsv,contigs_report,ice_hits,phage_coords,comp_txt_files,tn3_txt_files,integron_file,gbk_file'
+        )
+
+    // Call INSERT_DB_BATCH (single process for ALL genomes)
+    INSERT_DB_BATCH(
+        ch_manifest,
         sketch_value,
         db_initial,
         iceberg_fasta_value
@@ -212,6 +256,6 @@ workflow MAKE_DB {
       phispy_coordinates   = PHISPY.out.coordinates
       //tncomp_report        = TNCOMP_FINDER.out.report
       //tn3_report           = TN3_FINDER.out.report
-      updated_db           = INSERT_DB.out.db.last() 
+      updated_db           = INSERT_DB_BATCH.out.db 
       iceberg_fasta        = ch_iceberg_db
 }	
