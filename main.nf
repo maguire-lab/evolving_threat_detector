@@ -111,10 +111,19 @@
       ch_iceberg_db   = params.iceberg_db   ? Channel.value(file(params.iceberg_db))   : null
 
       // Update AMRFinderPlus database once for all modes
-      if (!params.amrfinder_db) {
+      //if (!params.amrfinder_db) {
+      //    AMRFINDERPLUS_UPDATE()
+      // }
+      // amrfinder_db_ch = params.amrfinder_db ? ch_amrfinder_db : AMRFINDERPLUS_UPDATE.out.db
+
+      if (params.amrfinder_db) {
+          amrfinder_db_ch = ch_amrfinder_db
+      } else if (params.mode == 'query_db') {
+          amrfinder_db_ch = Channel.value(file("${params.outdir}/amrfinderplus/amrfinderdb"))
+      } else {
           AMRFINDERPLUS_UPDATE()
+          amrfinder_db_ch = AMRFINDERPLUS_UPDATE.out.db
       }
-      amrfinder_db_ch = params.amrfinder_db ? ch_amrfinder_db : AMRFINDERPLUS_UPDATE.out.db
       //
       // WORKFLOW: Build database if requested
       //
