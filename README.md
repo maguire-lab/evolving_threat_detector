@@ -171,6 +171,7 @@ the previous database using `--db_path`:
 ```bash
 nextflow run main.nf \
    --mode make_db \
+   -profile docker \
    --input_make reference_genomes.csv \
    --db_path /path/to/previous_run/insert/etd.db
 ```
@@ -181,8 +182,13 @@ nextflow run main.nf \
 nextflow run main.nf \
    --mode query_db \
    -profile docker \
-   --input_query query_genomes.csv
+   --input_query query_genomes.csv \
+   --outdir /path/to/make_db_results
 ```
+
+> [!NOTE]
+> On HPC clusters where compute nodes lack internet access, pass `--amrfinder_db` and `--iceberg_db` to provide pre-downloaded databases. This applies to both `make_db` and `query_db` modes, as the pipeline
+> cannot download these databases without internet. On systems with internet, `make_db` downloads and stores these automatically, and `query_db` loads them from `--outdir`.
 
 3. **combined workflow**: This workflow runs both the make_db and query_db subworkflows sequentially.
    
