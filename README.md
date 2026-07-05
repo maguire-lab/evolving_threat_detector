@@ -93,7 +93,7 @@ Across its execution, the ETD interacts with a number of databases. These can be
    ```bash
    git clone -b etdv0.1 https://github.com/maguire-lab/evolving_threat_detector.git
 
-   cd evolving_threat_detection
+   cd evolving_threat_detector
    ```
 
 5. Test with a stub-run. The stub-run will ensure that the pipeline is able to download and use containers as well as execute in the proper logic.
@@ -137,7 +137,7 @@ On most shared HPC clusters, compute nodes do not have internet access. Pre-down
 
 ## Usage
 
-The etd pipeline accepts **annotated** GenBank files (.gbk/.gbff/.gb) whose paths are specified via a samplesheet.csv file as input. Unannotated GenBank files (i.e, those containing only raw nucleotide sequences without CDS features) will cause downstream tools to fail.
+The etd pipeline accepts **annotated** GenBank files (`.gbk/.gbff/.gb`) whose paths are specified via a samplesheet.csv file as input. Unannotated GenBank files (i.e, those containing only raw nucleotide sequences without CDS features) will cause downstream tools to fail.
 
 To run your analysis, first, prepare a samplesheet with your input data that looks as follows:
 
@@ -216,7 +216,6 @@ Optional parameters:
  - `--max_distance` : maximum co-location distance in base pairs between AMR and MGE (default: 5000) 
  - `--amrfinder_db` : path to a pre-downloaded AMRFinderPlus database directory. When provided, the pipeline skips the AMRFINDERPLUS_UPDATE step (useful for HPC compute nodes without internet).
  - `--iceberg_db` : path to a pre-downloaded ICEberg protein FASTA file. When provided, the pipeline skips the iceberg database download step (useful for HPC compute nodes without internet).
- - `--keep_all` : 
 
 > [!NOTE]
 > To override defaults for optional parameters, please provide pipeline parameters via the CLI. E.g. to override the `--number` and `--min_pident` default parameters:
