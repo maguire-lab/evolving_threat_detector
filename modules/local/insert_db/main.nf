@@ -22,6 +22,7 @@ process INSERT_DB {
   path sketch_msh
   path db_in
   path iceberg_fasta
+  path geometry_tsvs
 
   output:
   path "etd.db"       , emit: db
@@ -126,6 +127,7 @@ process INSERT_DB_BATCH {
   path sketch_msh
   path db_in, stageAs: 'seed.db'
   path iceberg_fasta
+  path geometry_tsvs
 
   output:
   path "etd.db",       emit: db

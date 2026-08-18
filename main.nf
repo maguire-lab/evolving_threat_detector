@@ -153,27 +153,25 @@
           ch_samplesheet_make | PARSE_GBK_MAKE
 
           PARSE_GBK_MAKE.out
-              .map { meta, genome, protein, gff ->
+              .map { meta, genome, protein, gff, geo ->
                   tuple(meta, genome, protein, gff)
               }
               .set { ch_amrfinder_input_make }
 
           PARSE_GBK_MAKE.out
-              .map { tuple ->
-                  def (meta, genome, protein, gff) = tuple
-                  [meta, genome]
-              }
+              .map { meta, genome, protein, gff, geo -> [meta, genome] }
               .set { ch_genomes_make }
 
           PARSE_GBK_MAKE.out
-              .map { tuple ->
-                  def (meta, genome, protein, gff) = tuple
-                  [meta, protein]
-              }
+              .map { meta, genome, protein, gff, geo -> [meta, protein] }
               .set { ch_proteins_make }
 
+	  PARSE_GBK_MAKE.out
+              .map { meta, genome, protein, gff, geo -> [meta, geo] }
+              .set { ch_geometry_make }
+
           // Run the MAKE_DB subworkflow
-          MAKE_DB_V1(ch_samplesheet_make, ch_amrfinder_input_make, ch_genomes_make, ch_proteins_make, amrfinder_db_ch, ch_iceberg_db)
+          MAKE_DB_V1(ch_samplesheet_make, ch_amrfinder_input_make, ch_genomes_make, ch_proteins_make, ch_geometry_make, amrfinder_db_ch, ch_iceberg_db)
 
           // Store outputs for potential use by QUERY_DB
           diamond_db_out = MAKE_DB_V1.out.diamond_db ?: Channel.empty()
@@ -213,23 +211,17 @@
           ch_samplesheet_query | PARSE_GBK_QUERY
 
           PARSE_GBK_QUERY.out
-              .map { meta, genome, protein, gff ->
+              .map { meta, genome, protein, gff, geo ->
                   tuple(meta, genome, protein, gff)
               }
               .set { ch_amrfinder_input_query }
 
           PARSE_GBK_QUERY.out
-              .map { tuple ->
-                  def (meta, genome, protein, gff) = tuple
-                  [meta, genome]
-              }
+              .map { meta, genome, protein, gff, geo -> [meta, genome] }
               .set { ch_genomes_query }
 
           PARSE_GBK_QUERY.out
-              .map { tuple ->
-                  def (meta, genome, protein, gff) = tuple
-                  [meta, protein]
-              }
+              .map { meta, genome, protein, gff, geo -> [meta, protein] }
               .set { ch_proteins_query }
 
           // Determine database sources based on mode
@@ -330,29 +322,27 @@
       ch_samplesheet | PARSE_GBK
 
       PARSE_GBK.out
-          .map { meta, genome, protein, gff ->
+          .map { meta, genome, protein, gff, geo ->
               tuple(meta, genome, protein, gff)
           }
           .set { ch_amrfinder_input }
 
       PARSE_GBK.out
-          .map { tuple ->
-              def (meta, genome, protein, gff) = tuple
-              [meta, genome]
-          }
+          .map { meta, genome, protein, gff, geo -> [meta, genome] }
           .set { ch_genomes }
 
       PARSE_GBK.out
-          .map { tuple ->
-              def (meta, genome, protein, gff) = tuple
-              [meta, protein]
-          }
+          .map { meta, genome, protein, gff, geo -> [meta, protein] }
           .set { ch_proteins }
+
+      PARSE_GBK.out
+          .map { meta, genome, protein, gff, geo -> [meta, geo] }
+          .set { ch_geometry }
 
       ch_iceberg_db = params.iceberg_db ? Channel.value(file(params.iceberg_db)) : null	  
 
       // Run the MAKE_DB subworkflow
-      MAKE_DB_V1(ch_samplesheet, ch_amrfinder_input, ch_genomes, ch_proteins, AMRFINDERPLUS_UPDATE.out.db, ch_iceberg_db)
+      MAKE_DB_V1(ch_samplesheet, ch_amrfinder_input, ch_genomes, ch_proteins, ch_geometry, AMRFINDERPLUS_UPDATE.out.db, ch_iceberg_db)
       
 
       emit:

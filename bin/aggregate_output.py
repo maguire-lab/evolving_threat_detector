@@ -403,6 +403,34 @@ def store_contigs(contig_map, genome_id, cursor):
         rows)
     return len(rows)
 
+def load_contig_map(geometry_tsv):
+    """contig_id -> {length, circular}, from PARSE_GBK's geometry TSV."""
+    contig_map = {}
+    with open(geometry_tsv) as fh:
+        next(fh, None)
+        for line in fh:
+            p = line.rstrip("\n").split("\t")
+            if len(p) < 7 or p[0] != "contig":
+                continue
+            contig_map[p[1]] = {"length": int(p[5]), "circular": p[6] == "1"}
+    print(f"Built contig map: {len(contig_map)} contigs from {geometry_tsv}")
+    return contig_map
+
+
+def load_protein_contig_map(geometry_tsv):
+    """protein_id -> {contig_id, start, end}, from PARSE_GBK's geometry TSV."""
+    protein_map = {}
+    with open(geometry_tsv) as fh:
+        next(fh, None)
+        for line in fh:
+            p = line.rstrip("\n").split("\t")
+            if len(p) < 7 or p[0] != "protein":
+                continue
+            protein_map[p[1]] = {"contig_id": p[2],
+                                 "start": int(p[3]), "end": int(p[4])}
+    print(f"Built protein-contig map: {len(protein_map)} proteins from {geometry_tsv}")
+    return protein_map
+
 def build_ice_element_metadata(iceberg_fasta_path):
     """
     Parse the raw ICEberg FASTA to extract element_id and functional
@@ -1339,7 +1367,7 @@ def insert_genome(cursor, fasta_name, organism, args_dict, ice_element_metadata=
             comp_txt_files, comp_txt_files_published,
             tn3_txt_files, tn3_txt_files_published,
             integron_file, integron_file_published,
-            max_distance, gbk_path, iceberg_fasta
+            max_distance, gbk_path, geometry_tsv, iceberg_fasta
         ice_element_metadata: pre-loaded dict from build_ice_element_metadata().
             If None, will be loaded from args_dict["iceberg_fasta"].
     """
@@ -1347,11 +1375,15 @@ def insert_genome(cursor, fasta_name, organism, args_dict, ice_element_metadata=
     genome_id = create_genome_entry(cursor, fasta_name, organism)
 
     # Record contig lengths and topology for EVERY genome.
+    geometry_tsv = args_dict.get("geometry_tsv")
     gbk_path = args_dict.get("gbk_path")
     contig_map = {}
-    if gbk_path and Path(gbk_path).exists():
+    if geometry_tsv and Path(geometry_tsv).exists():
+        contig_map = load_contig_map(geometry_tsv)
+    elif gbk_path and Path(gbk_path).exists():
         contig_map = build_contig_map(gbk_path)
-        store_contigs(build_contig_map(gbk_path), genome_id, cursor)
+    if contig_map:
+        store_contigs(contig_map, genome_id, cursor)
 
 
     # Store sketch file
@@ -1398,8 +1430,9 @@ def insert_genome(cursor, fasta_name, organism, args_dict, ice_element_metadata=
     filtered_hits_report_path = args_dict.get("filtered_hits_report_path")
     if filtered_hits_report_path and Path(filtered_hits_report_path).exists():
         protein_contig_map = {}
-        gbk_path = args_dict.get("gbk_path")
-        if gbk_path and Path(gbk_path).exists():
+        if geometry_tsv and Path(geometry_tsv).exists():
+            protein_contig_map = load_protein_contig_map(geometry_tsv)
+        elif gbk_path and Path(gbk_path).exists():
             protein_contig_map = build_protein_contig_map(gbk_path, fasta_name)
 
         # Use pre-loaded metadata if available, otherwise load it
@@ -1554,6 +1587,8 @@ def main():
     parser.add_argument('--max_distance', type=int, default=5000, help='Maximum distance (bp) between AMR gene and MGE element to consider them co-located (default is 5000)')
     parser.add_argument('--gbk_path', type=Path, default=None,
                         help='Path to genome GBK file (for protein-to-contig mapping in ICE analysis)')
+    parser.add_argument('--geometry_tsv', type=Path, default=None, 
+                        help='Path to the PARSE_GBK geometry TSV. Preferred over --gbk_path when present.')
     parser.add_argument('--iceberg_fasta', type=Path, default=None,
                         help='Path to ICEberg reference FASTA (for element metadata)')
 
@@ -1814,6 +1849,7 @@ def main():
         "integron_file_published": args.integron_file_published,
         "max_distance": args.max_distance,
         "gbk_path": args.gbk_path,
+        "geometry_tsv": args.geometry_tsv,
         "iceberg_fasta": args.iceberg_fasta,
     }
 

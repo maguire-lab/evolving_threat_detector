@@ -9,7 +9,7 @@ process PARSE_GBK {
     tuple val(meta), path(gbk)
 
     output:
-    tuple val(meta), path("*_contigs.fasta"), path("*_proteins.fasta"), path("*.gff3")
+    tuple val(meta), path("*_contigs.fasta"), path("*_proteins.fasta"), path("*.gff3"), path("*_geometry.tsv")
 
     script:
     """
@@ -21,5 +21,6 @@ process PARSE_GBK {
     touch ${meta.id}_contigs.fasta
     touch ${meta.id}_proteins.fasta
     touch ${meta.id}.gff3
+    touch ${meta.id}_geometry.tsv
     """
 }
