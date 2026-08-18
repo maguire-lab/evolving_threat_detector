@@ -62,6 +62,7 @@ def main():
 
     inserted = 0
     skipped = 0
+    n_no_geometry = 0
     t0 = time.time()
 
     for i, row in enumerate(rows, start=1):
@@ -100,16 +101,25 @@ def main():
             "tn3_txt_files_published":             None,
             "integron_file":                      path_or_none(row.get("integron_file")),
             "integron_file_published":             f"{args.outdir}/integronfinder/{genome_id}.integrons",
-            "gbk_path":                           path_or_none(row.get("gbk_file")),
+            "geometry_tsv":                       path_or_none(row.get("geometry_tsv")),
             "iceberg_fasta":                      args.iceberg_fasta,
             "max_distance":                       args.max_distance,
         }
+
+        if not args_dict["geometry_tsv"]:
+            print(f"WARNING: {genome_id}: geometry TSV not readable "
+                  f"({row.get('geometry_tsv')!r}) -- falling back to the GenBank "
+                  f"file; if that is also unreadable this genome gets no contigs "
+                  f"and no ICE", file=sys.stderr)
+            n_no_geometry += 1
 
         try:
             insert_genome(cursor, genome_id, organism, args_dict,
                           ice_element_metadata=ice_element_metadata)
             inserted += 1
         except Exception as exc:
+            import traceback
+            traceback.print_exc()
             print(f"ERROR inserting {genome_id}: {exc}", file=sys.stderr)
             skipped += 1
             continue
@@ -124,6 +134,13 @@ def main():
     # Final commit
     conn.commit()
     conn.close()
+
+    if n_no_geometry:
+        print(f"*** {n_no_geometry}/{total} genomes had no readable geometry TSV. "
+              f"Tasks 1-3 and ICE detection are INACTIVE for those genomes. ***",
+              file=sys.stderr)
+        if n_no_geometry == total:
+            sys.exit(1)
 
     elapsed = time.time() - t0
     print(f"Done. {inserted}/{total} genomes inserted in {elapsed:.1f}s "

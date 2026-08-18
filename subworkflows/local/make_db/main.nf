@@ -25,6 +25,7 @@ workflow MAKE_DB {
     ch_amrfinder_input
     ch_genomes
     ch_proteins
+    ch_geometry
     amrfinder_db
     iceberg_db
 
@@ -158,8 +159,12 @@ workflow MAKE_DB {
     paired7 = paired6
        .join(ch_samplesheet, by: 0, remainder: true)
 
+    // Join the geometry TSV emitted by PARSE_GBK
+    paired8 = paired7
+       .join(ch_geometry, by: 0, remainder: true)
+
     // Step 3: Shape the final per-genome bundle
-    to_insert = paired7.map { items -> 
+    to_insert = paired8.map { items -> 
         def meta = items[0]
         def amr_tsv = items[1] ?: []
         def contigs_report = items[2] ?: []
@@ -169,6 +174,7 @@ workflow MAKE_DB {
         def tn3_files_nested = items[6] ?: []
         def integron_file = items[7] ?: []
         def gbk_file = items[8] ?: []
+	def geometry = items[9] ?: []                        
 
      // Flatten the double-nested tncomp and tn3 gbk files
      def txt_files = txt_files_nested ? [txt_files_nested].flatten() : []
@@ -177,7 +183,7 @@ workflow MAKE_DB {
 
 
        
-        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, txt_files, tn3_files, integron_file, gbk_file)
+        tuple(meta, amr_tsv, contigs_report, ice_file, phage_file, txt_files, tn3_files, integron_file, gbk_file, geometry)
 }
 
     // Initialize empty database if it doesn't exist
@@ -191,6 +197,9 @@ workflow MAKE_DB {
 
     // Convert ICEberg raw FASTA to a value channel (global, shared across all genomes)
     iceberg_fasta_value = ch_iceberg_db.first()
+
+    // All geometry TSVs, staged together into the single INSERT_DB_BATCH task
+    geometry_files = ch_geometry.map { meta, geo -> geo }.collect()
     
 
     // Call INSERT_DB
@@ -214,6 +223,7 @@ workflow MAKE_DB {
             def tn3_files      = items[6]
             def integron_file  = items[7]
             def gbk_file       = items[8]
+	    def geometry       = items[9]
 
             def s = { v ->
                 if (v == null) return 'NA'
@@ -225,15 +235,20 @@ workflow MAKE_DB {
                 if (v instanceof List && v.size() > 0) return v.collect{it.toString()}.join(';')
                 return 'NA'
             }
+	    def basename = { v ->
+                if (v == null) return 'NA'
+                if (v instanceof List) return v.size() > 0 ? v[0].name : 'NA'
+                return v.name
+            }
 
             [meta.id, meta.organism ?: '', s(amr_tsv), s(contigs_report),
              s(ice_file), s(phage_file), slist(txt_files), slist(tn3_files),
-             s(integron_file), s(gbk_file)].join(',')
+             s(integron_file), s(gbk_file), basename(geometry)].join(',')
         }
         .collectFile(
             name: 'manifest.csv',
             newLine: true,
-            seed: 'genome_id,organism,amr_tsv,contigs_report,ice_hits,phage_coords,comp_txt_files,tn3_txt_files,integron_file,gbk_file'
+            seed: 'genome_id,organism,amr_tsv,contigs_report,ice_hits,phage_coords,comp_txt_files,tn3_txt_files,integron_file,gbk_file,geometry_tsv'
         )
 
     // Call INSERT_DB_BATCH (single process for ALL genomes)
@@ -241,7 +256,8 @@ workflow MAKE_DB {
         ch_manifest,
         sketch_value,
         db_initial,
-        iceberg_fasta_value
+        iceberg_fasta_value,
+	geometry_files
     )
 
     emit:

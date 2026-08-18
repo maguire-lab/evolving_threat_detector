@@ -101,17 +101,20 @@ def gbk_to_files(gbk_file, output_prefix=None):
     gff_file = f"{output_prefix}.gff3"
     nucleotide_fasta = f"{output_prefix}_contigs.fasta"
     protein_fasta = f"{output_prefix}_proteins.fasta"
+    geometry_tsv = f"{output_prefix}_geometry.tsv"
     
     print(f"Converting {gbk_file}...")
     print(f"Output files will be:")
     print(f"  - GFF3: {gff_file}")
     print(f"  - Nucleotide FASTA: {nucleotide_fasta}")
     print(f"  - Protein FASTA: {protein_fasta}")
+    print(f"  - Geometry TSV: {geometry_tsv}")
     
     # Parse GenBank file and process each record
     with open(gff_file, 'w') as gff_out, \
          open(nucleotide_fasta, 'w') as nucl_out, \
-         open(protein_fasta, 'w') as prot_out:
+         open(protein_fasta, 'w') as prot_out, \
+         open(geometry_tsv, 'w') as geo_out:
         
         # Write GFF3 header
         write_gff3_header(gff_out)
@@ -119,9 +122,17 @@ def gbk_to_files(gbk_file, output_prefix=None):
         record_count = 0
         feature_count = 0
         protein_count = 0
+
+        # Header for the geometry TSV consumed by insert_genome()
+        geo_out.write("record_type\tid\tcontig_id\tstart\tend\tlength\tis_circular\n")
         
         for record in SeqIO.parse(gbk_file, "genbank"):
             record_count += 1
+
+            # One geometry row per contig: length and topology
+            topology = str(record.annotations.get('topology', 'linear')).lower()
+            geo_out.write(f"contig\t{record.id}\t\t\t\t{len(record.seq)}"
+                          f"\t{1 if topology == 'circular' else 0}\n")
             
             # Write contig sequence directive to GFF3
             gff_out.write(f"##sequence-region {record.id} 1 {len(record.seq)}\n")
@@ -152,6 +163,9 @@ def gbk_to_files(gbk_file, output_prefix=None):
                 if feature.type == "CDS":
                     protein_count += 1
                     feature_id = f"{output_prefix}_{protein_count:05d}"
+                    # Same numbering as the protein FASTA DIAMOND searches
+                    geo_out.write(f"protein\t{feature_id}\t{record.id}"
+                                  f"\t{start}\t{end}\t\t\n")
                 elif 'locus_tag' in feature.qualifiers:
                     feature_id = feature.qualifiers['locus_tag'][0]
                 elif 'gene' in feature.qualifiers:
