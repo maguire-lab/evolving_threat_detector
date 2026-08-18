@@ -20,4 +20,8 @@ run_stub.sh
 run_test.sh
 run_batch.sh
 slum_out
+run_one_genome.sh
 run_querydb.sh
+make_db_samplesheet.csv
+query_samplesheet.csv
+db_samplesheet.csv

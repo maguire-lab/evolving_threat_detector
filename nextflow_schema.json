@@ -269,18 +269,18 @@
                     "description": "Number of closest relatives to retrieve from Mash distance results.",
                     "fa_icon": "fas fa-sort-numeric-down"
                 },
-                "min_pident": {
-                    "type": "integer",
-                    "default": 60,
-                    "description": "Minimum percent identity threshold for DIAMOND BLASTP hits against ICEberg.",
-                    "fa_icon": "fas fa-percentage"
+              "max_evalue": {
+                  "type": "number",
+                  "default": 1e-5,
+                  "description": "Maximum DIAMOND BLASTP e-value for a hit against ICEberg to be retained.",
+                  "fa_icon": "fas fa-filter"
+              },
+              "min_coverage": {
+                  "type": "number",
+                  "default": 0.5,
+                  "description": "Minimum alignment coverage of both query and subject protein for a DIAMOND BLASTP hit against ICEberg.",
+                  "fa_icon": "fas fa-ruler-horizontal"
                },
-	       "min_alignment_length": {
-                    "type": "integer",
-                    "default": 60,
-                    "description": "Minimum alignment length threshold for DIAMOND BLASTP hits against ICEberg.",
-                    "fa_icon": "fas fa-ruler-horizontal"
-                },
                 "db_path": {
                     "type": "string",
                     "default": null,

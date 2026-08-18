@@ -211,20 +211,20 @@ Optional parameters:
 
  - `--number` : Number of closest genomes to consider (default: 5)
  - `--output_format` {json, dataframe} : Output format (default:  json)
- - `--min_pident` : minimum percentage identity for diamond homology search (default: 60)
- - `--min_alignment_length` : minimum alignment length for diamond homology search (default: 60)
+ - `--max_evalue` : maximum e_value cutoff for diamond homology search (default: 1e-5)
+ - `--min_coverage` : minimum coverage of both queryy and subject length for diamond homology search (default: 0.5)
  - `--max_distance` : maximum co-location distance in base pairs between AMR and MGE (default: 5000) 
  - `--amrfinder_db` : path to a pre-downloaded AMRFinderPlus database directory. When provided, the pipeline skips the AMRFINDERPLUS_UPDATE step (useful for HPC compute nodes without internet).
  - `--iceberg_db` : path to a pre-downloaded ICEberg protein FASTA file. When provided, the pipeline skips the iceberg database download step (useful for HPC compute nodes without internet).
 
 > [!NOTE]
-> To override defaults for optional parameters, please provide pipeline parameters via the CLI. E.g. to override the `--number` and `--min_pident` default parameters:
+> To override defaults for optional parameters, please provide pipeline parameters via the CLI. E.g. to override the `--number` and `--min_coverage` default parameters:
 
 ```bash
 nextflow run main.nf \
    --mode all \
    -profile docker \
-   --min_pident 80 \
+   --min_coverage 0.6 \
    --number 20 \
    --input_make reference_genomes.csv \
    --input_query query_genomes.csv

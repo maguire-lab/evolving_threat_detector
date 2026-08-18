@@ -7,7 +7,9 @@ import polars as pl
 import argparse
 from Bio import SeqIO
 import sys
-from aggregate_output import parse_plasmid_annotation, parse_ice_annotation, parse_phage_annotation, parse_composite_transposon_annotation,parse_tn3_transposon_annotation, parse_integron_annotation, is_proximal, build_protein_contig_map, build_ice_element_metadata
+from aggregate_output import parse_plasmid_annotation, parse_ice_annotation, parse_phage_annotation, parse_composite_transposon_annotation,parse_tn3_transposon_annotation, parse_integron_annotation, is_proximal, build_protein_contig_map, build_ice_element_metadata, window_is_truncated, build_contig_map
+
+INDETERMINATE = "Indeterminate"
 
 def retrieve_closest_relatives(mash_dist_output, number=5):
     try:
@@ -125,7 +127,8 @@ def merge_amr_plasmid_annotation(query_amr_annotations, plasmid_annotations):
 #
 #    return amr_ice_annotations
 
-def merge_amr_ice_annotation(query_amr_annotations, ice_annotations, max_distance=5000):
+def merge_amr_ice_annotation(query_amr_annotations, ice_annotations, max_distance=5000, 
+                             contig_map=None):
     """
     Join query AMR rows with ICE annotations by contig proximity.
 
@@ -138,8 +141,11 @@ def merge_amr_ice_annotation(query_amr_annotations, ice_annotations, max_distanc
         if regions:
             proximal_elements = []
             for r in regions:
+                cinfo = (contig_map or {}).get(annotation["contig_id"], {})
                 if is_proximal(annotation["start"], annotation["stop"],
-                               r["start"], r["end"], max_distance):
+                               r["start"], r["end"], max_distance,
+                               cinfo.get("length"), 
+                               cinfo.get("circular", False)):
                     proximal_elements.append(
                         f"{r['ice_label']} ({r['start']}-{r['end']})"
                     )
@@ -152,7 +158,8 @@ def merge_amr_ice_annotation(query_amr_annotations, ice_annotations, max_distanc
                 })
     return amr_ice_annotations
 
-def merge_amr_phage_annotation(query_amr_annotations, phage_annotations, max_distance=5000):
+def merge_amr_phage_annotation(query_amr_annotations, phage_annotations, max_distance=5000,
+                               contig_map=None):
     """
     Join AMR rows with prophage annotations by contig_id.
 
@@ -167,10 +174,13 @@ def merge_amr_phage_annotation(query_amr_annotations, phage_annotations, max_dis
     for annotation in query_amr_annotations:
         regions = phage_annotations.get(annotation["contig_id"])
         if regions:
+            cinfo = (contig_map or {}).get(annotation["contig_id"], {})
             proximal_regions = []
             for r in regions:
                 if is_proximal(annotation["start"], annotation["stop"],
-                               r["start"], r["end"], max_distance):
+                               r["start"], r["end"], max_distance,
+                               cinfo.get("length"),
+                               cinfo.get("circular", False)):
                     proximal_regions.append(
                         f"{r['prophage_id']} ({r['start']}-{r['end']})"
                     )
@@ -184,13 +194,17 @@ def merge_amr_phage_annotation(query_amr_annotations, phage_annotations, max_dis
 
     return amr_phage_annotations
 
-def merge_amr_comp_transposon(query_amr_annotations, composite_transposon_annotation, max_distance=5000):
+def merge_amr_comp_transposon(query_amr_annotations, composite_transposon_annotation, 
+                              max_distance=5000, contig_map=None):
     amr_comp_transposon_annotations = []
     for annotation in query_amr_annotations:
         info = composite_transposon_annotation.get(annotation["contig_id"])
         if info and info.get("start") is not None and info.get("end") is not None:
+            cinfo = (contig_map or {}).get(annotation["contig_id"], {})
             if is_proximal(annotation["start"], annotation["stop"],
-                           info["start"], info["end"], max_distance):
+                           info["start"], info["end"], max_distance,
+                           cinfo.get("length"),
+                           cinfo.get("circular", False)):
                 amr_comp_transposon_annotations.append({
                     "contig_id": annotation["contig_id"],
                     "start": annotation["start"],
@@ -213,15 +227,19 @@ def merge_amr_tn3_transposon(query_amr_annotations, tn3_annotations):
             })
     return amr_tn3_annotations
 
-def merge_amr_integron_annotation(query_amr_annotations, integron_annotations, max_distance=5000):
+def merge_amr_integron_annotation(query_amr_annotations, integron_annotations, 
+                                  max_distance=5000, contig_map=None):
     amr_integron_annotations = []
     for annotation in query_amr_annotations:
         regions = integron_annotations.get(annotation["contig_id"])
         if regions:
+            cinfo = (contig_map or {}).get(annotation["contig_id"], {})
             proximal_regions = []
             for r in regions:
                 if is_proximal(annotation["start"], annotation["stop"],
-                               r["start"], r["end"], max_distance):
+                               r["start"], r["end"], max_distance,
+                               cinfo.get("length"), 
+                               cinfo.get("circular", False)):
                     proximal_regions.append(
                         f"{r['integron_id']} ({r['start']}-{r['end']})"
                     )
@@ -332,20 +350,32 @@ def merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations=N
 
       return merged_df
 
-def determine_mge_context(row):
+def determine_mge_context(row, contig_length=None, is_circular=False, max_distance=5000):
     """
     Determine the MGE context(s) for a gene based on its annotation row.
 
-    Inspects each MGE annotation column. If any has a non-null, non-empty
+    Inspects each MGE annotation column. If any has a non-null, non-empty 
     value, the corresponding MGE type is added to the context set.
-    If no MGE associations are found, the gene is assumed chromosomal.
+    If no MGE associations are found, the result depends on whether the 
+    proximity window around the gene was fully observable. Where the window
+    extends past a contig end, part of it lies in sequence the assembly does
+    not contain, so absence of an association is not evidence of absence: the
+    gene is reported as Indeterminate. Only where the full window was visible
+    is the gene assumed chromosomal.
 
     Parameters:
         row (dict): A single gene's annotation dict (from query merged_df
                     or from the relative's DB-fetched DataFrame).
+        contig_length (int, optional): Length of the gene's contig. Without it,
+                    truncation cannot be detected and Chromosome is returned.
+        is_circular (bool, optional): True for closed replicons, which have no
+                    ends and therefore no truncation.
+        max_distance (int, optional): Proximity window in bp. Must match the
+                    window used to make the annotations in this row.
 
     Returns:
-        context (set): e.g. set{"Plasmid", "ICE"} or set{"Chromosome"}.
+        context (set): e.g. set{"Plasmid", "ICE"} or set{"Chromosome"}, 
+        or set{"Indeterminate"}.
     """
     contexts = set()
 
@@ -367,13 +397,20 @@ def determine_mge_context(row):
     if has_value(row.get('integron_annotation')):
         contexts.add("Integron")
 
-    # No MGE associations, gene sits on the chromosome
-    if not contexts:
-        contexts.add("Chromosome")
+    if contexts:
+        return contexts
 
+    # No MGE associations. Was the window actually observable?
+    if contig_length and window_is_truncated(
+            row["start"], row["stop"], max_distance, contig_length, is_circular):
+        contexts.add(INDETERMINATE)
+        return contexts
+
+    contexts.add("Chromosome")
     return contexts
 
-def compare_amr_annotations(cursor, merged_df, closest_relatives):
+def compare_amr_annotations(cursor, merged_df, closest_relatives, contig_map=None,
+                             max_distance=5000):
       """
       Compare AMR gene presence/absence between query genome and closest relatives.
 
@@ -382,6 +419,11 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
       merged_df (pl.DataFrame): Merged annotations of the query genome.
       closest_relatives (list): List of tuples (genome_name, p_value, dist) of closest genome 
   names, distance metric, and their p-values.
+      contig_map (dict, optional): Query genome contig geometry from
+  build_contig_map(); contig_id -> {"length", "circular"}. Without it, contexts
+  cannot be marked Indeterminate and behave as before.
+      max_distance (int, optional): Proximity window in bp, used to test whether
+  a gene's window was truncated by a contig end.
 
       Returns:
       pl.DataFrame: A Polars DataFrame containing the resistome differences.
@@ -394,6 +436,19 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
       }
 
       for genome_name, mash_distance, p_value, similarity in closest_relatives:
+           # Load contig length and topology for every genome in the database.
+          relative_contigs = {
+           cid: {"length": ln, "circular": bool(circ)}
+          for cid, ln, circ in cursor.execute(
+               """
+               SELECT c.contig_id, c.contig_length, c.is_circular
+               FROM contigs c JOIN genomes g ON g.id = c.genome_id
+               WHERE g.genome_name = ?
+               """, 
+               (genome_name,)
+           ).fetchall()
+       }
+
           cursor.execute(
               """
               SELECT g.genome_name, a.gene_name, a.contig_id, a.start, a.stop, a.amr_annotation, 
@@ -432,6 +487,10 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
           for key, query_row in query_annotations_dict.items():
               gene = key[0]
               if gene in gained_genes:
+                  q_ci = (contig_map or {}).get(query_row['contig_id'], {})
+                  q_ctx = determine_mge_context(
+                      query_row, q_ci.get("length"), q_ci.get("circular", False),
+                      max_distance)
                   differences.append({
                       'relative_genome': genome_name,
                       'gene_name': gene,
@@ -457,7 +516,7 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
                       'relative_tn3_transposon_annotation': 'Gene not present',
                       'relative_ice_annotation': 'Gene not present',
                       # Summary: human-readable MGE context
-                      'query_mge_context': ", ".join(sorted(determine_mge_context(query_row))),
+                      'query_mge_context': ", ".join(sorted(q_ctx)),
                       'relative_mge_context': 'Gene not present',
 
                       'difference_type': 'gained_gene'
@@ -468,6 +527,11 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
           for key, closest_row in closest_annotations_dict.items():
               gene = key[0]
               if gene in lost_genes:
+
+                  r_ci = relative_contigs.get(closest_row['contig_id'], {})
+                  r_ctx = determine_mge_context(
+                      closest_row, r_ci.get("length"), r_ci.get("circular", False),
+                      max_distance)
                   differences.append({
                       'relative_genome': genome_name,
                       'gene_name': gene,
@@ -499,7 +563,7 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
 
                       # Summary: human-readable MGE context
                       'query_mge_context': 'Gene not present',
-                      'relative_mge_context': ", ".join(sorted(determine_mge_context(closest_row))),
+                      'relative_mge_context': ", ".join(sorted(r_ctx)),
 
                       'difference_type': 'lost_gene'
                   })
@@ -520,11 +584,20 @@ def compare_amr_annotations(cursor, merged_df, closest_relatives):
               ]
 
               for rkey, closest_row in matching_relative_rows:
-                  query_context = determine_mge_context(query_row)
-                  relative_context = determine_mge_context(closest_row)
+                  q_ci = (contig_map or {}).get(query_row["contig_id"], {})
+                  query_context = determine_mge_context(
+                      query_row, q_ci.get("length"), q_ci.get("circular", False),
+                      max_distance)
 
-                  # Only report if MGE contexts actually differ
-                  if query_context != relative_context:
+                  r_ci = relative_contigs.get(closest_row["contig_id"], {})
+                  relative_context = determine_mge_context(
+                      closest_row, r_ci.get("length"), r_ci.get("circular", False),
+                      max_distance)
+
+                  # Only report if MGE contexts actually differ and both contexts could be examined
+                  if (INDETERMINATE not in query_context
+                          and INDETERMINATE not in relative_context
+                          and query_context != relative_context):
                       differences.append({
                           'relative_genome': genome_name,
                           'gene_name': gene,
@@ -607,6 +680,10 @@ def main():
 
     args = parser.parse_args()
 
+    contig_map = {}
+    if args.gbk_path and Path(args.gbk_path).exists():
+        contig_map = build_contig_map(args.gbk_path)
+
     # Initialize variables
     plasmid_amr_annotations = None
     ice_amr_annotations = None
@@ -667,17 +744,17 @@ def main():
         ice_annotations = parse_ice_annotation(
             args.filtered_hits_report_path, protein_contig_map, ice_element_metadata)
         ice_amr_annotations = merge_amr_ice_annotation(
-            query_amr_annotations, ice_annotations, args.max_distance)
+            query_amr_annotations, ice_annotations, args.max_distance, contig_map)
 
     # parse and merge prophage annotations
     if query_amr_annotations and args.phage_report_path and Path(args.phage_report_path).exists():
         phage_annotations = parse_phage_annotation(args.phage_report_path)
-        phage_amr_annotations = merge_amr_phage_annotation(query_amr_annotations, phage_annotations, args.max_distance)
+        phage_amr_annotations = merge_amr_phage_annotation(query_amr_annotations, phage_annotations, args.max_distance, contig_map)
 
     # parse and merge composite transposon annotations
     if query_amr_annotations and comp_txt_list:
         comp_transposon_annotations = parse_composite_transposon_annotation(comp_txt_list)
-        comp_transposon_amr_annotations = merge_amr_comp_transposon(query_amr_annotations, comp_transposon_annotations, args.max_distance)
+        comp_transposon_amr_annotations = merge_amr_comp_transposon(query_amr_annotations, comp_transposon_annotations, args.max_distance, contig_map)
 
     # parse and merge Tn3 transposon annotations
     if query_amr_annotations and tn3_txt_list:
@@ -688,16 +765,15 @@ def main():
     if query_amr_annotations and args.integron_file and Path(args.integron_file).exists():
         integron_annotations = parse_integron_annotation(args.integron_file)
         if integron_annotations:
-            integron_amr_annotations = merge_amr_integron_annotation(query_amr_annotations, integron_annotations, args.max_distance)
+            integron_amr_annotations = merge_amr_integron_annotation(query_amr_annotations, integron_annotations, args.max_distance, contig_map)
     
     merged_df =  merge_all_query_annotations(query_amr_annotations, plasmid_amr_annotations, phage_amr_annotations, ice_amr_annotations, comp_transposon_amr_annotations, tn3_amr_annotations, integron_amr_annotations)
 
-    differences = compare_amr_annotations(cursor, merged_df, closest_relatives)
+    differences = compare_amr_annotations(cursor, merged_df, closest_relatives, contig_map, args.max_distance)
 
     prepare_output(differences, args.fasta_name, args.output_format)
 
     conn.close()
-
 
 if __name__ == "__main__":
     main()
