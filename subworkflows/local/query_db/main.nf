@@ -65,8 +65,8 @@ workflow QUERY_DB {
     FILTER_DIAMOND_HITS(
         ch_blast_results,
         "ICEBERG",
-        params.min_pident,
-        params.min_alignment_length
+        params.max_evalue,
+        params.min_coverage
     )
 
    // Run Tncompfinder

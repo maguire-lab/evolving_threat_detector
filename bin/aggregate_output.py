@@ -77,6 +77,17 @@ def init_db(db_path=DATABASE_PATH):
                           output_path TEXT,
                           UNIQUE(genome_id, mge_type, contig_id, start_pos, end_pos))''')
 
+        # Create Contigs table — one row per contig per genome.
+        # contig_length supports contig-edge (Indeterminate) detection;
+        # is_circular supports wrap-around distance on closed replicons
+        cursor.execute('''CREATE TABLE IF NOT EXISTS contigs (
+                          id INTEGER PRIMARY KEY,
+                          genome_id INTEGER REFERENCES genomes(id),
+                          contig_id TEXT,
+                          contig_length INTEGER,
+                          is_circular INTEGER DEFAULT 0,
+                          UNIQUE (genome_id, contig_id))''')
+
 
         # Index to speed up UPDATE/SELECT by (genome_id, gene_name)
         cursor.execute("""
@@ -269,15 +280,30 @@ def store_amr_annotation(amr_annotations, cursor, output_path):
         print(f"Error storing AMR annotations: {e}")
         raise
 
-def is_proximal(amr_start, amr_stop, element_start, element_end, max_distance):
+def is_proximal(amr_start, amr_stop, element_start, element_end, max_distance, 
+                contig_length=None, is_circular=False):
     """
     Test whether an AMR gene is within max_distance bp of a genomic element.
 
-    Returns True if:
+    Parameters:
+        amr_start, amr_stop      (int): AMR gene coordinates, 1-based.
+        element_start, element_end (int): element coordinates, 1-based.
+        max_distance             (int): proximity window, bp.
+        contig_length      (int, opt.): length of the shared contig. Required
+                                        for wrap-around; ignored if absent.
+        is_circular       (bool, opt.): True only for closed replicons. Must be
+                                        False for draft contigs, where wrapping
+                                        would be meaningless.
+
+    Returns:
+        bool: True if:
       - The AMR gene overlaps the element, OR
       - The gap between the nearest edges is <= max_distance
 
     All coordinates are 1-based genomic positions on the same contig.
+    On a circular replicon the shorter of the two ways round is used.
+    If contig_length is inconsistent with the coordinates, the wrap is
+    discarded and only the linear gap is considered.
     """
     # Normalise so start <= stop (handles reverse strand)
     a_lo, a_hi = min(amr_start, amr_stop), max(amr_start, amr_stop)
@@ -288,8 +314,30 @@ def is_proximal(amr_start, amr_stop, element_start, element_end, max_distance):
         return True
 
     # Otherwise, compute gap between nearest edges
-    gap = max(a_lo - e_hi, e_lo - a_hi)
+    if a_lo > e_hi:                      # AMR gene lies to the right
+        linear_gap = a_lo - e_hi
+        wrap_gap = (contig_length - a_hi) + e_lo if contig_length else None
+    else:                                # AMR gene lies to the left
+        linear_gap = e_lo - a_hi
+        wrap_gap = (contig_length - e_hi) + a_lo if contig_length else None
+
+    if wrap_gap is not None and wrap_gap < 0:
+        wrap_gap = None
+
+    gap = (min(linear_gap, wrap_gap)
+           if (is_circular and wrap_gap is not None) else linear_gap)
     return gap <= max_distance
+
+def window_is_truncated(gene_start, gene_stop, max_distance,
+                        contig_length, is_circular=False):
+    """
+    True when the proximity window extends past a contig end, so part of it
+    lies in sequence the assembly does not contain. A circle has no ends.
+    """
+    if is_circular or not contig_length:
+        return False
+    lo, hi = min(gene_start, gene_stop), max(gene_start, gene_stop)
+    return (lo - max_distance) < 1 or (hi + max_distance) > contig_length
 
 def build_protein_contig_map(gbk_path, genome_id):
     """
@@ -327,6 +375,34 @@ def build_protein_contig_map(gbk_path, genome_id):
     print(f'Built protein-contig map: {len(protein_map)} proteins from {gbk_path}')
     return protein_map
 
+def build_contig_map(gbk_path):
+    """
+    Parse a GenBank file and return contig length and topology.
+
+    Returns:
+        dict: {contig_id: {"length": int, "circular": bool}}
+    """
+    contig_map = {}
+    for record in SeqIO.parse(str(gbk_path), 'genbank'):
+        topology = str(record.annotations.get('topology', 'linear')).lower()
+        contig_map[record.id] = {
+            "length": len(record.seq),
+            "circular": topology == 'circular',
+        }
+    print(f'Built contig map: {len(contig_map)} contigs from {gbk_path}')
+    return contig_map
+
+
+def store_contigs(contig_map, genome_id, cursor):
+    """Write contig lengths and topology for one genome."""
+    rows = [(genome_id, cid, info["length"], 1 if info["circular"] else 0)
+            for cid, info in contig_map.items()]
+    cursor.executemany(
+        "INSERT OR REPLACE INTO contigs "
+        "(genome_id, contig_id, contig_length, is_circular) VALUES (?, ?, ?, ?)",
+        rows)
+    return len(rows)
+
 def build_ice_element_metadata(iceberg_fasta_path):
     """
     Parse the raw ICEberg FASTA to extract element_id and functional
@@ -347,15 +423,15 @@ def build_ice_element_metadata(iceberg_fasta_path):
     INTEGRASE_KW = ['integrase', 'recombinase', 'xerc', 'xerd', 'excisionase']
 
     RELAXASE_KW  = ['relaxase', 'moba', 'mobb', 'mobc',
-                    'mobilization_protein', 'mobilisation_protein']
+                    'mobilization_protein', 'mobilisation_protein', 'trai']
 
-    T4CP_KW      = ['virb4', 'coupling', 'trae', 'vird4']
+    T4CP_KW      = ['virb4', 'coupling', 'trae', 'vird4', 'trad']
 
     T4SS_KW      = ['virb', 'sex_pilus', 'pilus_assembly', 'mating_pair',
                     'conjugative_transfer', 'conjugal_transfer',
                     'type_iv_secret', 'type-iv_secret',
                     'type_iv_b_pilus', 'type_iv_pilus', 'type_4_pilus',
-                    'traa', 'trab', 'traf', 'trah', 'trai',
+                    'traa', 'trab', 'traf', 'trah',
                     'trak', 'tral', 'trau', 'traw', 'traq',
                     'trbb', 'trbc', 'trbd', 'trbe', 'trbf', 'trbg',
                     'trbi', 'trbj', 'trbl',
@@ -671,7 +747,7 @@ def parse_ice_annotation(filtered_hits_report_path, protein_contig_map, ice_elem
 #
 #    return amr_ice_annotations
 
-def merge_amr_ice_annotation(amr_annotations, ice_annotations, max_distance=5000):
+def merge_amr_ice_annotation(amr_annotations, ice_annotations, max_distance=5000, contig_map=None):
     """
     Join AMR rows with ICE annotations by contig proximity.
     For each AMR gene, check all ICE element regions on the same contig.
@@ -681,6 +757,7 @@ def merge_amr_ice_annotation(amr_annotations, ice_annotations, max_distance=5000
         amr_annotations: list of dicts from parse_amr (with contig_id, start, stop)
         ice_annotations: dict from parse_ice_annotation (contig_id -> [regions])
         max_distance: int, bp threshold for proximity (default 5000)
+        contig_map: dict from build_contig_map
 
     Returns:
         list of dicts: {genome_id, contig_id, start, amr_gene, ice_annotation}
@@ -690,11 +767,14 @@ def merge_amr_ice_annotation(amr_annotations, ice_annotations, max_distance=5000
         # Look up ICE elements on this AMR gene's contig
         regions = ice_annotations.get(annotation["contig_id"])
         if regions:
+            cinfo = (contig_map or {}).get(annotation["contig_id"], {})
             proximal_elements = []
             for r in regions:
                 # same is_proximal() function from above
                 if is_proximal(annotation["start"], annotation["stop"],
-                               r["start"], r["end"], max_distance):
+                               r["start"], r["end"], max_distance,
+                               cinfo.get("length"),             
+                               cinfo.get("circular", False)):
                     proximal_elements.append(
                         f"{r['ice_label']} ({r['start']}-{r['end']})"
                     )
@@ -793,7 +873,8 @@ def parse_phage_annotation(phage_report_path):
         print(f"An unexpected error occurred while parsing {phage_report_path}: {e}")
         raise
 
-def merge_amr_phage_annotation(amr_annotations, phage_annotations, max_distance=5000):
+def merge_amr_phage_annotation(amr_annotations, phage_annotations,
+                               max_distance=5000, contig_map=None):
     """
     Join AMR rows with prophage annotations by contig_id.
     A contig may contain multiple prophage regions.
@@ -805,11 +886,14 @@ def merge_amr_phage_annotation(amr_annotations, phage_annotations, max_distance=
     for annotation in amr_annotations:
         regions = phage_annotations.get(annotation["contig_id"])
         if regions:
+            cinfo = (contig_map or {}).get(annotation["contig_id"], {})
             # Build annotation string from proximal prophage regions on this contig
             proximal_regions = []
             for r in regions:
                 if is_proximal(annotation["start"], annotation["stop"],
-                               r["start"], r["end"], max_distance):
+                               r["start"], r["end"], max_distance,
+                               cinfo.get("length"), 
+                               cinfo.get("circular", False)):
                     proximal_regions.append(
                         f"{r['prophage_id']} ({r['start']}-{r['end']})"
                     )
@@ -954,13 +1038,17 @@ def parse_composite_transposon_annotation(comp_txt_files):
 
     return composite_transposon_annotations
 
-def merge_amr_comp_transposon(amr_annotations, composite_transposon_annotation, max_distance=5000):
+def merge_amr_comp_transposon(amr_annotations, composite_transposon_annotation,
+                              max_distance=5000, contig_map=None):
     amr_comp_transposon_annotations = []
     for annotation in amr_annotations:
         info = composite_transposon_annotation.get(annotation["contig_id"])
         if info and info.get("start") is not None and info.get("end") is not None:
+            cinfo = (contig_map or {}).get(annotation["contig_id"], {})
             if is_proximal(annotation["start"], annotation["stop"],
-                           info["start"], info["end"], max_distance):
+                           info["start"], info["end"], max_distance,
+                           cinfo.get("length"),
+                           cinfo.get("circular", False)):
                 amr_comp_transposon_annotations.append({
                     "genome_id": annotation["genome_id"],
                     "contig_id": annotation["contig_id"],
@@ -1183,15 +1271,19 @@ def parse_integron_annotation(integron_file_path):
         print(f"An unexpected error occurred while parsing {integron_file_path}: {e}")
         raise
 
-def merge_amr_integron_annotation(amr_annotations, integron_annotations, max_distance=5000):
+def merge_amr_integron_annotation(amr_annotations, integron_annotations, 
+                                  max_distance=5000, contig_map=None):
     amr_integron_annotations = []
     for annotation in amr_annotations:
         regions = integron_annotations.get(annotation["contig_id"])
         if regions:
+            cinfo = (contig_map or {}).get(annotation["contig_id"], {})
             proximal_regions = []
             for r in regions:
                 if is_proximal(annotation["start"], annotation["stop"],
-                               r["start"], r["end"], max_distance):
+                               r["start"], r["end"], max_distance,
+                               cinfo.get("length"),
+                               cinfo.get("circular", False)):
                     proximal_regions.append(
                         f"{r['integron_id']} ({r['start']}-{r['end']})"
                     )
@@ -1254,6 +1346,14 @@ def insert_genome(cursor, fasta_name, organism, args_dict, ice_element_metadata=
     # Create genome entry
     genome_id = create_genome_entry(cursor, fasta_name, organism)
 
+    # Record contig lengths and topology for EVERY genome.
+    gbk_path = args_dict.get("gbk_path")
+    contig_map = {}
+    if gbk_path and Path(gbk_path).exists():
+        contig_map = build_contig_map(gbk_path)
+        store_contigs(build_contig_map(gbk_path), genome_id, cursor)
+
+
     # Store sketch file
     sketch_published = args_dict.get("sketch_path_published")
     if sketch_published:
@@ -1281,8 +1381,8 @@ def insert_genome(cursor, fasta_name, organism, args_dict, ice_element_metadata=
                     "mge_type": "plasmid",
                     "mge_name": record["plasmid"],
                     "contig_id": record["contig_id"],
-                    "start_pos": None,
-                    "end_pos": None
+                    "start_pos": 1,
+                    "end_pos": contig_map.get(record["contig_id"], {}).get("length")
                 }
                 for record in plasmid_annotations.values()
             ]
@@ -1330,7 +1430,7 @@ def insert_genome(cursor, fasta_name, organism, args_dict, ice_element_metadata=
 
     if amr_annotations and ice_annotations:
         ice_amr_annotations = merge_amr_ice_annotation(
-            amr_annotations, ice_annotations, max_distance)
+            amr_annotations, ice_annotations, max_distance, contig_map)
         if ice_amr_annotations:
             store_amr_ice_annotations(ice_amr_annotations, cursor, args_dict.get("filtered_hits_report_path_published"))
 
@@ -1354,7 +1454,7 @@ def insert_genome(cursor, fasta_name, organism, args_dict, ice_element_metadata=
             store_mge_elements(phage_mge_records, cursor, args_dict.get("phage_report_path_published"))
 
     if amr_annotations and phage_annotations:
-        phage_amr_annotation = merge_amr_phage_annotation(amr_annotations, phage_annotations, max_distance)
+        phage_amr_annotation = merge_amr_phage_annotation(amr_annotations, phage_annotations, max_distance, contig_map)
         if phage_amr_annotation:
             store_amr_phage_annotations(phage_amr_annotation, cursor, args_dict.get("phage_report_path_published"))
 
@@ -1383,7 +1483,7 @@ def insert_genome(cursor, fasta_name, organism, args_dict, ice_element_metadata=
             store_mge_elements(comp_mge_records, cursor, args_dict.get("comp_txt_files_published"))
 
     if amr_annotations and comp_transposon_annotations:
-        comp_transposon_amr_annotation = merge_amr_comp_transposon(amr_annotations, comp_transposon_annotations, max_distance)
+        comp_transposon_amr_annotation = merge_amr_comp_transposon(amr_annotations, comp_transposon_annotations, max_distance, contig_map)
         if comp_transposon_amr_annotation:
             store_amr_comp_transposon(comp_transposon_amr_annotation, cursor, args_dict.get("comp_txt_files_published"))
 
@@ -1434,7 +1534,7 @@ def insert_genome(cursor, fasta_name, organism, args_dict, ice_element_metadata=
             store_mge_elements(integron_mge_records, cursor, args_dict.get("integron_file_published"))
 
     if amr_annotations and integron_annotations:
-        integron_amr_annotation = merge_amr_integron_annotation(amr_annotations, integron_annotations, max_distance)
+        integron_amr_annotation = merge_amr_integron_annotation(amr_annotations, integron_annotations, max_distance, contig_map)
         if integron_amr_annotation:
             store_amr_integron_annotations(integron_amr_annotation, cursor, args_dict.get("integron_file_published"))
 
